@@ -1,0 +1,57 @@
+{
+    "name": "kunpocc",
+    "version": "1.0.18",
+    "type": "module",
+    "description": "基于creator3.0+的kunpocc库",
+    "main": "./dist/kunpocc.cjs",
+    "module": "./dist/kunpocc.mjs",
+    "types": "./dist/kunpocc.d.ts",
+    "exports": {
+        ".": {
+            "require": "./dist/kunpocc.cjs",
+            "import": "./dist/kunpocc.mjs",
+            "types": "./dist/kunpocc.d.ts",
+            "default": "./dist/kunpocc.cjs"
+        },
+        "./min": {
+            "require": "./dist/kunpocc.min.cjs",
+            "import": "./dist/kunpocc.min.mjs"
+        }
+    },
+    "scripts": {
+        "clean": "rm -rf dist",
+        "build": "npm run clean && rollup -c rollup.config.mjs",
+        "copy": "cp -r dist/* /Users/gongxh/work/kunpo-lib/KunpoDemo/node_modules/kunpocc/dist/",
+        "build:all": "npm run build && npm run copy"
+    },
+    "files": [
+        "dist/kunpocc.cjs",
+        "dist/kunpocc.mjs",
+        "dist/kunpocc.min.cjs",
+        "dist/kunpocc.min.mjs",
+        "dist/kunpocc.d.ts"
+    ],
+    "author": "gongxh",
+    "license": "ISC",
+    "repository": {
+        "type": "gitlab",
+        "url": "https://git.lanfeitech.com/gongxinhai/kunpolibrary/-/tree/main/KunpoLib"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
+    },
+    "dependencies": {
+        "fairygui-cc": "^1.2.2"
+    },
+    "devDependencies": {
+        "@cocos/creator-types": "^3.8.0",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@types/lodash": "^4.17.13",
+        "@types/node": "^22.10.2",
+        "rollup": "^4.28.1",
+        "rollup-plugin-dts": "^6.1.1",
+        "ts-node": "^10.9.2",
+        "tslib": "^2.6.2"
+    }
+}
