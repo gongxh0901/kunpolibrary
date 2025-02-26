@@ -6,6 +6,7 @@
 
 import { debug, warn } from "../tool/log";
 import { ComponentExtendHelper } from "./ComponentExtendHelper";
+import { IPackageConfigRes } from "./IPackageConfig";
 import { IWindow } from "./IWindow";
 import { _uidecorator } from "./UIDecorator";
 import { WindowGroup } from "./WindowGroup";
@@ -21,24 +22,39 @@ export class WindowManager {
     /** 初始化时传入实例 */
     private static _resPool: WindowResPool;
 
-    /**
-     * 打开一个窗口
-     * @param windowName 窗口名
-     * @param userdata 用户数据
-     */
-    public static showWindow(windowName: string, userdata?: any): void {
-        //TODO::如果没有资源 加载资源
-        this.showWindowIm(windowName, userdata);
+    /** 配置UI包的一些信息 (可以不配置 完全手动管理) */
+    public static initPackageConfig(res: IPackageConfigRes): void {
+        this._resPool.initPackageConfig(res);
     }
 
     /**
-     * 显示指定名称的窗口，并传递可选的用户数据。
+     * 异步打开一个窗口 (如果UI包的资源未加载, 会自动加载 配合 WindowManager.initPackageConfig一起使用)
+     * @param windowName 窗口名
+     * @param userdata 用户数据
+     */
+    public static async showWindow(windowName: string, userdata?: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this._resPool.loadWindowRes(windowName, {
+                complete: () => {
+                    this.showWindowIm(windowName, userdata);
+                    resolve();
+                },
+                fail: (pkgs: string[]) => {
+                    reject(pkgs);
+                }
+            });
+        });
+    }
+
+    /**
+     * 显示指定名称的窗口，并传递可选的用户数据。(用于已加载过资源的窗口)
      * @param windowName - 窗口的名称。
      * @param userdata - 可选参数，用于传递给窗口的用户数据。
      */
     public static showWindowIm(windowName: string, userdata?: any): void {
         const info = this._resPool.get(windowName);
         const windowGroup = this.getWindowGroup(info.group);
+        this._resPool.addResRef(windowName);
         windowGroup.showWindow(info, userdata);
     }
 
@@ -68,6 +84,25 @@ export class WindowManager {
                     }
                 } while (index >= 0);
             }
+        }
+    }
+
+    /**
+     * 关闭所有窗口
+     * @param ignoreNames 忽略关闭的窗口名
+     */
+    public static closeAllWindow(ignoreNames: string[] = []): void {
+        let existIgnore = ignoreNames.length > 0;
+        this._windows.forEach((window: IWindow, name: string) => {
+            if (!existIgnore) {
+                this.closeWindow(name);
+            } else if (!ignoreNames.includes(name)) {
+                this.closeWindow(name);
+            }
+        });
+
+        if (!existIgnore) {
+            this._windows.clear();
         }
     }
 
@@ -162,6 +197,7 @@ export class WindowManager {
         if (this.hasWindow(name)) {
             this._windows.get(name)._close();
             this._windows.delete(name);
+            this._resPool.releaseWindowRes(name);
         }
     }
 
@@ -175,6 +211,7 @@ export class WindowManager {
         for (const { ctor, res } of _uidecorator.getWindowMaps().values()) {
             debug(`窗口注册  窗口名:${res.name} 包名:${res.pkg} 组名:${res.group}`);
             this._resPool.add(ctor, res.group, res.pkg, res.name);
+
         }
         // 窗口header注册
         for (const { ctor, res } of _uidecorator.getHeaderMaps().values()) {

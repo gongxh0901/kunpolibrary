@@ -135,7 +135,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
         return this._header as T;
     }
 
-    public setHeader<T extends IWindowHeader>(header: T): void {
+    public _setHeader<T extends IWindowHeader>(header: T): void {
         this._header = header;
     }
 

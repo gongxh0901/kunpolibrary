@@ -339,7 +339,7 @@ export class WindowGroup {
         let name = headerInfo.name;
         let header = this._getHeader(name);
         if (header) {
-            window.setHeader(header);
+            window._setHeader(header);
             header._addRef();
         } else {
             // 创建header节点
@@ -347,7 +347,7 @@ export class WindowGroup {
             let newHeader = UIPackage.createObject(pkg, name) as WindowHeader;
             newHeader.name = name;
             newHeader.opaque = false;
-            window.setHeader(newHeader);
+            window._setHeader(newHeader);
             newHeader.visible = false;
             PropsHelper.serializeProps(newHeader, pkg);
             newHeader._init();
@@ -389,5 +389,15 @@ export class WindowGroup {
         this._alphaGraph.setPosition(Screen.ScreenWidth * 0.5, Screen.ScreenHeight * 0.5);
         this._alphaGraph.setSize(Screen.ScreenWidth, Screen.ScreenHeight, true);
         this._alphaGraph.setPivot(0.5, 0.5, true);
+    }
+
+    /**
+     * 关闭窗口组中的所有窗口
+     */
+    public closeAllWindow(): void {
+        while (this.size > 0) {
+            let name = this.getTopWindowName();
+            WindowManager.closeWindow(name);
+        }
     }
 }

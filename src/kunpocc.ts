@@ -41,7 +41,8 @@ export { Ticker as BTTicker } from "./behaviortree/Ticker";
 /** UI */
 export { Window } from "./fgui/Window";
 export { WindowHeader } from "./fgui/WindowHeader";
-export * from "./ui/header";
+export { AdapterType, WindowType } from "./ui/header";
+export { IPackageConfig } from "./ui/IPackageConfig";
 export { _uidecorator } from "./ui/UIDecorator";
 export { WindowGroup } from "./ui/WindowGroup";
 export { WindowHeaderInfo } from "./ui/WindowHeaderInfo";

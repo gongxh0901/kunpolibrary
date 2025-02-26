@@ -75,5 +75,5 @@ export interface IWindow {
     /** 获取资源栏数据 */
     getHeaderInfo(): WindowHeaderInfo;
 
-    setHeader(header: IWindowHeader): void;
+    _setHeader(header: IWindowHeader): void;
 }

@@ -34,7 +34,7 @@ export class CocosUIModule extends ModuleBase {
         // this._uiInitializer.init(this.reAdaptWhenScreenResize, this.fullIfWideScreen);
         this.node.destroyAllChildren();
         /** 注册窗口信息 */
-        WindowManager.registerUI()
+        WindowManager.registerUI();
         this.onInit();
     }
 
