@@ -4,9 +4,7 @@
  * @Description: 包配置格式
  */
 
-
-
-export interface IPackageConfig {
+interface IPackageConfig {
     /** UI所在resources中的路径 */
     uiPath: string;
     /** 
