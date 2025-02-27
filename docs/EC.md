@@ -7,8 +7,12 @@
   * 支持多世界（多战斗场景，互不影响）
   * 区分数据组件和逻辑组件，只更新逻辑组件
 
+### 插件链接
+
+* **kunpo-ec**:  [https://store.cocos.com/app/detail/7311](https://store.cocos.com/app/detail/7311)
+
 ### 使用
-    
+
 #### *creator插件`kunpo-ec`*
 > `kunpo-cc`可以方便创建、配置、导出实体，操作界面如下图：
 

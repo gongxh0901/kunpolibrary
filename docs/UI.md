@@ -14,6 +14,8 @@
   
   * 支持不同界面使用不同 header
 
+### 插件链接
+* **kunpo-fgui**: [https://store.cocos.com/app/detail/7213](https://store.cocos.com/app/detail/7213)
 
 ### 使用
 
