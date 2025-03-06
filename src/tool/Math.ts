@@ -4,6 +4,7 @@ const MathFloor = Math.floor;
 const MathRandom = Math.random;
 
 export class MathTool {
+    /** 限制 value 在 min 和 max 之间 */
     public static clampf(value: number, min: number, max: number): number {
         return MathMin(MathMax(value, min), max);
     }
@@ -18,14 +19,24 @@ export class MathTool {
         return MathRandom() * (max - min) + min;
     }
 
+    /** 角度转弧度 */
     public static rad(angle: number): number {
         return (angle * Math.PI) / 180;
     }
 
+    /** 弧度转角度 */
     public static deg(radian: number): number {
         return (radian * 180) / Math.PI;
     }
 
+    /** 
+     * 平滑过渡
+     * @param num1 起始值
+     * @param num2 目标值
+     * @param elapsedTime 已用时间
+     * @param responseTime 响应时间
+     * @returns 平滑过渡后的值
+     */
     public static smooth(num1: number, num2: number, elapsedTime: number, responseTime: number): number {
         let out: number = num1;
         if (elapsedTime > 0) {

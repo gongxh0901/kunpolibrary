@@ -10,7 +10,7 @@ export { Binary } from "./tool/Binary";
 export * from "./tool/log";
 export { MathTool } from "./tool/Math";
 export { md5 } from "./tool/MD5";
-
+export { Time } from "./tool/Time";
 /** 消息监听 */
 export { EventManager } from "./event/EventManager";
 

@@ -22,7 +22,17 @@ export default [
         plugins: [
             typescript({
                 tsconfig: './tsconfig.json',
-                importHelpers: false
+                importHelpers: false,
+                compilerOptions: {
+                    target: "es6",
+                    module: "es6",
+                    experimentalDecorators: true, // 启用ES装饰器。
+                    strict: true,
+                    strictNullChecks: false,
+                    moduleResolution: "Node",
+                    skipLibCheck: true,
+                    esModuleInterop: true,
+                }
             })
         ]
     },
@@ -45,7 +55,17 @@ export default [
         plugins: [
             typescript({
                 tsconfig: './tsconfig.json',
-                importHelpers: false
+                importHelpers: false,
+                compilerOptions: {
+                    target: "es6",
+                    module: "es6",
+                    experimentalDecorators: true, // 启用ES装饰器。
+                    strict: true,
+                    strictNullChecks: false,
+                    moduleResolution: "Node",
+                    skipLibCheck: true,
+                    esModuleInterop: true,
+                }
             }),
             terser()
         ]

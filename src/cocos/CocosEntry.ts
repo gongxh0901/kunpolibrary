@@ -14,6 +14,7 @@ import { Platform, PlatformType } from "../global/Platform";
 import { ECManager } from "../kunpocc";
 import { ModuleBase } from "../module/ModuleBase";
 import { info } from "../tool/log";
+import { Time } from "../tool/Time";
 import { PropsHelper } from "../ui/PropsHelper";
 import { CocosAdapter } from "./CocosAdapter";
 const { property } = _decorator;
@@ -109,6 +110,7 @@ export abstract class CocosEntry extends Component {
     }
 
     private initTime(): void {
+        Time._configBoot();
         InnerTimer.initTimer();
         GlobalTimer.initTimer();
         this.schedule(this.tick.bind(this), 0, macro.REPEAT_FOREVER);
