@@ -6,6 +6,7 @@ export { Platform, PlatformType } from "./global/Platform";
 export { Screen } from "./global/Screen";
 
 /** tool */
+export { Binary } from "./tool/Binary";
 export * from "./tool/log";
 export { MathTool } from "./tool/Math";
 export { md5 } from "./tool/MD5";
