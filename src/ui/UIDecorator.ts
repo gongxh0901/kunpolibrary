@@ -12,7 +12,6 @@ export namespace _uidecorator {
     const UICBMeta = "__uicbmeta__"
 
 
-    /** @internal */
     interface IUIInfoBase {
         /** 构造函数 */
         ctor: any;
@@ -24,7 +23,6 @@ export namespace _uidecorator {
 
     /**
      * 窗口属性注册数据结构
-     * @internal
      */
     interface UIWindowInfo extends IUIInfoBase {
         /** 配置信息 */
@@ -72,7 +70,6 @@ export namespace _uidecorator {
 
     /**
      * 组件属性注册数据结构
-     * @internal
      */
     interface IUIComInfo extends IUIInfoBase {
         /** 配置信息 */
@@ -111,10 +108,7 @@ export namespace _uidecorator {
         };
     }
 
-    /**
-     * header属性注册数据结构
-     * @internal
-     */
+    /** header属性注册数据结构 */
     interface IUIHeaderInfo extends IUIInfoBase {
         /** 配置信息 */
         res: {

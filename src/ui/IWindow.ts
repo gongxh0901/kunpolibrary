@@ -78,6 +78,7 @@ export interface IWindow {
 
     /** 
      * 窗口尺寸发生改变时被调用 
+     * @internal
      */
     screenResize(): void;
 

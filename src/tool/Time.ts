@@ -45,11 +45,11 @@ export class Time {
     public static get netTimeDiff(): number { return this._netTimeDiff; }
 
     /** 获取系统运行时间 */
-    public static get runTime(): number { return game.totalTime };
+    public static get runTime(): number { return Math.floor(game.totalTime); }
 
 
     public static _configBoot(): void {
-        this._osBootTime = Date.now();
+        this._osBootTime = Math.floor(Date.now());
         log("系统启动时间", this._osBootTime);
         TimeCache = new Date();
         this._nowTimestamp = (): number => {
@@ -67,7 +67,7 @@ export class Time {
         }
         this._netTime = netTime;
         const localTime = this._nowTimestamp();
-        this._netTimeDiff = this.netTime - localTime;
+        this._netTimeDiff = Math.floor(this.netTime - localTime);
         log(`设置网络时间: net(${this.formatTime(this.netTime)}), boot(${this.formatTime(this.osBootTime)}), diff(${Math.abs(this.netTimeDiff / 1000)}秒)`);
     }
 
