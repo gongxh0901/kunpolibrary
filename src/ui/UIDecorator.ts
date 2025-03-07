@@ -6,9 +6,13 @@
 
 import { ObjectHelper } from "../tool/helper/ObjectHelper";
 export namespace _uidecorator {
+    /** @internal */
     const UIPropMeta = "__uipropmeta__"
+    /** @internal */
     const UICBMeta = "__uicbmeta__"
 
+
+    /** @internal */
     interface IUIInfoBase {
         /** 构造函数 */
         ctor: any;
@@ -20,6 +24,7 @@ export namespace _uidecorator {
 
     /**
      * 窗口属性注册数据结构
+     * @internal
      */
     interface UIWindowInfo extends IUIInfoBase {
         /** 配置信息 */
@@ -32,7 +37,7 @@ export namespace _uidecorator {
             name: string;
         };
     }
-    /** 用来存储窗口注册信息 */
+    /** 用来存储窗口注册信息 @internal */
     const uiclassMap: Map<any, UIWindowInfo> = new Map();
 
     /** 获取窗口注册信息 */
@@ -67,6 +72,7 @@ export namespace _uidecorator {
 
     /**
      * 组件属性注册数据结构
+     * @internal
      */
     interface IUIComInfo extends IUIInfoBase {
         /** 配置信息 */
@@ -77,7 +83,7 @@ export namespace _uidecorator {
             name: string;
         };
     }
-    /** 用来存储组件注册信息 */
+    /** 用来存储组件注册信息 @internal */
     let uicomponentMap: Map<string, IUIComInfo> = new Map();
 
     /** 获取组件注册信息 */
@@ -107,6 +113,7 @@ export namespace _uidecorator {
 
     /**
      * header属性注册数据结构
+     * @internal
      */
     interface IUIHeaderInfo extends IUIInfoBase {
         /** 配置信息 */
@@ -117,7 +124,7 @@ export namespace _uidecorator {
             name: string;
         };
     }
-    /** 用来存储组件注册信息 */
+    /** 用来存储组件注册信息 @internal */
     let uiheaderMap: Map<string, IUIHeaderInfo> = new Map();
 
     /** 获取header注册信息 */

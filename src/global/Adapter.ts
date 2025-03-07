@@ -11,6 +11,7 @@ import { Screen } from "./Screen";
 import { size } from "./header";
 
 export abstract class Adapter {
+    /** @internal */
     public init() {
         // 设计尺寸 不会变化
         let designSize = this.getDesignSize();
@@ -25,6 +26,7 @@ export abstract class Adapter {
         });
     }
 
+    /** @internal */
     protected resize(): void {
         Screen.SafeAreaHeight = 60;
         // 屏幕像素尺寸
@@ -55,6 +57,7 @@ export abstract class Adapter {
         this.printScreen();
     }
 
+    /** @internal */
     private printScreen() {
         info(`设计分辨率: ${Screen.DesignWidth}x${Screen.DesignHeight}`);
         info(`屏幕分辨率: ${Screen.ScreenWidth}x${Screen.ScreenHeight}`);

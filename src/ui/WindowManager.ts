@@ -13,13 +13,13 @@ import { WindowGroup } from "./WindowGroup";
 import { WindowResPool } from "./WindowResPool";
 
 export class WindowManager {
-    /** 窗口组 */
+    /** 窗口组 @internal */
     private static _groups: Map<string, WindowGroup> = new Map();
-    /** 不忽略查询的窗口组名 */
+    /** 不忽略查询的窗口组名 @internal */
     private static _queryGroupNames: string[] = [];
-    /** 所有窗口全部放到这个map中 */
+    /** 所有窗口全部放到这个map中 @internal */
     private static _windows: Map<string, IWindow> = new Map();
-    /** 初始化时传入实例 */
+    /** 初始化时传入实例 @internal */
     private static _resPool: WindowResPool;
 
     /** 配置UI包的一些信息 (可以不配置 完全手动管理) */
@@ -175,6 +175,7 @@ export class WindowManager {
     /**
      * 初始化窗口管理器，设置资源池。 （框架内部使用）
      * @param resPool - 窗口资源池实例。
+     * @internal
      */
     public static _init(resPool: WindowResPool): void {
         this._resPool = resPool;
@@ -184,6 +185,7 @@ export class WindowManager {
      * 向窗口管理器添加一个新窗口。 (框架内部使用)
      * @param name 窗口的唯一标识符。
      * @param window 要添加的窗口对象，需实现 IWindow 接口。
+     * @internal
      */
     public static _addWindow(name: string, window: IWindow): void {
         this._windows.set(name, window);
@@ -192,6 +194,7 @@ export class WindowManager {
     /**
      * 移除指定名称的窗口。 (框架内部使用)
      * @param name 窗口的名称。
+     * @internal
      */
     public static _removeWindow(name: string): void {
         if (this.hasWindow(name)) {
@@ -225,6 +228,7 @@ export class WindowManager {
     /**
      * 向窗口管理器添加一个窗口组 如果窗口组名称已存在，则抛出错误. (内部方法)
      * @param group 要添加的窗口组
+     * @internal
      */
     public static _addWindowGroup(group: WindowGroup): void {
         if (this._groups.has(group.name)) {
@@ -237,6 +241,7 @@ export class WindowManager {
 
     /**
      * 屏幕大小改变时 调用所有窗口的screenResize方法 (内部方法)
+     * @internal
      */
     public static _screenResize(): void {
         this._windows.forEach((window: IWindow) => {
@@ -247,6 +252,11 @@ export class WindowManager {
         });
     }
 
+    /**
+     * 获取资源池实例 (内部方法)
+     * @returns {WindowResPool} 资源池实例
+     * @internal
+     */
     public static _getResPool(): WindowResPool {
         return this._resPool;
     }

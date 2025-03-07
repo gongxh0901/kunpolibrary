@@ -8,7 +8,7 @@ import { ConditionManager } from "../ConditionManager";
 import { ConditionMode } from "../ConditionMode";
 
 export abstract class ConditionNode {
-    /** 条件类型 */
+    /** 条件类型 @internal */
     public _modeType: ConditionMode;
 
     /**

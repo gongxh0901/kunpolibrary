@@ -15,7 +15,7 @@ import { IWindowHeader } from "../ui/IWindowHeader";
 export abstract class WindowHeader extends GComponent implements IWindowHeader {
     /** 窗口适配类型 */
     public adapterType: AdapterType = AdapterType.Full;
-    /** 引用计数 */
+    /** 引用计数 @internal */
     public _refCount: number = 0;
 
     protected abstract onInit(): void;
@@ -31,6 +31,7 @@ export abstract class WindowHeader extends GComponent implements IWindowHeader {
 
     /**
      * 初始化 (内部方法)
+     * @internal
      */
     public _init(): void {
         this.onInit();
@@ -38,6 +39,7 @@ export abstract class WindowHeader extends GComponent implements IWindowHeader {
 
     /**
      * 窗口适配 (内部方法)
+     * @internal
      */
     public _adapted(): void {
         this.setPosition(Screen.ScreenWidth * 0.5, Screen.ScreenHeight * 0.5);
@@ -58,6 +60,7 @@ export abstract class WindowHeader extends GComponent implements IWindowHeader {
     /**
      * 显示 (内部方法)
      * @param {IWindow} window 所属窗口
+     * @internal
      */
     public _show(window: IWindow): void {
         this.visible = true;
@@ -66,6 +69,7 @@ export abstract class WindowHeader extends GComponent implements IWindowHeader {
 
     /**
      * 隐藏 (内部方法)
+     * @internal
      */
     public _hide(): void {
         this.visible = false;
@@ -74,23 +78,33 @@ export abstract class WindowHeader extends GComponent implements IWindowHeader {
 
     /**
      * 关闭 (内部方法)
+     * @internal
      */
     public _close(): void {
         this.onClose();
         this.dispose();
     }
 
-    /** 增加引用计数 (内部方法) */
+    /**
+     * 增加引用计数 (内部方法)
+     * @internal
+     */
     public _addRef(): void {
         this._refCount++;
     }
 
-    /** 减少引用计数 (内部方法) */
+    /**
+     * 减少引用计数 (内部方法)
+     * @internal
+     */
     public _decRef(): number {
         return --this._refCount;
     }
 
-    /** 屏幕大小改变时被调用 (内部方法) */
+    /**
+     * 屏幕大小改变时被调用 (内部方法)
+     * @internal
+     */
     public _screenResize(): void {
         this._adapted();
     }

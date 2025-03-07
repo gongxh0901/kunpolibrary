@@ -16,23 +16,23 @@ import { WindowManager } from "./WindowManager";
 import { WindowInfo } from "./WindowResPool";
 
 export class WindowGroup {
-    /** 窗口组的名字 */
+    /** 窗口组的名字 @internal */
     private _name: string = "";
-    /** 窗口组的根节点 */
+    /** 窗口组的根节点 @internal */
     private _root: GComponent;
-    /** 忽略顶部窗口查询 */
+    /** 忽略顶部窗口查询 @internal */
     private _ignoreQuery: boolean = false;
-    /** 吞噬触摸事件 */
+    /** 吞噬触摸事件 @internal */
     private _swallowTouch: boolean = false;
-    /** 窗口容器中的窗口名列表 */
+    /** 窗口容器中的窗口名列表 @internal */
     private _windowNames: string[] = [];
-    /** 窗口顶部资源栏 */
+    /** 窗口顶部资源栏 @internal */
     private _headers: Map<string, WindowHeader> = new Map();
-    /** 半透明遮罩的透明度 */
+    /** 半透明遮罩的透明度 @internal */
     private _bgAlpha: number = 0;
-    /** 半透明节点 */
+    /** 半透明节点 @internal */
     private _alphaGraph: GGraph;
-    /** 半透明遮罩的颜色 */
+    /** 半透明遮罩的颜色 @internal */
     private _color: Color = new Color(0, 0, 0, 255);
 
     /**
@@ -65,6 +65,8 @@ export class WindowGroup {
      * @param root 窗口组的根节点 一个fgui的组件
      * @param ignoreQuery 是否忽略顶部窗口查询
      * @param swallowTouch 是否吞掉触摸事件
+     * @param bgAlpha 半透明遮罩的透明度
+     * @internal
      */
     constructor(name: string, root: GComponent, ignoreQuery: boolean, swallowTouch: boolean, bgAlpha: number) {
         this._name = name;
@@ -86,6 +88,7 @@ export class WindowGroup {
     /**
      * 根据窗口名创建窗口 并添加到显示节点
      * @param windowName 窗口名
+     * @internal
      */
     private _createWindow(pkg: string, name: string): WindowBase {
         let window = UIPackage.createObject(pkg, name) as WindowBase;
@@ -99,6 +102,11 @@ export class WindowGroup {
         return window;
     }
 
+    /**
+     * 添加窗口到显示节点
+     * @param window 窗口
+     * @internal
+     */
     private _addWindow(window: WindowBase): void {
         this._root.addChild(window);
         WindowManager._addWindow(window.name, window);
@@ -125,6 +133,7 @@ export class WindowGroup {
     /**
      * 移除指定名称的窗口。
      * @param name 窗口的名称。
+     * @internal
      */
     public _removeWindow(name: string): void {
         let index = this._windowNames.lastIndexOf(name);
@@ -162,6 +171,7 @@ export class WindowGroup {
     /**
      * 将指定名称的窗口移动到窗口组的最顶层。
      * @param name 窗口的名称。
+     * @internal
      */
     public _moveWindowToTop(name: string): boolean {
         let isMoved = false;
@@ -198,6 +208,7 @@ export class WindowGroup {
      * 处理index下层窗口的隐藏状态的私有方法。递归调用
      * @param index - 窗口索引
      * @param isRecursion - 是否递归调用
+     * @internal
      */
     private _processWindowHideStatus(index: number, isRecursion: boolean = true): void {
         if (index < 0) {
@@ -237,6 +248,8 @@ export class WindowGroup {
     /**
      * 新创建窗口时，根据新创建的窗口类型
      * 处理上一个窗口或者所有窗口的关闭
+     * @param window 新创建的窗口
+     * @internal
      */
     private _processWindowCloseStatus(window: IWindow): void {
         // 新创建窗口 如果需要关闭窗口或者关闭所有窗口 处理窗口的关闭
@@ -263,7 +276,10 @@ export class WindowGroup {
         }
     }
 
-    /** 处理header的显示状态 并调整层级 */
+    /**
+     * 处理header的显示状态 并调整层级
+     * @internal
+     */
     private _processHeaderStatus(): void {
         // 找到第一个要显示的header
         let firstHeader: WindowHeader = null;
@@ -303,6 +319,7 @@ export class WindowGroup {
     /**
      * 调整指定窗口的透明度图形。并根据窗口的背景透明度绘制半透明遮罩。
      * @param window - 需要调整透明度的窗口对象。
+     * @internal
      */
     private _adjustAlphaGraph(window: IWindow): void {
         this._root.setChildIndex(this._alphaGraph, this._root.numChildren - 1);
@@ -329,7 +346,7 @@ export class WindowGroup {
     }
 
 
-    /** 根据窗口 创建顶部资源栏 (内部方法) */
+    /** 根据窗口 创建顶部资源栏 (内部方法) @internal */
     private _createHeader(window: IWindow): void {
         // 只有创建界面的时候, 才会尝试创建顶部资源栏
         let headerInfo = window.getHeaderInfo();
@@ -362,6 +379,7 @@ export class WindowGroup {
     /**
      * 顶部资源栏窗口 从管理器中移除 (内部方法)
      * @param header 资源栏
+     * @internal
      */
     public _removeHeader(header: WindowHeader): void {
         if (this._headers.has(header.name)) {
@@ -376,12 +394,13 @@ export class WindowGroup {
     /**
      * 获取顶部资源栏 (内部方法)
      * @param name 资源栏的名称
+     * @internal
      */
     public _getHeader<T extends WindowHeader>(name: string): T | null {
         return this._headers.get(name) as T;
     }
 
-    /** 屏幕大小改变时被调用 (内部方法) */
+    /** 屏幕大小改变时被调用 (内部方法) @internal */
     public _screenResize(): void {
         this._headers.forEach((header) => {
             header._screenResize();

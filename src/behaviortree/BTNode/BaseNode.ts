@@ -26,7 +26,11 @@ export abstract class BaseNode {
         }
     }
 
-    /** 执行节点 */
+    /**
+     * 执行节点
+     * @param ticker 更新器
+     * @returns {Status} 状态
+     */
     public _execute(ticker: Ticker): Status {
         /* ENTER */
         this._enter(ticker);
@@ -44,6 +48,7 @@ export abstract class BaseNode {
     /**
      * 进入节点
      * @param ticker 更新器
+     * @internal
      */
     public _enter(ticker: Ticker): void {
         ticker.enterNode(this);
@@ -53,6 +58,7 @@ export abstract class BaseNode {
     /**
      * 打开节点
      * @param ticker 更新器
+     * @internal
      */
     public _open(ticker: Ticker): void {
         ticker.openNode(this);
@@ -63,6 +69,7 @@ export abstract class BaseNode {
     /**
      * 更新节点
      * @param ticker 更新器
+     * @internal
      */
     public _tick(ticker: Ticker): Status {
         ticker.tickNode(this);
@@ -72,6 +79,7 @@ export abstract class BaseNode {
     /**
      * 关闭节点
      * @param ticker 更新器
+     * @internal
      */
     public _close(ticker: Ticker): void {
         ticker.closeNode(this);
@@ -82,6 +90,7 @@ export abstract class BaseNode {
     /**
      * 退出节点
      * @param ticker 更新器
+     * @internal
      */
     public _exit(ticker: Ticker): void {
         ticker.exitNode(this);

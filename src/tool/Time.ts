@@ -11,16 +11,28 @@ import { log } from "./log";
 let TimeCache: Date = null;
 
 export class Time {
-    /** 游戏系统启动时间戳 */
+    /** 
+     * 游戏系统启动时间戳
+     * @internal
+     */
     private static _osBootTime: number = 0;
 
-    /** 主动设置的网络时间 单位ms */
+    /** 
+     * 主动设置的网络时间 单位ms
+     * @internal
+     */
     private static _netTime: number = 0;
 
-    /** 本地时间与网路时间的偏移量 单位ms */
+    /** 
+     * 本地时间与网路时间的偏移量 单位ms
+     * @internal
+     */
     private static _netTimeDiff: number = 0;
 
-    /** 获取当前毫秒时间戳 */
+    /** 
+     * 获取当前毫秒时间戳
+     * @internal
+     */
     private static _nowTimestamp: () => number;
 
     /** 获取游戏系统启动时间戳 */

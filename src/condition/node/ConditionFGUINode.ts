@@ -14,9 +14,11 @@ export class ConditionFGUINode extends ConditionNode {
      * @protected
      * @type {GObject | Node} fgui节点 或 node节点
      * @memberof NotityFGUINode
+     * @internal
      */
     protected node: GObject;
 
+    /** 旧的移除父节点 @internal */
     private _oldRemoveFromParent: () => void;
 
     /**
@@ -46,6 +48,10 @@ export class ConditionFGUINode extends ConditionNode {
         }
     }
 
+    /**
+     * 通知
+     * @param {boolean} visible 是否显示
+     */
     public notify(visible: boolean): void {
         this.node.visible = visible;
     }

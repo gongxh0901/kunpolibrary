@@ -16,13 +16,16 @@ interface IPropsInfo {
     callbacks: (string | number)[];
 }
 
+/** @internal */
 export class PropsHelper {
+    /** @internal */
     private static _config: IPropsConfig = {};
+    /** @internal */
     public static setConfig(config: IPropsConfig): void {
         this._config = config;
     }
 
-    /** 序列化属性 */
+    /** 序列化属性 @internal */
     public static serializeProps(component: GComponent, packageName: string): void {
         if (!this._config) {
             return;
@@ -45,7 +48,7 @@ export class PropsHelper {
         this.serializationCallbacksNode(component, callbacks);
     }
 
-    /** 给界面中定义的属性赋值 */
+    /** 给界面中定义的属性赋值 @internal */
     private static serializationPropsNode(component: GComponent, props: (string | number)[]) {
         const propsCount = props.length;
         // [name1, len, ...props1, name2, len, ...props2, ...]
@@ -65,6 +68,7 @@ export class PropsHelper {
         }
     }
 
+    /** 给界面中定义的回调赋值 @internal */
     private static serializationCallbacksNode(component: GComponent, callbacks: (string | number)[]) {
         const propsCount = callbacks.length;
         // [name1, len, ...props1, name2, len, ...props2, ...]

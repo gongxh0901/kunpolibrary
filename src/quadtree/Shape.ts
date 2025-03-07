@@ -20,16 +20,16 @@ export abstract class Shape {
     /** 缩放 */
     public scale: number; // 缩放
 
-    /** 脏标记 用来重置包围盒 */
+    /** 脏标记 用来重置包围盒 @internal */
     protected isDirty: boolean;
 
-    /** 包围盒 */
+    /** 包围盒 @internal */
     protected boundingBox: Rect;
 
-    /** 位置 */
+    /** 位置 @internal */
     protected _position: Vec2;
 
-    /** 旋转角度 */
+    /** 旋转角度 @internal */
     protected _rotation: number;
 
     constructor(tag: number) {
@@ -64,6 +64,7 @@ export abstract class Shape {
     /** 包围盒 子类重写 */
     public abstract getBoundingBox(): Rect;
 
+    /** @internal */
     public drawShape(draw: Graphics): void {
 
     }

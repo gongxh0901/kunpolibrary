@@ -8,7 +8,7 @@ import { Component } from "./Component";
  * @Description: 
  */
 export class ECDataHelper {
-    /** 组件池 */
+    /** 组件池 @internal */
     public static _componentPool: ComponentPool = new ComponentPool();
     /** 注册所有组件 */
     public static registerComponents(): void {

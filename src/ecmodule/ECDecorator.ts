@@ -9,6 +9,7 @@ import { ObjectHelper } from "../tool/helper/ObjectHelper";
 
 
 export namespace _ecdecorator {
+    /** @internal */
     const ECPropMeta = "__ecpropmeta__"
 
     type ECPropType = "int" | "float" | "string" | "boolean" | "size" | "vec2" | "vec3" | "color" | "asset" | "spriteframe" | "jsonAsset" | "particle" | "animation" | "audio" | "prefab" | "skeleton" | "enum" | "array" | "object" | "entity";

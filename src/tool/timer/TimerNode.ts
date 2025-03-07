@@ -5,6 +5,7 @@
  */
 import { HeapNode } from "../DataStruct/BinaryHeap";
 
+/** @internal */
 export class TimerNode extends HeapNode {
     /** 定时器ID */
     public id: number;

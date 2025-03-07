@@ -77,6 +77,10 @@ export default [
             file: 'dist/kunpocc.d.ts',
             format: 'es'
         },
-        plugins: [dts()]
+        plugins: [dts({
+            compilerOptions: {
+                stripInternal: true
+            }
+        })]
     }
 ]; 

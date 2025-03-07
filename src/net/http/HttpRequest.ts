@@ -11,7 +11,7 @@ import { IHttpResponse } from "./IHttpResponse";
 export class HttpRequest implements IHttpRequest, IHttpResponse {
     /** 请求方法 */
     public method: HttpRequestMethod;
-    /** xhr实例 */
+    /** xhr实例 @internal */
     private _xhr: XMLHttpRequest;
     /** 请求超时时间 (s) */
     public timeout: number;
@@ -22,7 +22,7 @@ export class HttpRequest implements IHttpRequest, IHttpResponse {
     /** 响应数据 */
     public data: HttpResponseDataType;
 
-    /** 网络事件回调 */
+    /** 网络事件回调 @internal */
     private _callback: (result: "succeed" | "fail", response: IHttpResponse) => void;
 
     /**
@@ -85,18 +85,25 @@ export class HttpRequest implements IHttpRequest, IHttpResponse {
 
     /**
      * 请求中断
-     * 
+     * @internal
      */
     private _onHttpAbort(): void {
         this.message = "request aborted by user";
         this.onError();
     }
 
+    /**
+     * 请求错误
+     * @internal
+     */
     private _onHttpError(): void {
         this.message = "request error";
         this.onError();
     }
 
+    /**
+     * @internal
+     */
     private _onHttpLoad(): void {
         const xhr = this._xhr;
         const status = xhr.status !== undefined ? xhr.status : 200;
@@ -108,6 +115,10 @@ export class HttpRequest implements IHttpRequest, IHttpResponse {
         }
     }
 
+    /**
+     * 请求超时
+     * @internal
+     */
     private _onHttpTimeout(): void {
         this.message = "request timeout";
         this.onError();
@@ -115,6 +126,7 @@ export class HttpRequest implements IHttpRequest, IHttpResponse {
 
     /**
      * 请求发生错误
+     * @internal
      */
     private onError(): void {
         this._callback?.("fail", this);
@@ -123,6 +135,7 @@ export class HttpRequest implements IHttpRequest, IHttpResponse {
 
     /**
      * 请求完成
+     * @internal
      */
     private onComplete(): void {
         try {
@@ -141,6 +154,10 @@ export class HttpRequest implements IHttpRequest, IHttpResponse {
         }
     }
 
+    /**
+     * 清除请求
+     * @internal
+     */
     private _clear(): void {
         this._xhr.onabort = null;
         this._xhr.onerror = null;

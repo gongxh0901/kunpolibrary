@@ -5,12 +5,12 @@ export class ObjectBase {
     /** 对象类型 */
     public objectType: number;
 
-    /** 回收 */
+    /** 回收 @internal */
     public _recycle(): void {
         this.recycled = true;
     }
 
-    /** 重新利用 */
+    /** 重新利用 @internal */
     public _reuse(): void {
         this.recycled = false;
     }

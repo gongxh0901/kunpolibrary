@@ -22,6 +22,7 @@ export class Circle extends Shape {
         return this.boundingBox;
     }
 
+    /** @internal */
     public drawShape(draw: Graphics): void {
         draw && draw.circle(this.position.x, this.position.y, this.radius * this.scale);
     }

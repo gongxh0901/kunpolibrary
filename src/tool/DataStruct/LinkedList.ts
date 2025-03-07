@@ -25,8 +25,11 @@ export class DoublyNode<T> extends LinkedNode<T> {
 
 /** 单向链表 */
 export class LinkedList<T> {
+    /** @internal */
     protected _equalsFn: (a: T, b: T) => boolean;
+    /** @internal */
     protected _count: number;
+    /** @internal */
     protected _head: LinkedNode<T>;
     /**
      * create
@@ -172,7 +175,9 @@ export class LinkedList<T> {
 
 /** 双向链表 */
 export class DoublyLinkedList<T> extends LinkedList<T> {
+    /** @internal */
     protected _head: DoublyNode<T>; // 重新定义 head 类型
+    /** @internal */
     protected _tail: DoublyNode<T>;
     /**
      * create

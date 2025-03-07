@@ -12,7 +12,7 @@ export abstract class ModuleBase extends Component implements IModule {
     /** 模块名称 */
     public moduleName: string;
 
-    /** 模块初始化 (内部使用) */
+    /** 模块初始化 (内部使用) @internal */
     public init(): void { }
 
     /** 模块初始化完成后调用的函数 */

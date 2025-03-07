@@ -19,6 +19,11 @@ export abstract class Decorator extends BaseNode {
  * @extends Decorator
  */
 export class Failer extends Decorator {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(Failer)节点必须包含一个子节点");
@@ -36,7 +41,12 @@ export class Failer extends Decorator {
  * 第一个Child Node节点, 返回 SUCCESS, 本Node向自己的Parent Node也返回 FAILURE
  */
 export class Inverter extends Decorator {
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(Inverter)节点必须包含一个子节点");
         }
@@ -58,9 +68,9 @@ export class Inverter extends Decorator {
  * 次数超过后, 直接返回 FAILURE
  */
 export class LimiterTicks extends Decorator {
-    /** 最大次数 */
+    /** 最大次数 @internal */
     private _maxTicks: number;
-    /** 当前执行过的次数 */
+    /** 当前执行过的次数 @internal */
     private _elapsedTicks: number;
 
     /**
@@ -74,12 +84,21 @@ export class LimiterTicks extends Decorator {
         this._elapsedTicks = 0;
     }
 
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         super.open(ticker);
         this._elapsedTicks = 0;
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(LimiterTicks)节点必须包含一个子节点");
         }
@@ -99,7 +118,7 @@ export class LimiterTicks extends Decorator {
  * 超时后, 直接返回 FAILURE
  */
 export class LimiterTime extends Decorator {
-    /** 最大时间 (毫秒 ms) */
+    /** 最大时间 (毫秒 ms) @internal */
     private _maxTime: number;
 
     /**
@@ -112,13 +131,22 @@ export class LimiterTime extends Decorator {
         this._maxTime = maxTime * 1000;
     }
 
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         super.open(ticker);
         let startTime = new Date().getTime();
         ticker.blackboard.set("startTime", startTime, ticker.tree.id, this.id);
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(LimiterTime)节点必须包含一个子节点");
         }
@@ -142,18 +170,33 @@ export class LimiterTime extends Decorator {
  * 否则等待次数超过之后, 返回Child Node的结果（RUNING的次数不计算在内）
  */
 export class Repeater extends Decorator {
-    maxLoop: number;
+    /** 最大循环次数 @internal */
+    private _maxLoop: number;
 
+    /**
+     * 创建
+     * @param child 子节点
+     * @param maxLoop 最大循环次数
+     */
     constructor(child: BaseNode, maxLoop: number = -1) {
         super(child);
-        this.maxLoop = maxLoop;
+        this._maxLoop = maxLoop;
     }
 
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         ticker.blackboard.set("i", 0, ticker.tree.id, this.id);
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(Repeater)节点必须包含一个子节点");
         }
@@ -162,7 +205,7 @@ export class Repeater extends Decorator {
         let i = ticker.blackboard.get("i", ticker.tree.id, this.id);
         let status = Status.SUCCESS;
 
-        while (this.maxLoop < 0 || i < this.maxLoop) {
+        while (this._maxLoop < 0 || i < this._maxLoop) {
             status = child._execute(ticker);
 
             if (status === Status.SUCCESS || status === Status.FAILURE) {
@@ -185,18 +228,28 @@ export class Repeater extends Decorator {
  * 循环次数大于等于maxLoop时, 返回Child Node的结果
  */
 export class RepeatUntilFailure extends Decorator {
-    maxLoop: number;
+    /** 最大循环次数 @internal */
+    private _maxLoop: number;
 
     constructor(child: BaseNode, maxLoop: number = -1) {
         super(child);
-        this.maxLoop = maxLoop;
+        this._maxLoop = maxLoop;
     }
 
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         ticker.blackboard.set("i", 0, ticker.tree.id, this.id);
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(RepeatUntilFailure)节点必须包含一个子节点");
         }
@@ -205,7 +258,7 @@ export class RepeatUntilFailure extends Decorator {
         let i = ticker.blackboard.get("i", ticker.tree.id, this.id);
         let status = Status.SUCCESS;
 
-        while (this.maxLoop < 0 || i < this.maxLoop) {
+        while (this._maxLoop < 0 || i < this._maxLoop) {
             status = child._execute(ticker);
 
             if (status === Status.SUCCESS) {
@@ -227,17 +280,33 @@ export class RepeatUntilFailure extends Decorator {
  * 循环次数大于等于maxLoop时, 返回Child Node的结果
  */
 export class RepeatUntilSuccess extends Decorator {
+    /** 最大循环次数 @internal */
     private _maxLoop: number;
+
+    /**
+     * 创建
+     * @param child 子节点
+     * @param maxLoop 最大循环次数
+     */
     constructor(child: BaseNode, maxLoop: number = -1) {
         super(child);
         this._maxLoop = maxLoop;
     }
 
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         ticker.blackboard.set("i", 0, ticker.tree.id, this.id);
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(RepeatUntilSuccess)节点必须包含一个子节点");
         }
@@ -262,6 +331,11 @@ export class RepeatUntilSuccess extends Decorator {
  * 直接返回 RUNING
  */
 export class Runner extends Decorator {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(Runner)节点必须包含一个子节点");
@@ -277,6 +351,11 @@ export class Runner extends Decorator {
  * 直接返回 SUCCESS
  */
 export class Succeeder extends Decorator {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         if (this.children.length !== 1) {
             throw new Error("(Succeeder)节点必须包含一个子节点");

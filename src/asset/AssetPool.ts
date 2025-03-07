@@ -9,7 +9,9 @@ import { log } from "../tool/log";
 import { AssetUtils } from "./AssetUtils";
 
 export class AssetPool {
+    /** @internal */
     private static _assets: { [path: string]: Asset } = {};
+    /** @internal */
     private static _uuidToName: Map<string, string> = new Map();
 
     /** 批量添加资源 */
@@ -112,6 +114,10 @@ export class AssetPool {
         this._uuidToName.clear();
     }
 
+    /** 
+     * 获取资源 key
+     * @internal
+     */
     private static getKey(path: string, bundlename: string = "resources"): string {
         return `${bundlename}:${path}`;
     }

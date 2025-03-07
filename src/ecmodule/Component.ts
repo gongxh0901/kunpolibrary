@@ -18,28 +18,28 @@ export abstract class Component extends ObjectBase {
     /** 所属组件管理器 */
     public componentManager: ComponentManager;
 
-    /** 是否需要销毁 */
+    /** 是否需要销毁 @internal */
     public _needDestroy: boolean;
 
-    /** 更新ID */
+    /** 更新ID @internal */
     public _updateId: number = -1;
 
-    /** 是否更新中 */
+    /** 是否更新中 @internal */
     public get _updating(): boolean {
         return this._updateId != -1;
     }
 
-    /** 生命周期函数 添加到实体 */
+    /** 生命周期函数 添加到实体 @internal */
     public _add(): void {
         this.onAdd();
     }
 
-    /** 生命周期函数 销毁 */
+    /** 生命周期函数 销毁 @internal */
     public _destroy(): void {
         this.onDestroy();
     }
 
-    /** 生命周期函数 添加到实体后 在这个函数中可以获取其他组件 */
+    /** 生命周期函数 添加到实体后 在这个函数中可以获取其他组件 @internal */
     public _enter(): void {
         // 自动开启更新
         if (this.needUpdate) {
@@ -48,14 +48,14 @@ export abstract class Component extends ObjectBase {
         this.onEnter();
     }
 
-    /** 生命周期函数 从实体中移除 */
+    /** 生命周期函数 从实体中移除 @internal */
     public _remove(): void {
         this.stopUpdate();
         this.onRemove();
         this.componentManager._destroyComponent(this);
     }
 
-    /** 更新 */
+    /** 更新 @internal */
     public _update(dt: number): void {
         this.onUpdate(dt);
     }

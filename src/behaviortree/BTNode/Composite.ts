@@ -18,12 +18,21 @@ export abstract class Composite extends BaseNode {
  * 任意一个Child Node返回不为 FAILURE, 本Node向自己的Parent Node也返回Child Node状态
  */
 export class MemSelector extends Composite {
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         super.open(ticker);
         ticker.blackboard.set("runningChild", 0, ticker.tree.id, this.id);
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         let childIndex = ticker.blackboard.get("runningChild", ticker.tree.id, this.id) as number;
 
         for (let i = childIndex; i < this.children.length; i++) {
@@ -49,12 +58,21 @@ export class MemSelector extends Composite {
  * 所有节点都返回 SUCCESS, 本节点才返回 SUCCESS
  */
 export class MemSequence extends Composite {
-    open(ticker: Ticker): void {
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
+    public open(ticker: Ticker): void {
         super.open(ticker);
         ticker.blackboard.set("runningChild", 0, ticker.tree.id, this.id);
     }
 
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         let childIndex = ticker.blackboard.get("runningChild", ticker.tree.id, this.id) as number;
         for (let i = childIndex; i < this.children.length; i++) {
             let status = this.children[i]._execute(ticker);
@@ -74,7 +92,12 @@ export class MemSequence extends Composite {
  * 从Child Node中随机选择一个执行
  */
 export class RandomSelector extends Composite {
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         let childIndex = (Math.random() * this.children.length) | 0;
         let child = this.children[childIndex];
         let status = child._execute(ticker);
@@ -89,7 +112,12 @@ export class RandomSelector extends Composite {
  * 如遇到一个Child Node执行后返回 SUCCESS 或者 RUNING，那停止迭代，本Node向自己的Parent Node也返回 SUCCESS 或 RUNING
  */
 export class Selector extends Composite {
-    tick(ticker: Ticker): Status {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
+    public tick(ticker: Ticker): Status {
         for (let i = 0; i < this.children.length; i++) {
             let status = this.children[i]._execute(ticker);
             if (status !== Status.FAILURE) {
@@ -107,6 +135,11 @@ export class Selector extends Composite {
  * 所有节点都返回 SUCCESS, 本节点才返回 SUCCESS
  */
 export class Sequence extends Composite {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         for (let i = 0; i < this.children.length; i++) {
             let status = this.children[i]._execute(ticker);
@@ -126,6 +159,11 @@ export class Sequence extends Composite {
  * 所有节点都返回 SUCCESS, 本节点才返回 SUCCESS
  */
 export class Parallel extends Composite {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         let result = Status.SUCCESS;
         for (let i = 0; i < this.children.length; i++) {
@@ -148,6 +186,11 @@ export class Parallel extends Composite {
  * 否则返回 RUNNING
  */
 export class ParallelAnySuccess extends Composite {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         let result = Status.RUNNING;
         for (let i = 0; i < this.children.length; i++) {

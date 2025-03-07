@@ -18,23 +18,38 @@ export class Ticker {
         this.blackboard = blackboard;
     }
 
-    /** 进入节点 */
-    enterNode(node: BaseNode): void {
+    /**
+     * 进入节点
+     * @param node 节点
+     */
+    public enterNode(node: BaseNode): void {
         this.nodeCount++;
         this.openNodes.push(node);
     }
 
-    /** 打开节点 */
-    openNode(node: BaseNode): void { }
+    /**
+     * 打开节点
+     * @param node 节点
+     */
+    public openNode(node: BaseNode): void { }
 
-    /** 更新节点 */
-    tickNode(node: BaseNode): void { }
+    /**
+     * 更新节点
+     * @param node 节点
+     */
+    public tickNode(node: BaseNode): void { }
 
-    /** 关闭节点 */
-    closeNode(node: BaseNode): void {
+    /**
+     * 关闭节点
+     * @param node 节点
+     */
+    public closeNode(node: BaseNode): void {
         this.openNodes.pop();
     }
 
-    /** 退出节点 */
-    exitNode(node: BaseNode): void { }
+    /**
+     * 退出节点
+     * @param node 节点
+     */
+    public exitNode(node: BaseNode): void { }
 }

@@ -11,8 +11,11 @@ export abstract class HeapNode {
 
 
 export class BinaryHeap<T extends HeapNode> {
+    /** @internal */
     private _nodes: Array<T>;
+    /** @internal */
     private _size: number;
+    /** @internal */
     private _capacity: number;
 
     constructor(capacity: number) {
@@ -132,6 +135,7 @@ export class BinaryHeap<T extends HeapNode> {
         return true;
     }
 
+    /** @internal */
     private _parent(index: number): number {
         return (index - 1) >> 1;
     }
@@ -144,6 +148,7 @@ export class BinaryHeap<T extends HeapNode> {
         return this._size == 0;
     }
 
+    /** @internal */
     private _sortUp(node: T, index: number): void {
         let parentIndex = this._parent(index);
         const nodes = this._nodes;
@@ -159,6 +164,7 @@ export class BinaryHeap<T extends HeapNode> {
         nodes[index] = node;
     }
 
+    /** @internal */
     private _sortDown(node: T, index: number): void {
         let childIndex = (index << 1) + 1;
         const nodes = this._nodes;

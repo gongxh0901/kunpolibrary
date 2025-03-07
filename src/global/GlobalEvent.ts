@@ -7,6 +7,7 @@
 import { EventManager } from "../event/EventManager";
 
 export class GlobalEvent {
+    /** @internal */
     private static _globalEvent: EventManager = null;
     public static add(eventName: string, callback: (...args: any[]) => void, target: any): void {
         this._globalEvent.addEvent(eventName, callback, target);
@@ -36,6 +37,7 @@ export class GlobalEvent {
         this._globalEvent.removeList(target);
     }
 
+    /** @internal */
     public static _initGlobalEvent(): void {
         if (!this._globalEvent) {
             this._globalEvent = new EventManager();

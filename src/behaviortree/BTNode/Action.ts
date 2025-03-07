@@ -17,12 +17,18 @@ export abstract class Action extends BaseNode {
  * 直接返回FAILURE
  */
 export class Failure extends Action {
+    /** 执行函数 @internal */
     private _func: () => void;
     constructor(func: () => void) {
         super();
         this._func = func;
     }
 
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         this._func();
         return Status.FAILURE;
@@ -34,12 +40,18 @@ export class Failure extends Action {
  * 直接返回RUNING
  */
 export class Running extends Action {
+    /** 执行函数 @internal */
     private _func: () => void;
     constructor(func: () => void) {
         super();
         this._func = func;
     }
 
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         this._func();
         return Status.RUNNING;
@@ -51,12 +63,18 @@ export class Running extends Action {
  * 直接返回SUCCESS
  */
 export class Success extends Action {
+    /** 执行函数 @internal */
     private _func: () => void;
     constructor(func: () => void) {
         super();
         this._func = func;
     }
 
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         this._func();
         return Status.SUCCESS;
@@ -68,9 +86,9 @@ export class Success extends Action {
  * 超次，返回SUCCESS
  */
 export class WaitTicks extends Action {
-    /** 最大次数 */
+    /** 最大次数 @internal */
     private _maxTicks: number;
-    /** 经过的次数 */
+    /** 经过的次数 @internal */
     private _elapsedTicks: number;
     constructor(maxTicks: number = 0) {
         super();
@@ -78,10 +96,19 @@ export class WaitTicks extends Action {
         this._elapsedTicks = 0;
     }
 
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
     public open(ticker: Ticker): void {
         this._elapsedTicks = 0;
     }
 
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         if (++this._elapsedTicks >= this._maxTicks) {
             this._elapsedTicks = 0;
@@ -96,18 +123,27 @@ export class WaitTicks extends Action {
  * 时间到后返回SUCCESS，否则返回RUNING
  */
 export class WaitTime extends Action {
-    /** 等待时间(毫秒 ms) */
+    /** 等待时间(毫秒 ms) @internal */
     private _duration: number;
     constructor(duration: number = 0) {
         super();
         this._duration = duration * 1000;
     }
 
+    /**
+     * 打开
+     * @param {Ticker} ticker 
+     */
     public open(ticker: Ticker): void {
         let startTime = new Date().getTime();
         ticker.blackboard.set("startTime", startTime, ticker.tree.id, this.id);
     }
 
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         let currTime = new Date().getTime();
         let startTime = ticker.blackboard.get("startTime", ticker.tree.id, this.id);
@@ -124,6 +160,11 @@ export class WaitTime extends Action {
  * 和 InterruptDefendCancel 必须成对出现
  */
 export class InterruptDefend extends Action {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         ticker.blackboard.interruptDefend = true;
         return Status.SUCCESS;
@@ -136,6 +177,11 @@ export class InterruptDefend extends Action {
  * 和 InterruptDefend 必须成对出现
  */
 export class InterruptDefendCancel extends Action {
+    /**
+     * 执行
+     * @param {Ticker} ticker 
+     * @returns {Status} 
+     */
     public tick(ticker: Ticker): Status {
         ticker.blackboard.interruptDefend = false;
         return Status.SUCCESS;

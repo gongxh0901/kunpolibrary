@@ -44,4 +44,27 @@ export class MathTool {
         }
         return out;
     }
+
+    /**
+     * 内部使用的辅助方法，用于计算平滑过渡的因子
+     * @internal
+     */
+    public static calculateSmoothFactor(elapsedTime: number, responseTime: number): number {
+        return elapsedTime / (elapsedTime + responseTime);
+    }
+
+    /**
+     * 内部使用的工具方法，不应该在库外部使用
+     * @internal
+     */
+    public static internalRoundToDecimal(value: number, decimals: number): number {
+        const factor = Math.pow(10, decimals);
+        return Math.round(value * factor) / factor;
+    }
+
+    /**
+     * 内部使用的辅助常量
+     * @internal
+     */
+    public static readonly INTERNAL_EPSILON = 0.00001;
 }

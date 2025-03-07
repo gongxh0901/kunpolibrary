@@ -24,28 +24,34 @@ export interface HeaderInfo {
     pkg: string;
 }
 
+/** @internal */
 export class WindowResPool {
-    /** 窗口信息池 */
+    /** 窗口信息池 @internal */
     protected _windowInfos: Map<string, WindowInfo> = new Map<string, any>();
-    /** 窗口header信息池 */
+    /** 窗口header信息池 @internal */
     protected _headerInfos: Map<string, HeaderInfo> = new Map<string, any>();
 
-    /** 是否设置过配置内容 */
+    /** 是否设置过配置内容 @internal */
     private _isInit: boolean = false;
-    /** 窗口名对应的包名列表 */
+    /** 窗口名对应的包名列表 @internal */
     private _windowPkgs: Map<string, string[]> = new Map();
-    /** 包的引用计数 */
+    /** 包的引用计数 @internal */
     private _pkgRefs: { [pkg: string]: number } = {};
+    /** UI包路径 @internal */
     private _uipath: string = "";
+    /** 手动管理的包 @internal */
     private _manualPackages: Set<string> = new Set();
+    /** 立即释放的包 @internal */
     private _imReleasePackages: Set<string> = new Set();
 
-    /** 注册的回调函数 */
+    /** 注册的回调函数 @internal */
     private _showWaitWindow: () => void = null;
+    /** 隐藏等待窗口的回调函数 @internal */
     private _hideWaitWindow: () => void = null;
+    /** 加载失败回调函数 @internal */
     private _fail: (windowName: string, errmsg: string, pkgs: string[]) => void = null;
 
-    /** 等待窗口的引用计数 */
+    /** 等待窗口的引用计数 @internal */
     private _waitRef: number = 0;
 
     /**

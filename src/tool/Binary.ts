@@ -80,6 +80,7 @@ export class Binary {
      * @param view DataView对象
      * @param offset 当前偏移量
      * @returns 下一个数据的偏移量
+     * @internal
      */
     private static validateBinaryFormat(view: DataView, offset: number): number {
         const type = view.getUint8(offset);
@@ -118,6 +119,7 @@ export class Binary {
         }
     }
 
+    /** @internal */
     private static readValue(view: DataView, offset: number): any {
         const type = view.getUint8(offset++);
 
@@ -166,6 +168,7 @@ export class Binary {
         }
     }
 
+    /** @internal */
     private static writeValue(value: any, chunks: Uint8Array[]): void {
         if (value === null) {
             chunks.push(new Uint8Array([0]));
@@ -235,6 +238,7 @@ export class Binary {
         }
     }
 
+    /** @internal */
     private static getNextOffset(view: DataView, offset: number): number {
         const type = view.getUint8(offset);
         switch (type) {

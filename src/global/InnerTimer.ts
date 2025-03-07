@@ -5,6 +5,7 @@
  */
 import { Timer } from "../tool/timer/Timer";
 
+/** @internal */
 export class InnerTimer {
     private static _timer: Timer = null;
     /**

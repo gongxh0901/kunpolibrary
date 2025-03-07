@@ -4,6 +4,11 @@ export const enum Status {
     RUNNING,
 }
 
+/**
+ * 创建UUID
+ * @returns UUID
+ * @internal
+ */
 export function createUUID(): string {
     let s: string[] = Array(36);
     let hexDigits = "0123456789abcdef";

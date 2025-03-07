@@ -7,7 +7,7 @@
 export class WindowHeaderInfo {
     /** header名字 */
     name: string;
-    /** 自定义数据 用于Header窗口 onShow方法的自定义参数 */
+    /** 自定义数据 用于Header窗口 onShow方法的自定义参数 @internal */
     userdata: any;
 
     /**

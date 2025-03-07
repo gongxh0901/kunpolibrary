@@ -21,9 +21,9 @@ interface IWorldConfig {
 }
 
 export class ECManager {
-    /** 实体管理器 */
+    /** 实体管理器 @internal */
     private static _worlds: Map<string, IWorldConfig> = new Map();
-    /** 实体配置信息 */
+    /** 实体配置信息 @internal */
     private static _entityList: { [name: string]: Record<string, any> } = {};
 
     /** 注册所有组件 如果GameEntry因分包导致，组件的代码注册晚于 CocosEntry的 onInit函数, 则需要在合适的时机手动调用此方法 */
@@ -130,6 +130,13 @@ export class ECManager {
         return entity;
     }
 
+    /**
+     * 添加组件到实体
+     * @param {EntityManager} world 实体管理器
+     * @param {Entity} entity 实体
+     * @param {Record<string, any>} componentsData 组件数据
+     * @internal
+     */
     private static _addComponentToEntity(world: EntityManager, entity: Entity, componentsData: Record<string, any>): void {
         for (const componentName in componentsData) {
             let component = world.createComponent(componentName);

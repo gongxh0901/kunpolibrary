@@ -1,6 +1,7 @@
 import { DoublyLinkedList } from "./LinkedList";
 
 export class Stack<T> {
+    /** @internal */
     private _items: DoublyLinkedList<T>;
     constructor(equalsFn?: (a: T, b: T) => boolean) {
         this._items = new DoublyLinkedList<T>(equalsFn);

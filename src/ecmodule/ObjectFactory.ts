@@ -1,5 +1,6 @@
 import { ObjectBase } from "./ObjectBase";
 
+/** @internal */
 export class ObjectFactory {
     /** 对象类 */
     private _ctor: new () => ObjectBase;

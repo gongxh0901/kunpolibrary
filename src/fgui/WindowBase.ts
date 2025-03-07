@@ -19,13 +19,15 @@ export abstract class WindowBase extends GComponent implements IWindow {
     public adapterType: AdapterType = AdapterType.Full;
     /** 底部遮罩的透明度 */
     public bgAlpha: number;
-    /** header (内部使用) */
+    /** header (内部使用) @internal */
     private _header: IWindowHeader = null;
-    /** 窗口是否被遮挡了 */
+    /** 窗口是否被遮挡了 @internal */
     private _isCover: boolean = false;
     /**
      * 初始化方法 (框架内部使用)
      * @param swallowTouch 是否吞噬触摸事件
+     * @param bgAlpha 底部遮罩的透明度
+     * @internal
      */
     public _init(swallowTouch: boolean, bgAlpha: number): void {
         if (swallowTouch) {
@@ -46,6 +48,10 @@ export abstract class WindowBase extends GComponent implements IWindow {
         this.onInit();
     }
 
+    /**
+     * 适配窗口
+     * @internal
+     */
     public _adapted(): void {
         this.setPosition(Screen.ScreenWidth * 0.5, Screen.ScreenHeight * 0.5);
         this.setPivot(0.5, 0.5, true);
@@ -64,6 +70,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
 
     /** 
      * 窗口关闭 (框架内部使用)
+     * @internal
      */
     public _close(): void {
         this.onClose();
@@ -72,6 +79,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
     /**
      * 显示窗口 (框架内部使用)
      * @param userdata 用户自定义数据
+     * @internal
      */
     public _show(userdata?: any): void {
         this.visible = true;
@@ -79,6 +87,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
     }
     /** 
      * 隐藏窗口 (框架内部使用)
+     * @internal
      */
     public _hide(): void {
         this.visible = false;
@@ -86,6 +95,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
     }
     /**
      * 从隐藏状态恢复显示
+     * @internal
      */
     public _showFromHide(): void {
         this.visible = true;
@@ -94,6 +104,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
 
     /**
      * 遮挡窗口 被同组或者不同组的其他窗口覆盖 (框架内部使用)
+     * @internal
      */
     public _cover(): void {
         this._isCover = true;
@@ -101,12 +112,18 @@ export abstract class WindowBase extends GComponent implements IWindow {
     }
     /**
      * 遮挡恢复窗口 被同组或者不同组的其他窗口覆盖恢复 (框架内部使用)
+     * @internal
      */
     public _recover(): void {
         this._isCover = false;
         this.onRecover();
     }
 
+    /**
+     * 设置窗口深度
+     * @param depth 深度
+     * @internal
+     */
     public _setDepth(depth: number): void {
         this.parent.setChildIndex(this, depth);
     }
@@ -119,6 +136,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
         return this._isCover;
     }
 
+    /** @internal */
     public screenResize(): void {
         this._adapted();
     }
@@ -135,6 +153,7 @@ export abstract class WindowBase extends GComponent implements IWindow {
         return this._header as T;
     }
 
+    /** @internal */
     public _setHeader<T extends IWindowHeader>(header: T): void {
         this._header = header;
     }

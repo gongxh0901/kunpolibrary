@@ -4,7 +4,7 @@
  * @Description: 条件装饰器
  */
 export namespace _conditionDecorator {
-    /** 用来存储条件注册信息 */
+    /** 用来存储条件注册信息 @internal */
     const cdClassMap: Map<number, any> = new Map();
 
     /** 获取组件注册信息 */

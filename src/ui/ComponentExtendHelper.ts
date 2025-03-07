@@ -19,6 +19,7 @@ export class ComponentExtendHelper {
     /**
      * 注册自定义组件信息
      * @param info 
+     * @internal
      */
     private static registerComponent(ctor: any, pkg: string, name: string): void {
         // 自定义组件扩展

@@ -13,6 +13,7 @@ export class CocosAdapter extends Adapter {
     /**
      * 获取屏幕像素尺寸
      * @returns {size}
+     * @internal
      */
     protected getScreenSize(): size {
         let windowSize = ccScreen.windowSize;
@@ -24,6 +25,7 @@ export class CocosAdapter extends Adapter {
     /**
      * 获取设计尺寸
      * @returns {size}
+     * @internal
      */
     protected getDesignSize(): size {
         let designSize = view.getDesignResolutionSize();
@@ -32,7 +34,8 @@ export class CocosAdapter extends Adapter {
 
     /**
      * 设置尺寸发生变化的监听
-     * @param callback 
+     * @param callback 回调
+     * @internal
      */
     protected registerResizeCallback(callback: (...args: any) => void): void {
         ccScreen.on("window-resize", (...args: any) => {

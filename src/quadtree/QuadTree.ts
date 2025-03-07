@@ -50,11 +50,17 @@ export const QTConfig = {
 }
 
 export class QuadTree {
+    /** @internal */
     private _draw: Graphics;
+    /** @internal */
     private _shapes_map: Map<number, Shape[]>; // 根据类型存储形状对象
+    /** @internal */
     private _trees: QuadTree[] = []; // 存储四个子节点
+    /** @internal */
     private _level: number; // 树的深度
+    /** @internal */
     private _bounds: Rect; // 树的外框
+    /** @internal */
     private _ignore_shapes: Shape[] = []; // 不在树中的形状
     /**
      * 创建一个四叉树
@@ -107,6 +113,7 @@ export class QuadTree {
         }
     }
 
+    /** @internal */
     private _insert(shape: Shape): void {
         if (!this._shapes_map.has(shape.tag)) {
             this._shapes_map.set(shape.tag, []);
@@ -177,7 +184,7 @@ export class QuadTree {
         this._trees.length = 0;
     }
 
-    /** 当前形状是否包含在象限内 */
+    /** 当前形状是否包含在象限内 @internal */
     private _isInner(shape: Shape, bounds: Rect): boolean {
         let rect = shape.getBoundingBox();
         return (
@@ -195,6 +202,7 @@ export class QuadTree {
      * 左上：象限二
      * 左下：象限三
      * 右下：象限四
+     * @internal
      */
     private _getQuadrant(shape: Shape): Quadrant {
         let bounds = this._bounds;
@@ -226,6 +234,7 @@ export class QuadTree {
      * 如果某一个象限（节点）内存储的物体数量超过了MAX_OBJECTS最大数量
      * 则需要对这个节点进行划分
      * 它的工作就是将一个象限看作一个屏幕，将其划分为四个子象限
+     * @internal
      */
     private _split(): void {
         let bounds = this._bounds;
@@ -242,7 +251,7 @@ export class QuadTree {
         );
     }
 
-    /** 删除子树 */
+    /** 删除子树 @internal */
     private _removeChildTree(): void {
         if (this._trees.length > 0) {
             if (this._totalSize() <= 0) {
@@ -251,7 +260,7 @@ export class QuadTree {
         }
     }
 
-    /** 更新忽略掉的形状 */
+    /** 更新忽略掉的形状 @internal */
     private _updateIgnoreShapes(root: QuadTree): void {
         let len = this._ignore_shapes.length;
         if (len <= 0) {
@@ -270,7 +279,7 @@ export class QuadTree {
         }
     }
 
-    /** 更新有效的形状 */
+    /** 更新有效的形状 @internal */
     private _updateShapes(root: QuadTree): void {
         for (const shapes of this._shapes_map.values()) {
             let len = shapes.length;
@@ -295,7 +304,7 @@ export class QuadTree {
         }
     }
 
-    /** 当前树以及子树中所有的形状数量 */
+    /** 当前树以及子树中所有的形状数量 @internal */
     private _totalSize(): number {
         let size = this._size();
         for (const tree of this._trees) {
@@ -304,6 +313,7 @@ export class QuadTree {
         return size;
     }
 
+    /** 当前树中所有的形状数量 @internal */
     private _size(): number {
         let size = 0;
         for (const shapes of this._shapes_map.values()) {
@@ -312,7 +322,7 @@ export class QuadTree {
         return size + this._ignore_shapes.length;
     }
 
-    /** 画出当前树的边界 */
+    /** 画出当前树的边界 @internal */
     private _drawTreeBound(root: QuadTree): void {
         if (!this._draw) {
             return;
@@ -335,6 +345,7 @@ export class QuadTree {
         }
     }
 
+    /** 清除绘制 @internal */
     private _strokeClear(): void {
         this._draw && this._draw.clear();
     }

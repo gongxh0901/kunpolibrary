@@ -9,8 +9,11 @@
  */
 import { Stack } from "../tool/DataStruct/Stack";
 
+/** 实体索引位数 @internal */
 export const EntityIndexBits = 16;
+/** 实体索引掩码 @internal */
 export const EntityIndexMask = (1 << EntityIndexBits) - 1;
+/** 最大实体数量 @internal */
 export const MaxEntityCount = 1 << EntityIndexBits;
 export type EntityId = number;
 
@@ -18,6 +21,7 @@ export type EntityId = number;
  * 2进制转10进制 (不支持小数和负数)
  * @param {number} bitNumber 二进制数
  * @return {number} 十进制数
+ * @internal
  */
 export function bit2Decimal(bitNumber: number): number {
     let bitString = String(bitNumber);
@@ -34,6 +38,7 @@ export function bit2Decimal(bitNumber: number): number {
  * 10进制转2进制 (不支持小数和负数)
  * @param {number} num 十进制数
  * @return {number} 二进制数
+ * @internal
  */
 export function decimal2Bit(num: number): number {
     let stack = new Stack<number>();
@@ -54,6 +59,8 @@ export function decimal2Bit(num: number): number {
 /**
  * 通过实体id获取实体index
  * @param id 实体id
+ * @return {number} 实体index
+ * @internal
  */
 export function getEntityIndex(id: EntityId): number {
     return id & EntityIndexMask;
@@ -61,7 +68,9 @@ export function getEntityIndex(id: EntityId): number {
 
 /**
  * 通过实体id获取实体版本
- * @param id
+ * @param id 实体id
+ * @return {number} 实体版本
+ * @internal
  */
 export function getEntityVersion(id: EntityId): number {
     return id >>> EntityIndexBits;
@@ -70,6 +79,8 @@ export function getEntityVersion(id: EntityId): number {
 /**
  * 实体描述
  * @param id 实体id
+ * @return {string} 实体描述
+ * @internal
  */
 export function entityIdString(id: EntityId): string {
     return `${getEntityIndex(id)}:${getEntityVersion(id)}`;

@@ -7,10 +7,12 @@
 import { Timer } from "../tool/timer/Timer";
 
 export class GlobalTimer {
+    /** @internal */
     private static _timer: Timer = null;
     /**
      * 初始化全局定时器，设置定时器间隔为16毫秒。
      * 此方法用于启动一个定时器实例，以便在整个应用程序中跟踪时间相关的操作。
+     * @internal
      */
     public static initTimer(): void {
         this._timer = new Timer(16);
@@ -19,6 +21,7 @@ export class GlobalTimer {
     /**
      * 获取全局定时器实例。如果定时器尚未初始化，则进行初始化。
      * @returns {Timer} 全局定时器实例
+     * @internal
      */
     public static get Timer(): Timer {
         if (this._timer) {
@@ -70,6 +73,11 @@ export class GlobalTimer {
         this.Timer.clear();
     }
 
+    /**
+     * 更新定时器
+     * @param dt - 时间间隔
+     * @internal
+     */
     public static update(dt: number): void {
         this._timer?.update(dt);
     }

@@ -8,9 +8,13 @@ import { Event } from "./Event";
 import { EventFactory } from "./EventFactory";
 
 export class EventManager {
+    /** @internal */
     private _idToEvent: Map<number, Event> = new Map<number, Event>();
+    /** @internal */
     private _nameToIds: Map<string, Set<number>> = new Map<string, Set<number>>();
+    /** @internal */
     private _targetToIds: Map<any, Set<number>> = new Map<any, Set<number>>();
+    /** @internal */
     private _factroy: EventFactory = new EventFactory(64, Event);
     /**
      * 添加事件监听器。
@@ -158,6 +162,7 @@ export class EventManager {
         this._targetToIds.clear();
     }
 
+    /** @internal */
     public _addEvent(name: string, callback: (...arg: any[]) => void, once: boolean, target: any): void {
         let listener = this._factroy.allocate<Event>();
         listener.name = name;
@@ -188,6 +193,7 @@ export class EventManager {
         }
     }
 
+    /** @internal */
     private _remove(id: number): void {
         if (!this._idToEvent.has(id)) {
             return;

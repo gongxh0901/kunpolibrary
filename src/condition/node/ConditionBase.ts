@@ -7,7 +7,7 @@
 import { ConditionManager } from "../ConditionManager";
 
 export abstract class ConditionBase {
-    /** 初始化 */
+    /** 初始化 @internal */
     public _init(): void {
         this.onInit();
     }
@@ -15,6 +15,7 @@ export abstract class ConditionBase {
     /** 条件类型 */
     public type: number;
 
+    /** 是否可以通知 @internal */
     private _canNotify: boolean;
     /**
      * 是否可以通知

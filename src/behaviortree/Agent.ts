@@ -4,8 +4,11 @@ import { Ticker } from "./Ticker";
 
 /** 代理 */
 export class Agent {
+    /** 行为树 */
     public tree: BehaviorTree;
+    /** 黑板 */
     public blackboard: Blackboard;
+    /** 更新器 */
     public ticker: Ticker;
     /**
      * constructor
@@ -18,6 +21,9 @@ export class Agent {
         this.ticker = new Ticker(subject, this.blackboard, tree);
     }
 
+    /**
+     * 执行
+     */
     public tick(): void {
         this.tree.tick(this, this.blackboard, this.ticker);
         if (this.blackboard.interrupt) {

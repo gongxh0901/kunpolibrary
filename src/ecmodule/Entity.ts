@@ -51,8 +51,8 @@ export class Entity {
 
     /**
      * 实体被添加到EntityManager
+     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     public _add(): void {
         this.active = true;
         for (const component of this.components.values()) {
@@ -62,9 +62,8 @@ export class Entity {
 
     /**
      * 实体销毁，不要手动调用
-     * @memberof Entity
+     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     public _destroy(): void {
         this.removeAllComponents();
         this.tags && this.tags.clear();

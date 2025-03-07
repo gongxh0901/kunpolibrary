@@ -83,6 +83,7 @@ export class Polygon extends Shape {
         }
     }
 
+    /** @internal */
     public drawShape(draw: Graphics): void {
         if (draw) {
             let points = this.points;

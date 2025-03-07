@@ -80,6 +80,7 @@ export class HttpManager {
      * @param {IHttpEvent} netEvent 网络事件
      * @param {any[]} headers 请求头 [key1, value1, key2, value2, ...] 形式
      * @param {number} timeout (单位s) 请求超时时间 默认0 (0表示不超时)
+     * @internal
      */
     private static _send(method: HttpRequestMethod, url: string, data: any, responseType: HttpResponseType, netEvent?: IHttpEvent, headers?: any[], timeout?: number): HttpRequest {
         let http = new HttpRequest()

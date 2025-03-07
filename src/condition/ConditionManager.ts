@@ -9,20 +9,20 @@ import { ConditionMode } from "./ConditionMode";
 import { ConditionBase } from "./node/ConditionBase";
 import { ConditionNode } from "./node/ConditionNode";
 export class ConditionManager {
-    /** 注册的 条件类型对应条件的信息 */
+    /** 注册的 条件类型对应条件的信息 @internal */
     private static readonly _typeToCondition: Map<number, ConditionBase> = new Map<number, ConditionBase>();
 
-    /** 条件类型 对应 条件节点 */
+    /** 条件类型 对应 条件节点 @internal */
     private static readonly _typeToNotifyNodes: Map<number, Set<ConditionNode>> = new Map<number, Set<ConditionNode>>();
-    /** 条件节点 对应 条件类型 */
+    /** 条件节点 对应 条件类型 @internal */
     private static readonly _nodeToConditionTypes: Map<ConditionNode, Set<number>> = new Map<ConditionNode, Set<number>>();
 
-    /** 需要更新的条件 */
+    /** 需要更新的条件 @internal */
     private static readonly _needUpdateConditions: Set<ConditionBase> = new Set<ConditionBase>();
-    /** 需要更新的节点 */
+    /** 需要更新的节点 @internal */
     private static readonly _needUpdateNodes: Set<ConditionNode> = new Set<ConditionNode>();
 
-    /** 是否正在更新 */
+    /** 是否正在更新 @internal */
     private static _updating: boolean = false;
 
     /** 初始化所有条件，并全部更新一次 */
@@ -44,6 +44,7 @@ export class ConditionManager {
     /**
      * 添加条件
      * @param {IConditionBase} condition 条件
+     * @internal
      */
     private static _addCondition(condition: ConditionBase): void {
         if (this._updating) {
@@ -54,7 +55,10 @@ export class ConditionManager {
         this._needUpdateConditions.add(condition);
     }
 
-
+    /**
+     * 刷新所有条件
+     * @internal
+     */
     private static _refreshAllConditions(): void {
         let allCondition = this._typeToCondition;
         for (const condition of allCondition.values()) {
@@ -65,6 +69,7 @@ export class ConditionManager {
     /**
      * 添加到更新列表中
      * @param conditionType 条件类型
+     * @internal
      */
     public static _addUpdateCondition(conditionType: number): void {
         if (this._updating) {
@@ -81,6 +86,7 @@ export class ConditionManager {
      * 添加条件节点
      * @param notifyNode 条件节点
      * @param conditionType 条件类型
+     * @internal
      */
     public static _addConditionNode(conditionNode: ConditionNode, conditionType: number): void {
         const condition = this._typeToCondition.get(conditionType);
@@ -108,6 +114,7 @@ export class ConditionManager {
      * 移除条件节点
      * @param conditionNode 条件节点
      * @param conditionType 条件类型
+     * @internal
      */
     public static _removeConditionNode(conditionNode: ConditionNode): void {
         let types = this._nodeToConditionTypes.get(conditionNode);
@@ -121,12 +128,16 @@ export class ConditionManager {
     /**
      * 立即更新条件节点（内部使用）
      * @param conditionNode 条件节点
+     * @internal
      */
     public static _nowUpdateConditionNode(conditionNode: ConditionNode): void {
         this._tryUpdateConditionNode(conditionNode);
     }
 
-    /** 更新函数（内部使用）*/
+    /**
+     * 更新函数（内部使用）
+     * @internal
+     */
     public static _update(): void {
         this._updating = true;
         // 更新条件
@@ -150,7 +161,8 @@ export class ConditionManager {
 
     /**
      * 更新条件节点，如果状态改变，收集需要更新的通知节点(内部使用)
-     * @param {ConditionNode} conditionNode 条件节点
+     * @param {ConditionBase} condition 条件
+     * @internal
      */
     private static _tryUpdateCondition(condition: ConditionBase): void {
         // 更新条件
@@ -172,6 +184,7 @@ export class ConditionManager {
     /**
      * 更新条件节点(内部使用)
      * @param {ConditionNode} conditionNode 条件节点
+     * @internal
      */
     private static _tryUpdateConditionNode(conditionNode: ConditionNode): void {
         if (!this._nodeToConditionTypes.has(conditionNode)) {

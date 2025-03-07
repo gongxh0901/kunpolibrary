@@ -16,12 +16,14 @@ export class EntityManager {
     /**
      * 单例实体
      * @type {Entity}
+     * @internal
      */
     public readonly insEntity: Entity = new Entity();
 
     /**
      * 单例实体激活状态
      * @type {boolean}
+     * @internal
      */
     public insActive: boolean = false;
 
@@ -34,30 +36,32 @@ export class EntityManager {
     /**
      * 普通实体事件容器
      * @type {EventManager}
+     * @internal
      */
     private _eventManager: EventManager;
 
     /**
      * 单例实体消息监听容器
      * @type {EventManager}
+     * @internal
      */
     private _insEventManager: EventManager;
 
-    /** 实体池 */
+    /** 实体池 @internal */
     private readonly _entityPool: Entity[] = [];
-    /** tag标记池 */
+    /** tag标记池 @internal */
     private readonly _tagToEntity: Map<number, Set<EntityId>> = new Map<number, Set<EntityId>>();
-    /** 实体回收池 */
+    /** 实体回收池 @internal */
     private _recyclePool: Entity[] = [];
-    /** 实体回收池最大容量 */
+    /** 实体回收池最大容量 @internal */
     private _maxCapacityInPool: number;
-    /** 实体回收版本 */
+    /** 实体回收版本 @internal */
     private _entityVersion: number[] = [];
-    /** 回收实体ID */
+    /** 回收实体ID @internal */
     private _recycleEntityIds: EntityId[] = [];
-    /** 世界是否删除 */
+    /** 世界是否删除 @internal */
     private _isDestroyed: boolean;
-    /** 是否正在更新 */
+    /** 是否正在更新 @internal */
     private _updating: boolean;
     /**
      * 实体池最大容量，回收的多余的实体不会缓存
@@ -67,7 +71,6 @@ export class EntityManager {
      * @param {number} [maxCapacityInPool=128] 实体回收池最大容量
      * @param {number} [preloadEntityCount=32] 预加载Entity数量
      */
-    // eslint-disable-next-line prettier/prettier
     constructor(name: string, componentPool: ComponentPool, componentUpdateOrderList: number[], maxCapacityInPool: number = 128, preloadEntityCount: number = 32) {
         this.name = name;
         if (preloadEntityCount >= MaxEntityCount) {
@@ -90,8 +93,8 @@ export class EntityManager {
      * 添加实体标签（内部使用）
      * @param {EntityId} entityId 实体Id
      * @param {number} tag 标签
+     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     public _addEntityTag(entityId: EntityId, tag: number): void {
         this._validateEntityById(entityId);
         let entitiesByTag = this._tagToEntity.get(tag);
@@ -106,8 +109,8 @@ export class EntityManager {
      * 删除实体Tag（内部使用）
      * @param {Entity} entity 实体
      * @param {number} tag 标签
+     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     public _removeEntityTag(entity: Entity, tag: number): void {
         this._removeEntityTagById(entity.id, tag);
     }
@@ -116,8 +119,8 @@ export class EntityManager {
      * 通过实体ID删除实体Tag（内部使用）
      * @param {EntityId} entityId 实体Id
      * @param {number} tag 标签
+     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     public _removeEntityTagById(entityId: EntityId, tag: number): void {
         this._validateEntityById(entityId);
         const entitiesByTag = this._tagToEntity.get(tag);
@@ -331,6 +334,7 @@ export class EntityManager {
      * @param callback 事件回调
      * @param entityId 实体ID
      * @param once 是否单次事件
+     * @internal
      */
     public _addEvent(eventName: string, callback: (...args: any[]) => void, entity: Entity, once: boolean = false): void {
         if (entity == this.insEntity) {
@@ -347,6 +351,7 @@ export class EntityManager {
      * @param eventName 消息名
      * @param entityId 实体ID
      * @param args 发送参数
+     * @internal
      */
     public _sendEvent(eventName: string, entity: Entity, ...args: any[]): void {
         if (entity == this.insEntity) {
@@ -356,6 +361,13 @@ export class EntityManager {
         this._eventManager && this._eventManager.send(eventName, entity, ...args);
     }
 
+    /**
+     * 移除消息监听 (内部使用)
+     * @param eventName 消息名
+     * @param entity 实体
+     * @param callback 事件回调
+     * @internal
+     */
     public _removeEvent(eventName: string, entity: Entity, callback?: (...args: any[]) => void): void {
         if (entity == this.insEntity) {
             this._insEventManager && this._insEventManager.remove(eventName, callback, entity);
@@ -364,7 +376,10 @@ export class EntityManager {
         this._eventManager && this._eventManager.remove(eventName, callback, entity);
     }
 
-    /** 更新 */
+    /**
+     * 更新
+     * @param {number} dt 时间间隔
+     */
     public update(dt: number): void {
         this._updating = true;
         this.componentManager._update(dt);
@@ -374,6 +389,7 @@ export class EntityManager {
     /**
      * 回收Entity
      * @param {Entity} entity 要回收的Entity
+     * @internal
      */
     private _recycleEntity(entity: Entity): void {
         // 回收实体Id
@@ -388,8 +404,8 @@ export class EntityManager {
     /**
      * 销毁实体
      * @param {Entity} entity
+     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     private _destroyEntity(entity: Entity): void {
         entity._destroy();
         if (this._recyclePool.length < this._maxCapacityInPool) {
@@ -400,6 +416,7 @@ export class EntityManager {
     /**
      * 实体根据tag添加到tag列表中
      * @param entity
+     * @internal
      */
     private _addEntityToTag(entity: Entity): void {
         const tags = entity.tags;
@@ -412,6 +429,11 @@ export class EntityManager {
         }
     }
 
+    /**
+     * 验证实体ID是否存在
+     * @param {EntityId} entityId 实体ID
+     * @internal
+     */
     private _validateEntityById(entityId: EntityId): void {
         if (!this.exists(entityId)) {
             throw new Error(`实体（${entityId}）不存在`);

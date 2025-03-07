@@ -11,12 +11,15 @@ const TimerVersionMask = (1 << TimerIdBit) - 1;
 const TimerMaxVersion = TimerVersionMask;
 
 export class TimerNodePool {
+    /** @internal */
     private _pool: Array<TimerNode> = new Array<TimerNode>();
+    /** @internal */
     private _freeIndices: Array<number> = new Array<number>();
 
     /**
      * 定时器池
      * @param {number} capacity 初始容量
+     * @internal
      */
     public constructor(capacity: number) {
         for (let i = 0; i < capacity; ++i) {
@@ -31,6 +34,7 @@ export class TimerNodePool {
     /**
      * 分配定时器节点
      * @returns {TimerNode} 定时器节点
+     * @internal
      */
     public allocate(): TimerNode {
         let timerNode: TimerNode;
@@ -59,6 +63,7 @@ export class TimerNodePool {
     /**
      * 回收定时器节点
      * @param {number} timerId 定时器ID
+     * @internal
      */
     public recycle(timerId: number): void {
         const index = timerId >>> TimerIdBit;
@@ -82,6 +87,7 @@ export class TimerNodePool {
      * 根据TimerID获取定时器节点
      * @param {number} timerId 定时器ID
      * @returns {TimerNode}
+     * @internal
      */
     public get(timerId: number): TimerNode | undefined {
         const index = timerId >>> TimerIdBit;
@@ -107,6 +113,7 @@ export class TimerNodePool {
 
     /**
      * 清空正在使用的Timer
+     * @internal
      */
     public clear(): void {
         const pools = this._pool;

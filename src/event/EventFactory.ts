@@ -6,6 +6,7 @@
 
 import { Event } from "./Event";
 
+/** @internal */
 export class EventFactory {
     private _id: number = 0;
     private _stack: Event[] = [];

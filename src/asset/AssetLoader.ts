@@ -21,7 +21,10 @@ export interface IAssetConfig {
     bundle?: string;
 }
 
-/** 资源加载的状态类型 */
+/** 
+ * 资源加载的状态类型 
+ * @internal
+ */
 enum StateType {
     Error,
     Wait,
@@ -30,31 +33,77 @@ enum StateType {
 }
 
 export class AssetLoader {
-    /** 资源加载器名称 */
+    /** 
+     * 资源加载器名称
+     * @internal
+     */
     private _name: string = "";
-    /** 资源总数 */
+    /** 
+     * 资源总数
+     * @internal
+     */
     private _total: number = 0;
-    /** 最大并行加载数量 */
+    /** 
+     * 最大并行加载数量
+     * @internal
+     */
     private _maxParallel: number = 10;
-    /** 当前并行加载数量 */
+    /** 
+     * 当前并行加载数量
+     * @internal
+     */
     private _parallel: number = 0;
-    /** 失败重试次数 */
+    /** 
+     * 失败重试次数
+     * @internal
+     */
     private _maxRetry: number = 3;
-    /** 失败重试次数 */
+    /** 
+     * 失败重试次数
+     * @internal
+     */
     private _retry: number = 0;
 
-    /** 获取资源数量是否成功 */
+    /** 
+     * 获取资源数量是否成功
+     * @internal
+     */
     private _initSuccess: boolean = false;
 
+    /** 
+     * 加载进度回调
+     * @internal
+     */
     private _progress: (percent: number) => void;
 
+    /** 
+     * 加载完成回调
+     * @internal
+     */
     private _complete: () => void;
+
+    /** 
+     * 加载失败回调
+     * @internal
+     */
     private _fail: (msg: string, err: Error) => void;
 
+    /** 
+     * 资源配置
+     * @internal
+     */
     private _configs: IAssetConfig[] = [];
+    /** 
+     * 资源加载项
+     * @internal
+     */
     private _items: { type: typeof Asset, bundle: string, path: string, isFile?: boolean, status: StateType, count: number }[] = [];
-    /** load完成数量 */
+    /** 
+     * 加载完成数量
+     * @internal
+     */
     private _completeCounts: Map<string, number> = new Map();
+
     constructor(name?: string) {
         this._name = name || "AssetLoader";
     }
@@ -123,7 +172,10 @@ export class AssetLoader {
         }
     }
 
-    /** 重试开始 */
+    /** 
+     * 重试开始
+     * @internal
+     */
     private retryStart(): void {
         this._retry++;
         this.start({
@@ -136,7 +188,10 @@ export class AssetLoader {
         });
     }
 
-    /** 重试加载资源 */
+    /** 
+     * 重试加载资源
+     * @internal
+     */
     private retryLoad(): void {
         this._retry++;
         let count = this.resetErrorItem();
@@ -146,7 +201,10 @@ export class AssetLoader {
         }
     }
 
-    /** 初始化成功后，开始批量加载资源 */
+    /** 
+     * 初始化成功后，开始批量加载资源
+     * @internal
+     */
     private initSuccess(): void {
         this._initSuccess = true;
         this._parallel = 0;
@@ -156,7 +214,10 @@ export class AssetLoader {
         }
     }
 
-    /** 加载下一个资源 */
+    /** 
+     * 加载下一个资源
+     * @internal
+     */
     private loadNext(): void {
         // 找到第一个等待中的资源
         let index = this._items.findIndex(item => item.status == StateType.Wait);
@@ -170,7 +231,10 @@ export class AssetLoader {
         }
     }
 
-    /** 重置失败资源状态为等待中 */
+    /** 
+     * 重置失败资源状态为等待中
+     * @internal
+     */
     private resetErrorItem(): number {
         let count = 0;
         for (const item of this._items) {
@@ -182,6 +246,10 @@ export class AssetLoader {
         return count;
     }
 
+    /** 
+     * 加载资源
+     * @internal
+     */
     private async loadItem(index: number): Promise<void> {
         let item = this._items[index];
         item.status = StateType.Loading;
@@ -200,6 +268,10 @@ export class AssetLoader {
         }
     }
 
+    /** 
+     * 加载资源
+     * @internal
+     */
     private loadDir(index: number, bundle: AssetManager.Bundle): void {
         let item = this._items[index];
         bundle.loadDir(item.path, item.type, (finish: number, total: number) => {
@@ -222,6 +294,10 @@ export class AssetLoader {
         });
     }
 
+    /** 
+     * 加载资源
+     * @internal
+     */
     private loadFile(index: number, bundle: AssetManager.Bundle): void {
         let item = this._items[index];
         bundle.load(item.path, item.type, (error: Error, asset: Asset) => {
@@ -240,7 +316,10 @@ export class AssetLoader {
         });
     }
 
-    /** 更新进度 */
+    /** 
+     * 更新进度
+     * @internal
+     */
     private updateProgress(): void {
         let value = 0;
         for (const count of this._completeCounts.values()) {

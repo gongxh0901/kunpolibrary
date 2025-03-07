@@ -19,6 +19,7 @@ export class CocosWindowContainer extends Component {
     @property({ displayName: "底部遮罩透明度", tooltip: "底部半透明遮罩的默认透明度", min: 0, max: 1, step: 0.01 }) bgAlpha: number = 0.75;
     /**
      * 初始化窗口容器
+     * @internal
      */
     public init(): void {
         let name = this.node.name;

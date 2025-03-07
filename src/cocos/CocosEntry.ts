@@ -33,6 +33,10 @@ export abstract class CocosEntry extends Component {
         return {};
     }
 
+    /**
+     * 开始初始化kunpo框架
+     * @internal
+     */
     protected start(): void {
         info("开始初始化kunpo框架");
 
@@ -56,6 +60,10 @@ export abstract class CocosEntry extends Component {
         this.onInit();
     }
 
+    /**
+     * 初始化平台
+     * @internal
+     */
     private initPlatform(): void {
         // 处理平台判断
         Platform.isNative = sys.isNative;
@@ -105,10 +113,18 @@ export abstract class CocosEntry extends Component {
         info(`platform: ${PlatformType[Platform.platform]}`);
     }
 
+    /**
+     * 初始化事件
+     * @internal
+     */
     private initEvent(): void {
         GlobalEvent._initGlobalEvent();
     }
 
+    /**
+     * 初始化时间
+     * @internal
+     */
     private initTime(): void {
         Time._configBoot();
         InnerTimer.initTimer();
@@ -116,10 +132,18 @@ export abstract class CocosEntry extends Component {
         this.schedule(this.tick.bind(this), 0, macro.REPEAT_FOREVER);
     }
 
+    /**
+     * 初始化适配器
+     * @internal
+     */
     private initAdapter(): void {
         new CocosAdapter().init();
     }
 
+    /**
+     * 初始化模块
+     * @internal
+     */
     private initModule(): void {
         info(`初始化模块`);
         // 递归查找自身或所有子节点中指定类型的组件。
@@ -129,6 +153,11 @@ export abstract class CocosEntry extends Component {
         }
     }
 
+    /**
+     * 更新
+     * @param dt 时间间隔
+     * @internal
+     */
     private tick(dt: number): void {
         InnerTimer.update(dt);
         GlobalTimer.update(dt);

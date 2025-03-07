@@ -24,6 +24,7 @@ export class ConditionModule extends ModuleBase {
     /** 模块名称 */
     public moduleName: string = "条件显示模块";
 
+    /** 计时器 @internal */
     private _timer: number = 0;
     public init(): void {
         this.onInit();

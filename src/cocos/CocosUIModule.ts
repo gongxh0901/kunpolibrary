@@ -19,7 +19,7 @@ const { ccclass, menu, property } = _decorator;
 export class CocosUIModule extends ModuleBase {
     /** 模块名称 */
     public moduleName: string = "UI模块";
-    /** 模块初始化 (内部使用) */
+    /** 模块初始化 (内部使用) @internal */
     public init(): void {
         /** 初始化窗口管理系统 */
         WindowManager._init(new WindowResPool());
