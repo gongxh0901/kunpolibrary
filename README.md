@@ -23,7 +23,7 @@ npm install kunpocc
 10. [全局计时器](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Timer.md)
 11. [平台工具](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Platform.md)
 12. [屏幕尺寸](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Screen.md)
-13. [小工具](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Tool.md)
+13. [小工具](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Tools.md)
 
 ## 类型支持
 
