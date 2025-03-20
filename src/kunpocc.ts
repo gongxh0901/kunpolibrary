@@ -74,3 +74,5 @@ export { ConditionAllNode } from "./condition/node/ConditionAllNode";
 export { ConditionAnyNode } from "./condition/node/ConditionAnyNode";
 export { ConditionBase } from "./condition/node/ConditionBase";
 
+/** 热更新 */
+export { HotUpdateManager } from "./hotupdate/HotUpdateManager";
