@@ -1,6 +1,8 @@
 ## 时间
 添加一系列时间相关的函数
 
+* 获取到服务器时间后，调用  `Time.setNetTime` 后，会自动计算本地时间和服务器时间的差值，之后通过`Time.now()`获取到的时间都是计算过差值后的时间戳
+
 ```typescript
 /** 获取游戏系统启动时间戳 */
 static get osBootTime(): number;
