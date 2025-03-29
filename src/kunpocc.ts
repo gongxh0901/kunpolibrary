@@ -14,12 +14,15 @@ export { Time } from "./tool/Time";
 /** 消息监听 */
 export { EventManager } from "./event/EventManager";
 
-/** 网络 */
+/** Http */
 export * from "./net/http/HttpManager";
 export { HttpTask } from "./net/http/HttpTask";
 export { IHttpEvent } from "./net/http/IHttpEvent";
 export { IHttpRequest } from "./net/http/IHttpRequest";
 export { IHttpResponse } from "./net/http/IHttpResponse";
+
+/** Socket */
+export { Socket } from "./net/socket/Socket";
 
 /** 四叉树 */
 export { Box } from "./quadtree/Box";

@@ -12,6 +12,9 @@
         "types": [
             "@cocos/creator-types/engine",
             "@cocos/creator-types/editor",
+            "./libs/lib.wx.api.d.ts",
+            "./libs/lib.ali.api.d.ts",
+            "@douyin-microapp/typings"
         ]
     },
     "include": [

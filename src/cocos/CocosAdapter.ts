@@ -7,7 +7,7 @@
 import { screen as ccScreen, view } from "cc";
 import { Adapter } from "../global/Adapter";
 import { size } from "../global/header";
-import { info } from "../tool/log";
+import { debug } from "../tool/log";
 
 export class CocosAdapter extends Adapter {
     /**
@@ -39,15 +39,15 @@ export class CocosAdapter extends Adapter {
      */
     protected registerResizeCallback(callback: (...args: any) => void): void {
         ccScreen.on("window-resize", (...args: any) => {
-            info("window-resize");
+            debug("window-resize");
             callback(...args);
         }, this);
         ccScreen.on("orientation-change", (...args: any) => {
-            info("orientation-change");
+            debug("orientation-change");
             callback(...args);
         }, this);
         ccScreen.on("fullscreen-change", (...args: any) => {
-            info("fullscreen-change");
+            debug("fullscreen-change");
             callback(...args);
         }, this);
     }

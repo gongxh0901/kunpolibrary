@@ -6,7 +6,7 @@
 import { _decorator } from "cc";
 import { InnerTimer } from "../global/InnerTimer";
 import { ModuleBase } from "../module/ModuleBase";
-import { info } from "../tool/log";
+import { debug } from "../tool/log";
 import { ConditionManager } from "./ConditionManager";
 
 const { ccclass, menu, property } = _decorator;
@@ -36,7 +36,7 @@ export class ConditionModule extends ModuleBase {
 
     /** 模块初始化完成后调用的函数 */
     protected onInit(): void {
-        info("ConditionModule init complete");
+        debug("ConditionModule init complete");
     }
 
     public onDestroy(): void {

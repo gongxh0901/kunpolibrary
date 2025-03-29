@@ -7,7 +7,7 @@
 import { Component, _decorator } from "cc";
 import { GComponent, GRoot } from "fairygui-cc";
 import { Screen } from "../global/Screen";
-import { info } from "../tool/log";
+import { debug } from "../tool/log";
 import { WindowGroup } from "../ui/WindowGroup";
 import { WindowManager } from "../ui/WindowManager";
 const { ccclass, property, menu } = _decorator;
@@ -23,7 +23,7 @@ export class CocosWindowContainer extends Component {
      */
     public init(): void {
         let name = this.node.name;
-        info(`\tUIContainer name:${name} 忽略顶部窗口查询:${this.ignoreQuery} 吞噬触摸事件:${this.swallowTouch}`);
+        debug(`\tUIContainer name:${name} 忽略顶部窗口查询:${this.ignoreQuery} 吞噬触摸事件:${this.swallowTouch}`);
         const root = new GComponent();
         root.name = name;
         root.node.name = name;

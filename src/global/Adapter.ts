@@ -4,8 +4,7 @@
  * @Description: 适配用的类
  */
 
-import { ResolutionPolicy, view } from "cc";
-import { info } from "../tool/log";
+import { debug, ResolutionPolicy, view } from "cc";
 import { WindowManager } from "../ui/WindowManager";
 import { Screen } from "./Screen";
 import { size } from "./header";
@@ -21,7 +20,7 @@ export abstract class Adapter {
 
         this.resize();
         this.registerResizeCallback((...args: any) => {
-            info("屏幕发生变化", ...args);
+            debug("屏幕发生变化", ...args);
             this.resize();
         });
     }
@@ -59,10 +58,10 @@ export abstract class Adapter {
 
     /** @internal */
     private printScreen() {
-        info(`设计分辨率: ${Screen.DesignWidth}x${Screen.DesignHeight}`);
-        info(`屏幕分辨率: ${Screen.ScreenWidth}x${Screen.ScreenHeight}`);
-        info(`安全区域高度: ${Screen.SafeAreaHeight}`);
-        info(`安全区宽高: ${Screen.SafeWidth}x${Screen.SafeHeight}`);
+        debug(`设计分辨率: ${Screen.DesignWidth}x${Screen.DesignHeight}`);
+        debug(`屏幕分辨率: ${Screen.ScreenWidth}x${Screen.ScreenHeight}`);
+        debug(`安全区域高度: ${Screen.SafeAreaHeight}`);
+        debug(`安全区宽高: ${Screen.SafeWidth}x${Screen.SafeHeight}`);
     }
 
     /**

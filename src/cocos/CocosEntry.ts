@@ -13,7 +13,7 @@ import { InnerTimer } from "../global/InnerTimer";
 import { Platform, PlatformType } from "../global/Platform";
 import { ECManager } from "../kunpocc";
 import { ModuleBase } from "../module/ModuleBase";
-import { info } from "../tool/log";
+import { debug, log } from "../tool/log";
 import { Time } from "../tool/Time";
 import { PropsHelper } from "../ui/PropsHelper";
 import { CocosAdapter } from "./CocosAdapter";
@@ -38,7 +38,7 @@ export abstract class CocosEntry extends Component {
      * @internal
      */
     protected start(): void {
-        info("开始初始化kunpo框架");
+        log("开始初始化kunpo框架");
 
         const config = this.getConfig();
         enableDebugMode(config.debug);
@@ -56,7 +56,7 @@ export abstract class CocosEntry extends Component {
         this.initModule();
         // 注册所有组件
         ECDataHelper.registerComponents();
-        info("kunpo框架初始化完成");
+        log("kunpo框架初始化完成");
         this.onInit();
     }
 
@@ -73,15 +73,15 @@ export abstract class CocosEntry extends Component {
         switch (sys.os) {
             case sys.OS.ANDROID:
                 Platform.isAndroid = true;
-                info("系统类型 Android");
+                debug("系统类型 Android");
                 break;
             case sys.OS.IOS:
                 Platform.isIOS = true;
-                info("系统类型 IOS");
+                debug("系统类型 IOS");
                 break;
             case sys.OS.OPENHARMONY:
                 Platform.isHarmonyOS = true;
-                info("系统类型 HarmonyOS");
+                debug("系统类型 HarmonyOS");
                 break;
             default:
                 break;
@@ -110,7 +110,7 @@ export abstract class CocosEntry extends Component {
                 Platform.platform = PlatformType.Browser;
                 break;
         }
-        info(`platform: ${PlatformType[Platform.platform]}`);
+        debug(`platform: ${PlatformType[Platform.platform]}`);
     }
 
     /**
@@ -145,10 +145,10 @@ export abstract class CocosEntry extends Component {
      * @internal
      */
     private initModule(): void {
-        info(`初始化模块`);
+        debug(`初始化模块`);
         // 递归查找自身或所有子节点中指定类型的组件。
         for (const module of this.getComponentsInChildren(ModuleBase)) {
-            info(`module:${module.moduleName}`);
+            debug(`module:${module.moduleName}`);
             module.init();
         }
     }
