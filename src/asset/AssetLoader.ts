@@ -250,21 +250,27 @@ export class AssetLoader {
      * 加载资源
      * @internal
      */
-    private async loadItem(index: number): Promise<void> {
+    private loadItem(index: number): void {
         let item = this._items[index];
         item.status = StateType.Loading;
         this._parallel++;
-
-        let bundle = null;
         if (item.bundle == "resources") {
-            bundle = resources;
+            if (item.isFile) {
+                this.loadFile(index, resources);
+            } else {
+                this.loadDir(index, resources);
+            }
         } else {
-            bundle = await AssetUtils.loadBundle(item.bundle);
-        }
-        if (item.isFile) {
-            this.loadFile(index, bundle);
-        } else {
-            this.loadDir(index, bundle);
+            AssetUtils.loadBundle(item.bundle).then((bundle: AssetManager.Bundle) => {
+                if (item.isFile) {
+                    this.loadFile(index, bundle);
+                } else {
+                    this.loadDir(index, bundle);
+                }
+            }).catch((err: Error) => {
+                log(`load bundle error, bundle:${item.bundle}, filename:${item.path}`);
+                item.status = StateType.Error;
+            });
         }
     }
 

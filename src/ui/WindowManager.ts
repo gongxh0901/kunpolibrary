@@ -32,7 +32,7 @@ export class WindowManager {
      * @param windowName 窗口名
      * @param userdata 用户数据
      */
-    public static async showWindow(windowName: string, userdata?: any): Promise<void> {
+    public static showWindow(windowName: string, userdata?: any): Promise<void> {
         return new Promise((resolve, reject) => {
             this._resPool.loadWindowRes(windowName, {
                 complete: () => {

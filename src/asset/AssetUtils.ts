@@ -33,7 +33,7 @@ export class AssetUtils {
     }
 
     /** 加载 bundle */
-    public static async loadBundle(bundlename: string): Promise<AssetManager.Bundle> {
+    public static loadBundle(bundlename: string): Promise<AssetManager.Bundle> {
         return new Promise((resolve, reject) => {
             let bundle = assetManager.getBundle(bundlename);
             if (bundle) {

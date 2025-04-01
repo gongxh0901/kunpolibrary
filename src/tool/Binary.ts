@@ -133,7 +133,7 @@ export class Binary {
                 const strLen = view.getUint32(offset, true);
                 offset += 4;
                 const strBytes = new Uint8Array(view.buffer, offset, strLen);
-                return new TextDecoder().decode(strBytes);
+                return this.utf8ArrayToString(strBytes);
             }
             case 3: // boolean
                 return view.getUint8(offset) === 1;
@@ -185,8 +185,7 @@ export class Binary {
                 break;
             }
             case 'string': {
-                const encoder = new TextEncoder();
-                const strBytes = encoder.encode(value);
+                const strBytes = this.stringToUtf8Array(value);
                 const strLen = strBytes.length;
                 const strBuf = new Uint8Array(5 + strLen);
                 strBuf[0] = 2;
@@ -267,5 +266,85 @@ export class Binary {
             default:
                 throw new Error(`未知的类型: ${type}`);
         }
+    }
+
+    /** @internal */
+    private static utf8ArrayToString(array: Uint8Array): string {
+        if (!array || array.length === 0) {
+            return '';
+        }
+        let out = '';
+        let i = 0;
+        try {
+            while (i < array.length) {
+                let c = array[i++];
+                if (c > 127) {
+                    if (c > 191 && c < 224) {
+                        if (i >= array.length) break;
+                        c = ((c & 31) << 6) | (array[i++] & 63);
+                    } else if (c > 223 && c < 240) {
+                        if (i + 1 >= array.length) break;
+                        c = ((c & 15) << 12) | ((array[i++] & 63) << 6) | (array[i++] & 63);
+                    } else if (c > 239 && c < 248) {
+                        if (i + 2 >= array.length) break;
+                        c = ((c & 7) << 18) | ((array[i++] & 63) << 12) | ((array[i++] & 63) << 6) | (array[i++] & 63);
+                    } else {
+                        // 无效的 UTF-8 序列
+                        continue;
+                    }
+                }
+                if (c <= 0xffff) {
+                    out += String.fromCharCode(c);
+                } else if (c <= 0x10ffff) {
+                    c -= 0x10000;
+                    out += String.fromCharCode((c >> 10) | 0xd800);
+                    out += String.fromCharCode((c & 0x3FF) | 0xdc00);
+                }
+            }
+        } catch (error) {
+            console.error('UTF-8 解码错误:', error);
+            return '';
+        }
+        return out;
+    }
+
+    /** @internal */
+    private static stringToUtf8Array(str: string): Uint8Array {
+        if (!str || str.length === 0) {
+            return new Uint8Array(0);
+        }
+        const arr: number[] = [];
+        try {
+            for (let i = 0; i < str.length; i++) {
+                let charcode = str.charCodeAt(i);
+                if (charcode < 0x80) {
+                    arr.push(charcode);
+                } else if (charcode < 0x800) {
+                    arr.push(0xc0 | (charcode >> 6));
+                    arr.push(0x80 | (charcode & 0x3f));
+                } else if (charcode < 0xd800 || charcode >= 0xe000) {
+                    arr.push(0xe0 | (charcode >> 12));
+                    arr.push(0x80 | ((charcode >> 6) & 0x3f));
+                    arr.push(0x80 | (charcode & 0x3f));
+                } else {
+                    // surrogate pair
+                    if (i + 1 >= str.length) {
+                        // 不完整的代理对
+                        break;
+                    }
+                    i++;
+                    charcode = ((charcode & 0x3ff) << 10) | (str.charCodeAt(i) & 0x3ff);
+                    charcode += 0x10000;
+                    arr.push(0xf0 | (charcode >> 18));
+                    arr.push(0x80 | ((charcode >> 12) & 0x3f));
+                    arr.push(0x80 | ((charcode >> 6) & 0x3f));
+                    arr.push(0x80 | (charcode & 0x3f));
+                }
+            }
+        } catch (error) {
+            console.error('UTF-8 编码错误:', error);
+            return new Uint8Array(0);
+        }
+        return new Uint8Array(arr);
     }
 }

@@ -78,7 +78,7 @@ public static getByUUID<T extends Asset>(uuid: string): T
 public static releasePath(path: string, bundlename: string = "resources"): void
 
 /** 按 bundle 和 文件夹释放资源 */
-public static async releaseDir(dir: string, bundlename: string = "resources", asset: typeof Asset): Promise<void>
+public static releaseDir(dir: string, bundlename: string = "resources", asset: typeof Asset): Promise<boolean>
 
 /** 按 uuid 释放资源 */
 public static releaseUUID(uuid: string): void

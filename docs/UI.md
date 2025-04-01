@@ -199,7 +199,7 @@ export interface IPackageConfigRes {
        /**
         * 异步打开一个窗口 (如果UI包的资源未加载, 会自动加载 配合 WindowManager.initPackageConfig一起使用)
         */
-       public static async showWindow(windowName: string, userdata?: any): Promise<void>
+       public static showWindow(windowName: string, userdata?: any): Promise<void>
    
        /**
         * 打开一个窗口 (用于已加载过资源的窗口)

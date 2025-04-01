@@ -75,17 +75,26 @@ export class AssetPool {
     }
 
     /** 按 bundle 和 文件夹释放资源 */
-    public static async releaseDir(dir: string, bundlename: string = "resources", asset: typeof Asset): Promise<void> {
-        let bundle = null;
-        if (bundlename == "resources") {
-            bundle = resources;
-        } else {
-            bundle = await AssetUtils.loadBundle(bundlename);
-        }
-        let uuids = AssetUtils.getUUIDs(dir, asset, bundle);
-        for (const uuid of uuids) {
-            this.releaseUUID(uuid);
-        }
+    public static releaseDir(dir: string, bundlename: string = "resources", asset: typeof Asset): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            if (bundlename == "resources") {
+                let uuids = AssetUtils.getUUIDs(dir, asset, resources);
+                for (const uuid of uuids) {
+                    this.releaseUUID(uuid);
+                }
+                resolve(true);
+            } else {
+                AssetUtils.loadBundle(bundlename).then((bundle: AssetManager.Bundle) => {
+                    let uuids = AssetUtils.getUUIDs(dir, asset, bundle);
+                    for (const uuid of uuids) {
+                        this.releaseUUID(uuid);
+                    }
+                    resolve(true);
+                }).catch((err: Error) => {
+                    reject(false);
+                });
+            }
+        });
     }
 
     /** 按 uuid 释放资源 */
