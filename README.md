@@ -11,20 +11,20 @@ npm install kunpocc
 ```
 
 # 目录
-1. [项目配置](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Basic.md)
-2. [UI模块](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/UI.md)
-3. [实体组件模块](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/EC.md) 
-4. [网络模块](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/HTTP.md)
-5. [四叉树](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/QuadTree.md)
-6. [行为树](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/BehaviorTree.md)
-7. [资源管理](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Asset.md)
-8. [条件显示节点 (一般用于UI上的红点)](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Condition.md)
-9. [全局事件](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Event.md)
-10. [全局计时器](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Timer.md)
-11. [平台工具](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Platform.md)
-12. [屏幕尺寸](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Screen.md)
-13. [小工具](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Tools.md)
-14. [时间](https://github.com/Gongxh0901/kunpolibrary/blob/main/docs/Time.md)
+1. [项目配置](./docs/Basic.md)
+2. [UI模块](./docs/UI.md)
+3. [实体组件模块](./docs/EC.md) 
+4. [网络模块](./docs/HTTP.md)
+5. [四叉树](./docs/QuadTree.md)
+6. [行为树](./docs/BehaviorTree.md)
+7. [资源管理](./docs/Asset.md)
+8. [条件显示节点 (一般用于UI上的红点)](./docs/Condition.md)
+9. [全局事件](./docs/Event.md)
+10. [全局计时器](./docs/Timer.md)
+11. [平台工具](./docs/Platform.md)
+12. [屏幕尺寸](./docs/Screen.md)
+13. [小工具](./docs/Tools.md)
+14. [时间](./docs/Time.md)
 
 ## 类型支持
 
