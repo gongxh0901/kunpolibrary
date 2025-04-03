@@ -28,8 +28,7 @@
         "dist/kunpocc.mjs",
         "dist/kunpocc.min.cjs",
         "dist/kunpocc.min.mjs",
-        "dist/kunpocc.d.ts",
-        "docs/"
+        "dist/kunpocc.d.ts"
     ],
     "author": "gongxh",
     "license": "ISC",
