@@ -25,7 +25,7 @@ npm install kunpocc
 12. [屏幕尺寸](./docs/Screen.md)
 13. [小工具](./docs/Tools.md)
 14. [时间](./docs/Time.md)
-
+15. [socket网络模块](./docs/Socket.md)
 ## 类型支持
 
 该库完全使用 TypeScript 编写，提供完整的类型定义文件。

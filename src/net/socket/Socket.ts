@@ -271,7 +271,7 @@ export class Socket {
      * 接收到服务端发送的消息
      * @param data - 消息数据
      */
-    public onmessage: (data: any) => void;
+    public onmessage: (data: string | ArrayBuffer) => void;
 
     /**
      * 监听可能发生的错误，一般用不到
