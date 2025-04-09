@@ -11,21 +11,23 @@ npm install kunpocc
 ```
 
 # 目录
-1. [项目配置](./docs/Basic.md)
-2. [UI模块](./docs/UI.md)
-3. [实体组件模块](./docs/EC.md) 
-4. [网络模块](./docs/HTTP.md)
-5. [四叉树](./docs/QuadTree.md)
-6. [行为树](./docs/BehaviorTree.md)
-7. [资源管理](./docs/Asset.md)
-8. [条件显示节点 (一般用于UI上的红点)](./docs/Condition.md)
-9. [全局事件](./docs/Event.md)
-10. [全局计时器](./docs/Timer.md)
-11. [平台工具](./docs/Platform.md)
-12. [屏幕尺寸](./docs/Screen.md)
-13. [小工具](./docs/Tools.md)
-14. [时间](./docs/Time.md)
-15. [socket网络模块](./docs/Socket.md)
+1. [使用教程 (新手必看)](./docs/Noviciate.md)
+
+2. [项目配置](./docs/Basic.md)
+3. [UI模块](./docs/UI.md)
+4. [实体组件模块](./docs/EC.md) 
+5. [网络模块](./docs/HTTP.md)
+6. [四叉树](./docs/QuadTree.md)
+7. [行为树](./docs/BehaviorTree.md)
+8. [资源管理](./docs/Asset.md)
+9. [条件显示节点 (一般用于UI上的红点)](./docs/Condition.md)
+10. [全局事件](./docs/Event.md)
+11. [全局计时器](./docs/Timer.md)
+12. [平台工具](./docs/Platform.md)
+13. [屏幕尺寸](./docs/Screen.md)
+14. [小工具](./docs/Tools.md)
+15. [时间](./docs/Time.md)
+16. [socket网络模块](./docs/Socket.md)
 ## 类型支持
 
 该库完全使用 TypeScript 编写，提供完整的类型定义文件。
