@@ -14,8 +14,7 @@
             "@cocos/creator-types/editor",
             "./libs/lib.wx.api.d.ts",
             "./libs/lib.ali.api.d.ts",
-            "./libs/lib.bytedance.api.d.ts",
-            // "@douyin-microapp/typings"
+            "./libs/lib.bytedance.api.d.ts"
         ]
     },
     "include": [
