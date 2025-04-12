@@ -7,6 +7,7 @@
 import { Asset, game, native, sys } from "cc";
 import { Platform } from "../global/Platform";
 import { log, warn } from "../tool/log";
+import { Utils } from "../tool/Utils";
 
 const TAG = "hotupdate:";
 
@@ -60,7 +61,7 @@ export class HotUpdateManager {
 
         // 创建 am 对象
         this._am = native.AssetsManager.create("", this._writablePath);
-        this._am.setVersionCompareHandle(this._versionCompareHandle);
+        this._am.setVersionCompareHandle(Utils.compareVersion);
         this._am.setVerifyCallback(this._verifyCallback);
         // 加载本地的 manifest
         log(`${TAG} 加载本地的 manifest:${manifest.nativeUrl}`);
@@ -221,33 +222,6 @@ export class HotUpdateManager {
                 game.restart()
             }, 500);
         }
-    }
-
-    /**
-     * 版本号比较
-     * @param version1 本地版本号
-     * @param version2 远程版本号
-     * 如果返回值大于0，则version1大于version2
-     * 如果返回值等于0，则version1等于version2
-     * 如果返回值小于0，则version1小于version2
-     */
-    private _versionCompareHandle(version1: string, version2: string): number {
-        log(`${TAG}本地资源版本号:${version1} 远程资源版本号:${version2}`);
-        let v1 = version1.split('.');
-        let v2 = version2.split('.');
-        for (let i = 0; i < v1.length; ++i) {
-            let a = parseInt(v1[i]);
-            let b = parseInt(v2[i] || '0');
-            if (a === b) {
-                continue;
-            } else {
-                return a - b;
-            }
-        }
-        if (v2.length > v1.length) {
-            return -1;
-        }
-        return 0;
     }
 
     private _verifyCallback(path: string, asset: native.ManifestAsset): boolean {

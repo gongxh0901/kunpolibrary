@@ -3516,6 +3516,15 @@ interface My {
 	 * 
 	 */
 	getLaunchOptionsSync(): AliyMiniprogram.AppLaunchOptions;
+	getEnterOptionsSync(): AliyMiniprogram.AppLaunchOptions;
+	requestGamePayment(data: {
+		customId: string,
+		buyQuantity: number,
+		extraInfo?: Record<string, any>,
+		success?: (res: { resultCode: number }) => void,
+		fail?: (res: CallBack.Fail) => void,
+		complete?: () => void
+	}): void;
 
 	/** 监听小游戏回到前台的事件 */
 	onShow(listener: (res: AliyMiniprogram.AppLaunchOptions) => void);

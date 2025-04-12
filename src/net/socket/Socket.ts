@@ -4,7 +4,6 @@
  * @Description: 网络socket
  */
 
-import { SocketTask } from "@douyin-microapp/typings/types/api";
 import { Platform } from "../../global/Platform";
 import { debug, warn } from "../../tool/log";
 
@@ -36,7 +35,7 @@ export class Socket {
      * socket对象 
      * @internal
      */
-    private _socket: WebSocket | WechatMiniprogram.SocketTask | AliyMiniprogram.SocketTask | SocketTask;
+    private _socket: WebSocket | WechatMiniprogram.SocketTask | AliyMiniprogram.SocketTask | BytedanceMiniprogram.SocketTask;
 
     /**
      * @param {string} url 要连接的 URL；这应该是 WebSocket 服务器将响应的 URL
@@ -129,8 +128,8 @@ export class Socket {
      * 抖音小游戏创建socket
      * @internal
      */
-    private createBytedanceSocket(url: string, timeout?: number, protocols?: string[]): SocketTask {
-        let socket: SocketTask = tt.connectSocket({
+    private createBytedanceSocket(url: string, timeout?: number, protocols?: string[]): BytedanceMiniprogram.SocketTask {
+        let socket: BytedanceMiniprogram.SocketTask = tt.connectSocket({
             url,
             protocols: protocols,
             success: () => { debug("socket success") },
@@ -208,7 +207,7 @@ export class Socket {
         } else if (Platform.isAlipay) {
             (this._socket as AliyMiniprogram.SocketTask).send({ data: data });
         } else if (Platform.isBytedance) {
-            (this._socket as SocketTask).send({ data: data });
+            (this._socket as BytedanceMiniprogram.SocketTask).send({ data: data });
         } else {
             (this._socket as WebSocket).send(data);
         }
@@ -230,7 +229,7 @@ export class Socket {
                 (this._socket as AliyMiniprogram.SocketTask).send({ data: data });
             }
         } else if (Platform.isBytedance) {
-            (this._socket as SocketTask).send({ data: data });
+            (this._socket as BytedanceMiniprogram.SocketTask).send({ data: data });
         } else {
             (this._socket as WebSocket).send(data);
         }
@@ -247,7 +246,7 @@ export class Socket {
         } else if (Platform.isAlipay) {
             (this._socket as AliyMiniprogram.SocketTask).close({ code: code, reason: reason });
         } else if (Platform.isBytedance) {
-            (this._socket as SocketTask).close({ code: code, reason: reason });
+            (this._socket as BytedanceMiniprogram.SocketTask).close({ code: code, reason: reason });
         } else {
             (this._socket as WebSocket).close(code, reason);
         }

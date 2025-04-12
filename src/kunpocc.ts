@@ -79,3 +79,10 @@ export { ConditionBase } from "./condition/node/ConditionBase";
 
 /** 热更新 */
 export { HotUpdateManager } from "./hotupdate/HotUpdateManager";
+
+/** 小游戏 */
+export { AlipayCommon } from "./minigame/alipay/AlipayCommon";
+export { BytedanceCommon } from "./minigame/bytedance/BytedanceCommon";
+export { MiniHelper } from "./minigame/MiniHelper";
+export { WechatCommon } from "./minigame/wechat/WechatCommon";
+
