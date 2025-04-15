@@ -32,7 +32,7 @@ export interface IMiniCommon {
     getEnvType(): 'release' | 'debug';
 
     /** 
-     * 宿主程序版本 (这里指微信版本)
+     * 宿主程序版本 (这里指微信、抖音、支付宝版本)
      */
     getHostVersion(): string;
 
