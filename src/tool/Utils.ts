@@ -36,4 +36,15 @@ export class Utils {
         return 0;
     }
 
+    /** 
+     * 判断传入的字符串是否是json格式的字符串
+     */
+    public static isJsonString(str: string): boolean {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 }

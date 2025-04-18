@@ -4,10 +4,11 @@
  * @Description: 热更新管理器
  */
 
-import { Asset, game, native, sys } from "cc";
-import { Platform } from "../global/Platform";
-import { log, warn } from "../tool/log";
-import { Utils } from "../tool/Utils";
+import { native } from "cc";
+import { ICheckUpdatePromiseResult } from "../interface/PromiseResult";
+import { Platform } from "../kunpocc";
+import { log } from "../tool/log";
+import { HotUpdate, HotUpdateCode } from "./HotUpdate";
 
 const TAG = "hotupdate:";
 
@@ -19,37 +20,73 @@ export class HotUpdateManager {
         }
         return HotUpdateManager.instance;
     }
-
+    /** 是否初始化了 */
+    private _isInitialized: boolean = false;
+    /** 本地manifest路径 */
+    private _manifestUrl: string = '';
     /** 版本号 */
     private _version: string = '';
+
+    /** 资源版本号 */
+    private _resVersion: string = null;
     /** 可写路径 */
     private _writablePath: string = '';
-    /** 资源管理器 */
-    private _am: native.AssetsManager = null;
     /** 是否正在更新 或者 正在检查更新 */
     private _updating: boolean = false;
 
-    /** 检查更新的回调 */
-    private _checkSucceed: (need: boolean, size: number) => void = null;
-    private _checkFail: (code: number, message: string) => void = null;
+    /** 更新实例 只有更新的时候初始化 检查更新不赋值 */
+    private _hotUpdate: HotUpdate = null;
 
-    /** 更新回调 */
-    private _updateProgress: (kb: number, total: number) => void = null;
-    private _updateFail: (code: number, message: string) => void = null;
-    private _updateError: (code: number, message: string) => void = null;
+    /** 
+     * 热更新文件存放的可写路径
+     */
+    public get writablePath(): string {
+        return this._writablePath;
+    }
+
+    /**
+     * 本地manifest路径
+     */
+    public get manifestUrl(): string {
+        return this._manifestUrl;
+    }
+
+    /** 
+     * 传入的游戏版本号
+     */
+    public get version(): string {
+        return this._version;
+    }
+
+    /** 
+     * 获取资源版本号, 须初始化成功后再使用
+     * @return 资源版本号 默认值 ‘0’
+     */
+    public get resVersion(): string {
+        if (this._resVersion === null) {
+            this._resVersion = new HotUpdate().resVersion;
+        }
+        return this._resVersion;
+    }
+
+    public set resVersion(version: string) {
+        if (this._resVersion === null) {
+            this._resVersion = version;
+        }
+    }
+
     /**
      * 1. 初始化热更新管理器
-     * @param manifest 传入manifest文件
-     * @param version 传入游戏版本号 eg: 1.0.0
+     * @param manifestUrl 传入本地manifest文件地址 资源的assets.nativeUrl
+     * @param version 游戏版本号 eg: 1.0.0
      */
-    public init(manifest: Asset, version: string): void {
-        if (!Platform.isNativeMobile) {
+    public init(manifestUrl: string, version: string): void {
+        if (this._isInitialized) {
+            log(`${TAG} 热更新管理器不需要重复初始化`);
             return;
         }
-        if (this._am) {
-            warn(`${TAG}请勿重复初始化`);
-            return;
-        }
+        this._isInitialized = true;
+        this._manifestUrl = manifestUrl;
         this._version = version;
 
         let writablePath = native?.fileUtils?.getWritablePath() || "";
@@ -58,184 +95,74 @@ export class HotUpdateManager {
         }
         this._writablePath = `${writablePath}hot-update/${version}/`;
         log(`${TAG}可写路径:${this._writablePath}`);
-
-        // 创建 am 对象
-        this._am = native.AssetsManager.create("", this._writablePath);
-        this._am.setVersionCompareHandle(Utils.compareVersion);
-        this._am.setVerifyCallback(this._verifyCallback);
-        // 加载本地的 manifest
-        log(`${TAG} 加载本地的 manifest:${manifest.nativeUrl}`);
-        this._am.loadLocalManifest(manifest.nativeUrl);
     }
 
     /** 
-     * 2. 检查是否有新的热更版本
-     * @param res.succeed.need 是否需要更新
-     * @param res.succeed.size 需要更新的资源大小 (KB)
-     * 
-     * @param res.fail 检查失败的回调 
-     * @param res.fail.code
-     * -1000: 未初始化 
-     * -1001: 正在更新或者正在检查更新
-     * -1002: 本地manifest文件错误
-     * -1004: 解析远程manifest文件失败
+     * 检查是否存在热更新
+     * 提供一个对外的方法检查是否存在热更新
+     * @return {Promise<ICheckUpdatePromiseResult>} 
      */
-    public checkUpdate(res: { succeed: (need: boolean, size: number) => void, fail: (code: number, message: string) => void }): void {
-        this._checkSucceed = res.succeed;
-        this._checkFail = res.fail;
-        if (this._updating) {
-            res.fail(-1001, "正在更新或者正在检查更新");
-            return;
-        }
-        if (!Platform.isNativeMobile) {
-            res.succeed(false, 0);
-            return;
-        }
-        if (!this._am) {
-            res.fail(-1000, "未初始化, 需要先调用init方法");
-            return;
-        }
-        this._updating = true;
-        // 设置回调
-        this._am.setEventCallback(this._checkCb.bind(this));
-        // 检查更新
-        this._am.checkUpdate();
+    public checkUpdate(): Promise<ICheckUpdatePromiseResult> {
+        return new Promise((resolve, reject) => {
+            if (!Platform.isNativeMobile) {
+                resolve({ code: HotUpdateCode.PlatformNotSupported, message: "当前平台不需要热更新" });
+                return;
+            }
+            if (!this._isInitialized) {
+                resolve({ code: HotUpdateCode.NotInitialized, message: "未初始化, 需要先调用init方法" });
+                return;
+            }
+            if (this._updating) {
+                resolve({ code: HotUpdateCode.Updating, message: "正在更新或者正在检查更新中" });
+                return;
+            }
+            this._updating = true;
+            new HotUpdate().checkUpdate().then((res) => {
+                this._updating = false;
+                resolve(res);
+            }).catch((err) => {
+                this._updating = false;
+                resolve({ code: HotUpdateCode.Error, message: JSON.stringify(err) });
+            });
+        });
     }
 
     /**
-     * 3. 开始热更新
+     * 开始热更新
+     * @param res.skipCheck 是否跳过检查更新
      * @param res.progress 更新进度回调 kb: 已下载的资源大小, total: 总资源大小 (kb)
-     * @param res.fail 更新失败 可以重试
-     * @param res.fail.code 更新失败错误码
-     * -10001: 更新失败 需要重试
-     * @param res.error 更新错误 无法重试
-     * @param res.error.code 更新错误错误码
-     * -1000: 未初始化
-     * -1001: 正在更新或者正在检查更新
-     * -10002: 资源更新错误
-     * -10003: 解压错误
+     * @param res.complete 更新结束回调 根据错误码判断 跳过还是重试失败资源
      */
-    public startUpdate(res: {
-        progress: (kb: number, total: number) => void,
-        fail: (code: number, message: string) => void,
-        error: (code: number, message: string) => void
-    }): void {
-        this._updateProgress = res.progress;
-        this._updateFail = res.fail;
-        this._updateError = res.error;
-
-        log(`${TAG} 开始热更新`);
-        if (this._updating) {
-            res.error(-1001, "正在更新或者正在检查更新");
+    public startUpdate(res: { skipCheck: boolean, progress: (kb: number, total: number) => void, complete: (code: HotUpdateCode, message: string) => void }): void {
+        if (!Platform.isNativeMobile) {
+            res.complete(HotUpdateCode.PlatformNotSupported, "当前平台不需要热更新");
             return;
         }
-        if (!this._am) {
-            res.error(-1000, "未初始化, 需要先调用init方法");
+        if (!this._isInitialized) {
+            res.complete(HotUpdateCode.NotInitialized, "未初始化, 需要先调用init方法");
+            return;
+        }
+        if (this._updating) {
+            res.complete(HotUpdateCode.Updating, "正在更新或者正在检查更新");
             return;
         }
         this._updating = true;
-        this._am.setEventCallback(this._updateCb.bind(this));
-        this._am.update();
+        this._hotUpdate = new HotUpdate();
+        this._hotUpdate.startUpdate({
+            skipCheck: res.skipCheck,
+            progress: res.progress,
+            complete: (code: HotUpdateCode, message: string) => {
+                this._updating = false;
+                res.complete(code, message);
+            }
+        });
     }
 
     /** 重试失败的资源 */
     public retryUpdate(): void {
-        this._am.downloadFailedAssets();
-    }
-
-    /** 检查更新的回调 */
-    private _checkCb(event: native.EventAssetsManager) {
-        let eventCode = event.getEventCode();
-        log(`${TAG} 检查更新回调code:${eventCode}`);
-        this._updating = false;
-        switch (eventCode) {
-            case native.EventAssetsManager.ERROR_NO_LOCAL_MANIFEST:
-                this._checkFail(-1002, "本地没有manifest文件");
-                break;
-            case native.EventAssetsManager.ERROR_DOWNLOAD_MANIFEST:
-                // this._checkFail(-1003, "下载manifest文件失败");
-                this._checkSucceed(false, 0);
-                break;
-            case native.EventAssetsManager.ERROR_PARSE_MANIFEST:
-                this._checkFail(-1004, "解析远程manifest文件失败");
-                break;
-            case native.EventAssetsManager.ALREADY_UP_TO_DATE:
-                this._checkSucceed(false, 0);
-                break;
-            case native.EventAssetsManager.NEW_VERSION_FOUND:
-                // 发现新版本
-                this._checkSucceed(true, this._am.getTotalBytes() / 1024);
-                break;
-            default:
-                return;
+        if (!this._hotUpdate) {
+            throw new Error(`${TAG} 使用前 必须使用过startUpdate方法`);
         }
-        this._am.setEventCallback(null);
-    }
-
-    /** 更新的回调 */
-    private _updateCb(event: native.EventAssetsManager) {
-        let eventCode = event.getEventCode();
-        log(`${TAG} 更新回调code:${eventCode}`);
-        let needRestart = false;
-        switch (eventCode) {
-            case native.EventAssetsManager.UPDATE_PROGRESSION:
-                let bytes = event.getDownloadedBytes() / 1024;
-                let total = event.getTotalBytes() / 1024;
-                this._updateProgress(bytes, total);
-                break;
-            case native.EventAssetsManager.UPDATE_FINISHED:
-                // 更新完成 自动重启
-                needRestart = true;
-                break;
-            case native.EventAssetsManager.UPDATE_FAILED:
-                this._updating = false;
-                this._updateFail(-10001, event.getMessage());
-                break;
-            case native.EventAssetsManager.ERROR_UPDATING:
-                this._updating = false;
-                this._updateError(-10002, event.getMessage());
-                break;
-            case native.EventAssetsManager.ERROR_DECOMPRESS:
-                this._updating = false;
-                this._updateError(-10003, event.getMessage());
-                break;
-            default:
-                break;
-        }
-        if (needRestart) {
-            this._am.setEventCallback(null);
-
-            // Prepend the manifest's search path
-            let searchPaths = native.fileUtils.getSearchPaths();
-            log(`${TAG} 当前搜索路径:${JSON.stringify(searchPaths)}`);
-
-            let newPaths = this._am.getLocalManifest().getSearchPaths();
-            log(`${TAG} 新搜索路径:${JSON.stringify(newPaths)}`);
-
-            Array.prototype.unshift.apply(searchPaths, newPaths);
-            sys.localStorage.setItem('hotupdate::version', this._version);
-            sys.localStorage.setItem('hotupdate::searchpaths', JSON.stringify(searchPaths));
-            native.fileUtils.setSearchPaths(searchPaths);
-
-            // 重启游戏
-            setTimeout(() => {
-                game.restart()
-            }, 500);
-        }
-    }
-
-    private _verifyCallback(path: string, asset: native.ManifestAsset): boolean {
-        // 资源是否被压缩, 如果压缩我们不需要检查它的md5值
-        let compressed = asset.compressed;
-        if (compressed) {
-            return true;
-        }
-        // 预期的md5
-        let expectedMD5 = asset.md5;
-        // 资源大小
-        let size = asset.size;
-        // 验证资源md5
-        log(`${TAG} 记录的md5:${expectedMD5} 文件大小:${size} 文件相对路径:${asset.path} 绝对路径:${path}`);
-        return true;
+        this._hotUpdate.retryUpdate();
     }
 }

@@ -4,7 +4,6 @@
  * @Description: 字节跳动小游戏工具类
  */
 
-import { LaunchParams } from "@douyin-microapp/typings/types/app";
 import { warn } from "../../tool/log";
 import { IMiniCommon } from "../interface/IMiniCommon";
 
@@ -24,14 +23,14 @@ export class BytedanceCommon implements IMiniCommon {
     /**
      * 获取冷启动参数
      */
-    public getLaunchOptions(): LaunchParams {
+    public getLaunchOptions(): BytedanceMiniprogram.LaunchParams {
         return this._launchOptions;
     }
 
     /**
      * 获取热启动参数
      */
-    public getHotLaunchOptions(): LaunchParams {
+    public getHotLaunchOptions(): BytedanceMiniprogram.LaunchParams {
         warn("字节跳动小游戏未提供热启动参数获取方式，请在 onShow 中获取");
         return null;
     }

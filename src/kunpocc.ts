@@ -4,6 +4,7 @@ export { GlobalTimer } from "./global/GlobalTimer";
 export { enableDebugMode, FrameConfig, KUNPO_DEBUG } from "./global/header";
 export { Platform, PlatformType } from "./global/Platform";
 export { Screen } from "./global/Screen";
+export * from "./interface/PromiseResult";
 
 /** tool */
 export { Binary } from "./tool/Binary";
@@ -23,6 +24,9 @@ export { IHttpResponse } from "./net/http/IHttpResponse";
 
 /** Socket */
 export { Socket } from "./net/socket/Socket";
+
+/** 读取网络文件 */
+export { ReadNetFile } from "./net/nettools/ReadNetFile";
 
 /** 四叉树 */
 export { Box } from "./quadtree/Box";
@@ -78,6 +82,7 @@ export { ConditionAnyNode } from "./condition/node/ConditionAnyNode";
 export { ConditionBase } from "./condition/node/ConditionBase";
 
 /** 热更新 */
+export { HotUpdateCode } from "./hotupdate/HotUpdate";
 export { HotUpdateManager } from "./hotupdate/HotUpdateManager";
 
 /** 小游戏 */

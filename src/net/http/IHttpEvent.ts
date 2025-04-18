@@ -8,7 +8,7 @@ import { IHttpResponse } from "./IHttpResponse";
 
 export interface IHttpEvent {
     /** 名称 */
-    name: string;
+    name?: string;
     /** 自定义参数 */
     data?: any;
     /** 网络请求成功 */
