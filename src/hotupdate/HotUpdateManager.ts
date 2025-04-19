@@ -34,7 +34,7 @@ export class HotUpdateManager {
     /** 是否正在更新 或者 正在检查更新 */
     private _updating: boolean = false;
 
-    /** 更新实例 只有更新的时候初始化 检查更新不赋值 */
+    /** 更新实例 */
     private _hotUpdate: HotUpdate = null;
 
     /** 
@@ -117,12 +117,10 @@ export class HotUpdateManager {
                 return;
             }
             this._updating = true;
-            new HotUpdate().checkUpdate().then((res) => {
+            this._hotUpdate = new HotUpdate();
+            this._hotUpdate.checkUpdate().then((res) => {
                 this._updating = false;
                 resolve(res);
-            }).catch((err) => {
-                this._updating = false;
-                resolve({ code: HotUpdateCode.Error, message: JSON.stringify(err) });
             });
         });
     }
@@ -147,15 +145,26 @@ export class HotUpdateManager {
             return;
         }
         this._updating = true;
-        this._hotUpdate = new HotUpdate();
-        this._hotUpdate.startUpdate({
-            skipCheck: res.skipCheck,
-            progress: res.progress,
-            complete: (code: HotUpdateCode, message: string) => {
-                this._updating = false;
-                res.complete(code, message);
-            }
-        });
+        if (res.skipCheck && this._hotUpdate) {
+            this._hotUpdate.startUpdate({
+                skipCheck: res.skipCheck,
+                progress: res.progress,
+                complete: (code: HotUpdateCode, message: string) => {
+                    this._updating = false;
+                    res.complete(code, message);
+                }
+            });
+        } else {
+            this._hotUpdate = new HotUpdate();
+            this._hotUpdate.startUpdate({
+                skipCheck: false,
+                progress: res.progress,
+                complete: (code: HotUpdateCode, message: string) => {
+                    this._updating = false;
+                    res.complete(code, message);
+                }
+            });
+        }
     }
 
     /** 重试失败的资源 */

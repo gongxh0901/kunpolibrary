@@ -25,8 +25,6 @@ export interface IManifestResult extends IPromiseResult {
 export enum HotUpdateCode {
     /** 成功 */
     Succeed = 0,
-    /** 出错了 */
-    Error = -1,
     /** 平台不支持 不需要热更新 */
     PlatformNotSupported = -1000,
     /** 未初始化 */
@@ -146,8 +144,6 @@ export class HotUpdate {
                 } else {
                     this._complete(res.code, res.message);
                 }
-            }).catch((err) => {
-                this._complete(HotUpdateCode.Error, JSON.stringify(err));
             });
         }
     }
