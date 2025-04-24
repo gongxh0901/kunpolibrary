@@ -20,13 +20,13 @@
 ### 使用
 
 #### *一、FairyGUI界面*
-> ![image-20250213105921142](https://gitee.com/gongxinhai/public-image/raw/master/image-20250213105921142.png)
+> ![image-fgui-project](./../image/image-fgui-project.png#pic_left)
 
 #### *二、UI 装饰器使用*
 
 > 注：只有使用了装饰器的内容才能在 `kunpo-fgui` 插件中识别，`kunpo-fgui`插件操作界面如下图
 
-> ![image-20250213110353385](https://gitee.com/gongxinhai/public-image/raw/master/image-20250213110353385.png)
+> ![image-fgui-editor](./../image/image-fgui-editor.png#pic_left)
 
 
 1. 窗口装饰器

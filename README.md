@@ -29,6 +29,7 @@ npm install kunpocc
 15. [时间](./docs/Time.md)
 16. [socket网络模块](./docs/Socket.md)
 17. [小游戏接口封装](./docs/MiniGame.md)
+18. [热更新](./docs/HotUpdate.md)
 ## 类型支持
 
 该库完全使用 TypeScript 编写，提供完整的类型定义文件。
