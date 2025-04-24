@@ -58,6 +58,7 @@
 1. 使用fgui创建一个包，包下新建一个组件，放置一些内容进去， 比如包名是`Home`,  组件名是`HomeWindow`， 注意：**组件需要设置为导出**
 
 2. 导出fgui到creator项目的 `resources`目录下一个ui文件夹下
+
    ![fgui-export](./../image/fgui-export.png#pic_left)
 
 3. 写 `HomeWindow`窗口脚本
