@@ -118,9 +118,9 @@ export class HotUpdate {
                 }
             }).then(res => {
                 log(`${TAG} 检查更新结果:${JSON.stringify(res)}`);
-                resolve(res);
+                res.code === HotUpdateCode.Succeed ? resolve(res) : reject(res);
             }).catch(res => {
-                resolve(res);
+                reject(res);
             });
         });
     }
@@ -138,12 +138,10 @@ export class HotUpdate {
         if (res.skipCheck) {
             this.startUpdateTask();
         } else {
-            this.checkUpdate().then((res) => {
-                if (res.code === HotUpdateCode.Succeed) {
-                    this.startUpdateTask();
-                } else {
-                    this._complete(res.code, res.message);
-                }
+            this.checkUpdate().then(res => {
+                this.startUpdateTask();
+            }).catch((res: ICheckUpdatePromiseResult) => {
+                this._complete(res.code, res.message);
             });
         }
     }
@@ -299,20 +297,20 @@ export class HotUpdate {
                 switch (eventCode) {
                     case native.EventAssetsManager.ERROR_DOWNLOAD_MANIFEST:
                         this._am.setEventCallback(null);
-                        resolve({ code: HotUpdateCode.LoadManifestFailed, message: "检查更新时下载manifest文件失败", needUpdate: false, size: 0 });
+                        resolve({ code: HotUpdateCode.LoadManifestFailed, message: "检查更新时下载manifest文件失败", size: 0 });
                         return;
                     case native.EventAssetsManager.ERROR_PARSE_MANIFEST:
                         this._am.setEventCallback(null);
-                        resolve({ code: HotUpdateCode.ParseManifestFailed, message: "检查更新时解析manifest文件失败", needUpdate: false, size: 0 });
+                        resolve({ code: HotUpdateCode.ParseManifestFailed, message: "检查更新时解析manifest文件失败", size: 0 });
                         return;
                     case native.EventAssetsManager.ALREADY_UP_TO_DATE:
                         this._am.setEventCallback(null);
-                        resolve({ code: HotUpdateCode.LatestVersion, message: "已是最新版本", needUpdate: false, size: 0 });
+                        resolve({ code: HotUpdateCode.LatestVersion, message: "已是最新版本", size: 0 });
                         return;
                     case native.EventAssetsManager.NEW_VERSION_FOUND:
                         // 发现新版本
                         this._am.setEventCallback(null);
-                        resolve({ code: HotUpdateCode.Succeed, message: "发现新版本", needUpdate: true, size: this._am.getTotalBytes() / 1024 });
+                        resolve({ code: HotUpdateCode.Succeed, message: "发现新版本", size: this._am.getTotalBytes() / 1024 });
                         return;
                 }
             });

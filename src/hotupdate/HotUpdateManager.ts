@@ -105,22 +105,27 @@ export class HotUpdateManager {
     public checkUpdate(): Promise<ICheckUpdatePromiseResult> {
         return new Promise((resolve, reject) => {
             if (!Platform.isNativeMobile) {
-                resolve({ code: HotUpdateCode.PlatformNotSupported, message: "当前平台不需要热更新" });
+                reject({ code: HotUpdateCode.PlatformNotSupported, message: "当前平台不需要热更新" });
                 return;
             }
             if (!this._isInitialized) {
-                resolve({ code: HotUpdateCode.NotInitialized, message: "未初始化, 需要先调用init方法" });
+                reject({ code: HotUpdateCode.NotInitialized, message: "未初始化, 需要先调用init方法" });
                 return;
             }
             if (this._updating) {
-                resolve({ code: HotUpdateCode.Updating, message: "正在更新或者正在检查更新中" });
+                reject({ code: HotUpdateCode.Updating, message: "正在更新或者正在检查更新中" });
                 return;
             }
             this._updating = true;
             this._hotUpdate = new HotUpdate();
             this._hotUpdate.checkUpdate().then((res) => {
                 this._updating = false;
+                // 有更新
                 resolve(res);
+            }).catch((res: ICheckUpdatePromiseResult) => {
+                this._updating = false;
+                // 无更新
+                reject(res);
             });
         });
     }

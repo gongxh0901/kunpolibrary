@@ -12,8 +12,6 @@ export interface IPromiseResult {
 }
 
 export interface ICheckUpdatePromiseResult extends IPromiseResult {
-    /** 是否需要更新 */
-    needUpdate?: boolean;
     /** 需要更新的资源大小 (KB) */
     size?: number;
 }
