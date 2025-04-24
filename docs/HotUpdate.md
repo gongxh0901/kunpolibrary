@@ -8,7 +8,7 @@
 
 * cdn上资源结构
 
-  ![image_hotupdate1](./../image/image_hotupdate1.jpeg#pic_left)
+  ![image_hotupdate1](../image/image_hotupdate1.jpeg#pic_left)
 
 ### 规则
 

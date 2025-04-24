@@ -16,7 +16,7 @@
 #### *creator插件`kunpo-ec`*
 > `kunpo-cc`可以方便创建、配置、导出实体，操作界面如下图：
 
-![image-entity-editor](./../image/image-entity-editor.png#pic_left)
+![image-entity-editor](../image/image-entity-editor.png#pic_left)
 
 #### *使用*
 
