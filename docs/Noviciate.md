@@ -41,7 +41,7 @@
 5. 创建一个scene
 
 6. 在新创建的scene中创建入口节点`GameEntry`，创建UI模块节点 `UI` 、窗口容器节点`window`  窗口容器节点可以有多个， 并关联第4步写的入口脚本
-   ![image-basic-config](./../image/image-basic-config.png#pic_left)
+   ![image-basic-config](../image/image-basic-config.png#pic_left)
 
 7. 项目配置完毕，点击运行，此时控制台就能输出 
 
@@ -59,7 +59,7 @@
 
 2. 导出fgui到creator项目的 `resources`目录下一个ui文件夹下
 
-   ![fgui-export](./../image/fgui-export.png#pic_left)
+   ![fgui-export](../image/fgui-export.png#pic_left)
 
 3. 写 `HomeWindow`窗口脚本
 

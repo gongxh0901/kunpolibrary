@@ -23,6 +23,6 @@
 
 3. 创建入口节点`GameEntry`，创建UI模块节点 `UI` 、UI容器节点`window`， 并关联对应的脚本
 
-   ![image-basic-config](./../image/image-basic-config.png#pic_left)
+   ![image-basic-config](../image/image-basic-config.png#pic_left)
 
 4. 配置完毕
