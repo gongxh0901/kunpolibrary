@@ -2552,7 +2552,7 @@ declare namespace AliyMiniprogram {
 		/** 
 		 * 广告加载完成
 		 */
-		onLoad(listener: () => void);
+		onLoad(listener: (res: any) => void);
 		/** 
 		 * 监听激励广告加载错误的事件
 			2	参数类型错误。请确认创建广告时传入的广告单元 ID 合法。	-

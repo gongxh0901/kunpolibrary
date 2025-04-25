@@ -34,29 +34,33 @@ export class WechatAds implements IMiniRewardAds {
             res.fail(MiniErrorCode.AD_NOT_INIT.code, MiniErrorCode.AD_NOT_INIT.msg);
             return;
         }
+        if (this._success) {
+            warn(MiniErrorCode.AD_PLAYING.msg);
+            res.fail(MiniErrorCode.AD_PLAYING.code, MiniErrorCode.AD_PLAYING.msg);
+            return;
+        }
+
         this._success = res.success;
         this._fail = res.fail;
 
         if (!this._video_ad) {
             this._video_ad = this.createVideoAd();
         }
-        this._video_ad.load().then(() => {
-            this._video_ad.show();
-        }).catch((res: { errMsg: string; errNo: number }) => {
-            warn(`广告加载失败 errCode:${res.errNo} errMsg:${res.errMsg}`);
-            this._fail(res.errNo, res.errMsg);
-            this.reset();
+        this._video_ad.show().catch(() => {
+            this._video_ad.load().then(() => {
+                this._video_ad.show().catch((res) => {
+                    this._fail(res.errCode, res.errMsg);
+                    this.reset();
+                });
+            }).catch((res) => {
+                this._fail(res.errCode, res.errMsg);
+                this.reset();
+            });
         });
     }
 
     private createVideoAd(): WechatMiniprogram.RewardedVideoAd {
         let videoAd = wx.createRewardedVideoAd({ adUnitId: this._adUnitId });
-        /** 激励视频错误事件的监听函数 */
-        videoAd.onError((res: WechatMiniprogram.RewardedVideoAdOnErrorListenerResult) => {
-            warn(`激励视频广告 onError:${res.errCode}:${res.errMsg}`);
-            this._fail(res.errCode, res.errMsg);
-            this.reset();
-        });
         videoAd.onClose((res: WechatMiniprogram.RewardedVideoAdOnCloseListenerResult) => {
             if ((res && res.isEnded) || res === undefined) {
                 /** 广告播放完成 */
