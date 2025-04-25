@@ -7,7 +7,7 @@
 import { game, native, sys } from "cc";
 import { ICheckUpdatePromiseResult, IPromiseResult } from "../interface/PromiseResult";
 import { ReadNetFile } from "../net/nettools/ReadNetFile";
-import { debug, log } from "../tool/log";
+import { debug, warn } from "../tool/log";
 import { Utils } from "../tool/Utils";
 import { HotUpdateManager } from "./HotUpdateManager";
 
@@ -93,7 +93,7 @@ export class HotUpdate {
         let localManifest: IHotUpdateConfig = null;
         return new Promise((resolve, reject) => {
             this.readLocalManifest().then(res => {
-                log(`${TAG} 读取本地manifest文件结果:${JSON.stringify(res)}`);
+                // log(`${TAG} 读取本地manifest文件结果:${JSON.stringify(res)}`);
                 if (res.code === HotUpdateCode.Succeed) {
                     localManifest = res.manifest;
                     return this.loadRemoteVersionManifest();
@@ -101,7 +101,7 @@ export class HotUpdate {
                     throw res;
                 }
             }).then(res => {
-                log(`${TAG} 读取远程version.manifest文件结果:${JSON.stringify(res)}`);
+                // log(`${TAG} 读取远程version.manifest文件结果:${JSON.stringify(res)}`);
                 // 获取远程version.manifest文件内容的结果
                 if (res.code === HotUpdateCode.Succeed) {
                     return this.refreshLocalManifest(localManifest, res.manifest);
@@ -109,7 +109,7 @@ export class HotUpdate {
                     throw res;
                 }
             }).then(res => {
-                log(`${TAG} 刷新本地manifest文件结果:${JSON.stringify(res)}`);
+                // log(`${TAG} 刷新本地manifest文件结果:${JSON.stringify(res)}`);
                 if (res.code === HotUpdateCode.Succeed) {
                     return this.startCheckUpdate();
                 } else {
@@ -117,7 +117,7 @@ export class HotUpdate {
                     throw res;
                 }
             }).then(res => {
-                log(`${TAG} 检查更新结果:${JSON.stringify(res)}`);
+                // log(`${TAG} 检查更新结果:${JSON.stringify(res)}`);
                 res.code === HotUpdateCode.Succeed ? resolve(res) : reject(res);
             }).catch(res => {
                 reject(res);
@@ -163,10 +163,10 @@ export class HotUpdate {
 
                     // Prepend the manifest's search path
                     let searchPaths = native.fileUtils.getSearchPaths();
-                    log(`${TAG} 当前搜索路径:${JSON.stringify(searchPaths)}`);
+                    // log(`${TAG} 当前搜索路径:${JSON.stringify(searchPaths)}`);
 
                     let newPaths = this._am.getLocalManifest().getSearchPaths();
-                    log(`${TAG} 新搜索路径:${JSON.stringify(newPaths)}`);
+                    // log(`${TAG} 新搜索路径:${JSON.stringify(newPaths)}`);
 
                     Array.prototype.unshift.apply(searchPaths, newPaths);
                     sys.localStorage.setItem('hotupdate::version', HotUpdateManager.getInstance().version);
@@ -211,7 +211,7 @@ export class HotUpdate {
         // 资源大小
         let size = asset.size;
         // 验证资源md5
-        log(`${TAG} 记录的md5:${expectedMD5} 文件大小:${size} 文件相对路径:${asset.path} 绝对路径:${path}`);
+        // log(`${TAG} 记录的md5:${expectedMD5} 文件大小:${size} 文件相对路径:${asset.path} 绝对路径:${path}`);
         return true;
     }
 
@@ -239,16 +239,16 @@ export class HotUpdate {
                 timeout: 5,
                 responseType: "text",
                 onComplete: (data: string) => {
-                    log(`${TAG} 下载hotconfig文件成功`);
+                    // log(`${TAG} 下载hotconfig文件成功`);
                     if (Utils.isJsonString(data)) {
                         resolve({ code: HotUpdateCode.Succeed, message: "读取远程version.manifest文件成功", manifest: JSON.parse(data) });
                     } else {
-                        log(`${TAG} 远程version.manifest文件格式错误`);
+                        warn(`${TAG} 远程version.manifest文件格式错误`);
                         resolve({ code: HotUpdateCode.ParseVersionFailed, message: "远程version.manifest文件格式错误" });
                     }
                 },
                 onError: (code: number, message: string) => {
-                    log(`${TAG} 读取远程version.manifest文件失败`, code, message);
+                    warn(`${TAG} 读取远程version.manifest文件失败`, code, message);
                     resolve({ code: HotUpdateCode.LoadVersionFailed, message: "读取远程version.manifest文件失败" });
                 }
             });
@@ -277,11 +277,11 @@ export class HotUpdate {
                     manifestRoot = manifestUrl.substring(0, found + 1);
                 }
                 this._am.getLocalManifest().parseJSONString(JSON.stringify(manifest), manifestRoot);
-                log(TAG + "manifest root:" + this._am.getLocalManifest().getManifestRoot());
-                log(TAG + "manifest packageUrl:" + this._am.getLocalManifest().getPackageUrl());
-                log(TAG + "manifest version:" + this._am.getLocalManifest().getVersion());
-                log(TAG + "manifest versionFileUrl:" + this._am.getLocalManifest().getVersionFileUrl());
-                log(TAG + "manifest manifestFileUrl:" + this._am.getLocalManifest().getManifestFileUrl());
+                // log(TAG + "manifest root:" + this._am.getLocalManifest().getManifestRoot());
+                // log(TAG + "manifest packageUrl:" + this._am.getLocalManifest().getPackageUrl());
+                // log(TAG + "manifest version:" + this._am.getLocalManifest().getVersion());
+                // log(TAG + "manifest versionFileUrl:" + this._am.getLocalManifest().getVersionFileUrl());
+                // log(TAG + "manifest manifestFileUrl:" + this._am.getLocalManifest().getManifestFileUrl());
                 resolve({ code: HotUpdateCode.Succeed, message: "更新热更新配置成功" });
             }
         });
@@ -293,7 +293,7 @@ export class HotUpdate {
             // 设置回调
             this._am.setEventCallback((event: native.EventAssetsManager) => {
                 let eventCode = event.getEventCode();
-                log(`${TAG} 检查更新回调code:${eventCode}`);
+                // log(`${TAG} 检查更新回调code:${eventCode}`);
                 switch (eventCode) {
                     case native.EventAssetsManager.ERROR_DOWNLOAD_MANIFEST:
                         this._am.setEventCallback(null);
