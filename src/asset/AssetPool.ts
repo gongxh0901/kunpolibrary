@@ -9,16 +9,27 @@ import { log } from "../tool/log";
 import { AssetUtils } from "./AssetUtils";
 
 export class AssetPool {
-    /** @internal */
+    /** 
+     * 资源名对应的资源
+     * @internal
+     */
     private static _assets: { [path: string]: Asset } = {};
-    /** @internal */
+    /** 
+     * uuid 对应的资源名
+     * @internal
+    */
     private static _uuidToName: Map<string, string> = new Map();
+    /** 
+     * 资源加载批次对应的资源名
+     * @internal
+     */
+    private static _batchAssetNames: Map<string, string[]> = new Map();
 
     /** 批量添加资源 */
-    public static add(asset: Asset[] | Asset, bundle: AssetManager.Bundle = resources): void {
+    public static add(asset: Asset[] | Asset, bundle: AssetManager.Bundle = resources, batchName: string = ""): void {
         if (Array.isArray(asset)) {
             for (const item of asset) {
-                this.add(item, bundle);
+                this.add(item, bundle, batchName);
             }
         } else {
             let uuid = asset.uuid;
@@ -32,6 +43,12 @@ export class AssetPool {
             // log(`>>>uuid:${uuid}, path:${info.path}`);
             this._uuidToName.set(uuid, key);
             this._assets[key] = asset;
+
+            if (batchName) {
+                let names = this._batchAssetNames.get(batchName) || [];
+                names.push(key);
+                this._batchAssetNames.set(batchName, names);
+            }
         }
     }
 
@@ -66,6 +83,21 @@ export class AssetPool {
         }
         let key = this._uuidToName.get(uuid);
         return this._assets[key] as T;
+    }
+
+    /** 
+     * 按资源加载批次释放资源
+     * @param batchName 资源加载批次名 对应 AssetLoader 实例化时传入的 name
+     */
+    public static releaseBatchAssets(batchName: string): void {
+        if (!this._batchAssetNames.has(batchName)) {
+            return;
+        }
+        let names = this._batchAssetNames.get(batchName);
+        for (const name of names) {
+            this.release(name);
+        }
+        this._batchAssetNames.delete(batchName);
     }
 
     /** 按资源路径释放资源 */
@@ -105,15 +137,6 @@ export class AssetPool {
         }
     }
 
-    private static release(key: string): void {
-        if (this._assets[key]) {
-            this._uuidToName.delete(this._assets[key].uuid);
-
-            this._assets[key].decRef();
-            delete this._assets[key];
-        }
-    }
-
     /** 释放所有加载的资源 */
     public static releaseAll(): void {
         for (const key in this._assets) {
@@ -121,6 +144,20 @@ export class AssetPool {
         }
         this._assets = {};
         this._uuidToName.clear();
+        this._batchAssetNames.clear();
+    }
+
+    /** 
+     * 按key释放资源
+     * @internal
+     */
+    private static release(key: string): void {
+        if (this._assets[key]) {
+            this._uuidToName.delete(this._assets[key].uuid);
+
+            this._assets[key].decRef();
+            delete this._assets[key];
+        }
     }
 
     /** 

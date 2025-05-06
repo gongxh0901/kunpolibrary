@@ -3,7 +3,14 @@
 
 ### 特点
   * 可通过路径或者uuid获取资源
+
   * 只适合手动管理资源，单无论加载多少次，卸载一次后删除
+
+  * 可根据 `new kunpo.AssetLoader("batchName")` 传入的 `batchName`批量卸载资源
+
+    > 比如进入战斗时，创建了多个new kunpo.AssetLoader("batchName") 来加载资源，传入的batchName相同
+    >
+    > 等退出战斗后，可以通过 AssetPool.releaseBatchAssets("batchName") 一键释放所有等于batchName的资源
 
 ### 使用
 ```typescript
@@ -14,7 +21,7 @@
         { path: "texture/6101/spriteFrame", type: cc.SpriteFrame, isFile: true },
         { path: "pet", type: cc.SpriteFrame, bundle: "bundle_res" },
     ];
-    let loader = new kunpo.AssetLoader("load");
+    let loader = new kunpo.AssetLoader("batchName");
     loader.start({
         configs: paths,
         complete: () => {
@@ -85,5 +92,11 @@ public static releaseUUID(uuid: string): void
 
 /** 释放所有加载的资源 */
 public static releaseAll(): void
+
+/** 
+ * 按资源加载批次释放资源
+ * @param batchName 资源加载批次名 对应 AssetLoader 实例化时传入的 name
+ */
+public static releaseBatchAssets(batchName: string): void;
 ```
 

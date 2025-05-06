@@ -104,8 +104,8 @@ export class AssetLoader {
      */
     private _completeCounts: Map<string, number> = new Map();
 
-    constructor(name?: string) {
-        this._name = name || "AssetLoader";
+    constructor(batchName?: string) {
+        this._name = batchName || "";
     }
 
     /**
@@ -293,7 +293,7 @@ export class AssetLoader {
             } else {
                 item.status = StateType.Finish;
                 this._completeCounts.set(`${item.bundle}:${item.path}`, assets.length);
-                AssetPool.add(assets, bundle);
+                AssetPool.add(assets, bundle, this._name);
             }
             this._progress && this.updateProgress();
             this.loadNext();
@@ -314,7 +314,7 @@ export class AssetLoader {
             } else {
                 item.status = StateType.Finish;
                 this._completeCounts.set(`${item.bundle}:${item.path}`, 1);
-                AssetPool.add(asset, bundle);
+                AssetPool.add(asset, bundle, this._name);
             }
 
             this._progress && this.updateProgress();
