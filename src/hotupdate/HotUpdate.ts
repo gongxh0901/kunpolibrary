@@ -8,6 +8,7 @@ import { game, native, sys } from "cc";
 import { ICheckUpdatePromiseResult, IPromiseResult } from "../interface/PromiseResult";
 import { ReadNetFile } from "../net/nettools/ReadNetFile";
 import { debug, warn } from "../tool/log";
+import { Time } from "../tool/Time";
 import { Utils } from "../tool/Utils";
 import { HotUpdateManager } from "./HotUpdateManager";
 
@@ -222,7 +223,16 @@ export class HotUpdate {
                 reject({ code: HotUpdateCode.LoadManifestFailed, message: "读取本地project.manifest文件失败" });
                 return;
             }
-            let content = native.fileUtils.getStringFromFile(HotUpdateManager.getInstance().manifestUrl);
+            let writablePath = HotUpdateManager.getInstance().writablePath;
+            // 本地内容
+            let content = "";
+            let cacheManifestPath = writablePath + "project.manifest";
+            if (native.fileUtils.isFileExist(cacheManifestPath)) {
+                content = native.fileUtils.getStringFromFile(cacheManifestPath);
+            } else {
+                let manifestUrl = HotUpdateManager.getInstance().manifestUrl;
+                content = native.fileUtils.getStringFromFile(manifestUrl);
+            }
             if (content) {
                 resolve({ code: HotUpdateCode.Succeed, message: "读取本地project.manifest文件成功", manifest: JSON.parse(content) });
             } else {
@@ -262,8 +272,8 @@ export class HotUpdate {
                 resolve({ code: HotUpdateCode.LatestVersion, message: "已是最新版本" });
             } else {
                 // 替换manifest中的内容
-                manifest.remoteManifestUrl = versionManifest.remoteManifestUrl;
-                manifest.remoteVersionUrl = versionManifest.remoteVersionUrl;
+                manifest.remoteManifestUrl = Utils.addUrlParam(versionManifest.remoteManifestUrl, "timeStamp", `${Time.now()}`);
+                manifest.remoteVersionUrl = Utils.addUrlParam(versionManifest.remoteVersionUrl, "timeStamp", `${Time.now()}`);
                 manifest.packageUrl = versionManifest.packageUrl;
 
                 // 注册本地manifest根目录
