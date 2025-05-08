@@ -2,12 +2,31 @@
 基于 Cocos Creator 3.0+ 的一套游戏框架，提供了一系列实用模块，帮助开发者快速构建高质量的游戏项目。
 项目持续优化中，敬请期待~~~
 
+>  此项目是框架源码，不是creator项目
+>
+> demo见最下方仓库地址
 
 ## 安装kunpocc
+
 项目已发布到 `npm`, 安装方法如下：
-> 如果连不上npm, 可使用国内镜像 比如: 阿里
+
 ```bash
 npm install kunpocc
+```
+
+> 如果连不上npm, 可使用国内镜像 比如: 淘宝、腾讯、华为
+
+```bash
+# 官方
+npm set registry https://registry.npmjs.org
+# 中国镜像站（用这个就行）
+npm set registry https://registry.npmmirror.com/
+#腾讯
+npm set registry https://mirrors.cloud.tencent.com/npm/
+# 华为
+npm set registry https://repo.huaweicloud.com/repository/npm/
+# 阿里
+npm set registry https://npm.aliyun.com
 ```
 
 # 目录
@@ -50,7 +69,6 @@ gongxh
 [kunpocc gitree地址](https://gitee.com/gongxinhai/kunpolibrary)
 
 [kunpocc github地址](https://github.com/Gongxh0901/kunpolibrary)
-
 
 [github demo地址](https://github.com/Gongxh0901/KunpoDemo)
 
