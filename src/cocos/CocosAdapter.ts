@@ -38,17 +38,22 @@ export class CocosAdapter extends Adapter {
      * @internal
      */
     protected registerResizeCallback(callback: (...args: any) => void): void {
-        ccScreen.on("window-resize", (...args: any) => {
-            debug("window-resize");
-            callback(...args);
-        }, this);
-        ccScreen.on("orientation-change", (...args: any) => {
-            debug("orientation-change");
-            callback(...args);
-        }, this);
-        ccScreen.on("fullscreen-change", (...args: any) => {
-            debug("fullscreen-change");
-            callback(...args);
-        }, this);
+        if (ccScreen && ccScreen.on) {
+            ccScreen.on("window-resize", (...args: any) => {
+                debug("window-resize");
+                callback(...args);
+            }, this);
+            ccScreen.on("orientation-change", (...args: any) => {
+                debug("orientation-change");
+                callback(...args);
+            }, this);
+            ccScreen.on("fullscreen-change", (...args: any) => {
+                debug("fullscreen-change");
+                callback(...args);
+            }, this);
+        } else {
+            // 3.8.0之前的版本
+            view.setResizeCallback(callback);
+        }
     }
 }

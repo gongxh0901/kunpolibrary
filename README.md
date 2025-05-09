@@ -1,6 +1,12 @@
 # KunpoLib
-基于 Cocos Creator 3.0+ 的一套游戏框架，提供了一系列实用模块，帮助开发者快速构建高质量的游戏项目。
+基于 Cocos Creator 的一套游戏框架，提供了一系列实用模块，帮助开发者快速构建高质量的游戏项目。
 项目持续优化中，敬请期待~~~
+
+
+#### 版本支持
+- creator 3.7之前的版本理论上也支持，未测试
+- creator 3.7+ 支持
+- creator 3.8+ 支持
 
 >  此项目是框架源码，不是creator项目
 >
@@ -66,7 +72,7 @@ gongxh
 *  邮箱: gong.xinhai@163.com
 
 ## 仓库
-[kunpocc gitree地址](https://gitee.com/gongxinhai/kunpolibrary)
+[kunpocc gitee地址](https://gitee.com/gongxinhai/kunpolibrary)
 
 [kunpocc github地址](https://github.com/Gongxh0901/kunpolibrary)
 

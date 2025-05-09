@@ -3,10 +3,11 @@
  * @Date: 2024-12-07
  * @Description: cocos UI模块
  */
-import { _decorator, debug } from "cc";
+import { _decorator } from "cc";
 
 import { GRoot } from "fairygui-cc";
 import { ModuleBase } from "../module/ModuleBase";
+import { debug } from "../tool/log";
 import { WindowManager } from "../ui/WindowManager";
 import { WindowResPool } from "../ui/WindowResPool";
 import { CocosWindowContainer } from "./CocosWindowContainer";

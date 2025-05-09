@@ -32,7 +32,7 @@ export class AssetPool {
                 this.add(item, bundle, batchName);
             }
         } else {
-            let uuid = asset.uuid;
+            let uuid = asset.uuid || asset._uuid;
             if (this._uuidToName.has(uuid)) {
                 return;
             }
