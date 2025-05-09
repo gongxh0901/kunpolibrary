@@ -112,7 +112,21 @@
    }
    ```
    
+6. 控制器和动画装饰器
 
+   ```typescript
+   import { Window, _uidecorator } from 'kunpocc';
+   const { uiclass, uiprop, uiclick, uicontrol, uitransition } = _uidecorator;
+   
+   @uiclass("Window", "Home", "MyWindow")
+   export class MyWindow extends Window {
+       // FairyGUI 组件属性装饰器
+       @uicontrol private control: Controller;
+       @uitransition private transition: Transition;
+   }
+   ```
+
+   
 #### *三、创建窗口*
 
 1. 新建窗口类

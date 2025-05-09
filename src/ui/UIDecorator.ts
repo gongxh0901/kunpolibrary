@@ -10,7 +10,10 @@ export namespace _uidecorator {
     const UIPropMeta = "__uipropmeta__"
     /** @internal */
     const UICBMeta = "__uicbmeta__"
-
+    /** @internal */
+    const UIControlMeta = "__uicontrolmeta__"
+    /** @internal */
+    const UITransitionMeta = "__uitransitionmeta__"
 
     interface IUIInfoBase {
         /** 构造函数 */
@@ -19,6 +22,10 @@ export namespace _uidecorator {
         props: Record<string, 1>;
         /** 方法 */
         callbacks: Record<string, Function>;
+        /** 控制器 */
+        controls: Record<string, 1>;
+        /** 动画 */
+        transitions: Record<string, 1>;
     }
 
     /**
@@ -58,6 +65,8 @@ export namespace _uidecorator {
                 ctor: ctor,
                 props: ctor[UIPropMeta] || null,
                 callbacks: ctor[UICBMeta] || null,
+                controls: ctor[UIControlMeta] || null,
+                transitions: ctor[UITransitionMeta] || null,
                 res: {
                     group: groupName,
                     pkg: pkgName,
@@ -100,6 +109,8 @@ export namespace _uidecorator {
                 ctor: ctor,
                 props: ctor[UIPropMeta] || null,
                 callbacks: ctor[UICBMeta] || null,
+                controls: ctor[UIControlMeta] || null,
+                transitions: ctor[UITransitionMeta] || null,
                 res: {
                     pkg: pkg,
                     name: name,
@@ -138,6 +149,8 @@ export namespace _uidecorator {
                 ctor: ctor,
                 props: ctor[UIPropMeta] || null,
                 callbacks: ctor[UICBMeta] || null,
+                controls: ctor[UIControlMeta] || null,
+                transitions: ctor[UITransitionMeta] || null,
                 res: {
                     pkg: pkg,
                     name: name,
@@ -156,6 +169,30 @@ export namespace _uidecorator {
     export function uiprop(target: Object, name: string): any {
         // debug("属性装饰器:", target.constructor, name);
         ObjectHelper.getObjectProp(target.constructor, UIPropMeta)[name] = 1;
+    }
+
+    /**
+     * UI控制器装饰器
+     * @param {Object} target 实例成员的类的原型
+     * @param {string} name 属性名
+     * 
+     * example: @uicontrol node: GObject
+     */
+    export function uicontrol(target: Object, name: string): any {
+        // debug("属性装饰器:", target.constructor, name);
+        ObjectHelper.getObjectProp(target.constructor, UIControlMeta)[name] = 1;
+    }
+
+    /**
+     * UI动画装饰器
+     * @param {Object} target 实例成员的类的原型
+     * @param {string} name 属性名
+     * 
+     * example: @uitransition node: GObject
+     */
+    export function uitransition(target: Object, name: string): any {
+        // debug("属性装饰器:", target.constructor, name);
+        ObjectHelper.getObjectProp(target.constructor, UITransitionMeta)[name] = 1;
     }
 
     /**
