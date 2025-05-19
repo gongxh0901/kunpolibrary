@@ -17,6 +17,7 @@ import { debug, log } from "../tool/log";
 import { Time } from "../tool/Time";
 import { PropsHelper } from "../ui/PropsHelper";
 import { CocosAdapter } from "./CocosAdapter";
+const _global = (globalThis || window || global) as any;
 const { property } = _decorator;
 export abstract class CocosEntry extends Component {
     @property({ displayName: "uiConfig", type: JsonAsset, tooltip: "编辑器导出的UI配置, 可不设置, 之后通过 PropsHelper.setConfig 手动设置" }) uiConfig: JsonAsset = null;
@@ -48,7 +49,10 @@ export abstract class CocosEntry extends Component {
         director.addPersistRootNode(this.node);
         this.node.setSiblingIndex(this.node.children.length - 1);
         PropsHelper.setConfig(this.uiConfig?.json);
-        this.ecConfig && ECManager.registerEntityConfig(this.ecConfig.json);
+        let ecsMaps = _global["getKunpoRegisterECSMaps"]?.();
+        if (this.ecConfig && (!ecsMaps || ecsMaps.size <= 0)) {
+            ECManager.registerEntityConfig(this.ecConfig.json);
+        }
         this.initPlatform();
         this.initEvent();
         this.initTime();
