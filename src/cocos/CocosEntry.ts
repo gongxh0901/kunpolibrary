@@ -48,7 +48,7 @@ export abstract class CocosEntry extends Component {
         director.addPersistRootNode(this.node);
         this.node.setSiblingIndex(this.node.children.length - 1);
         PropsHelper.setConfig(this.uiConfig?.json);
-        ECManager.registerEntityConfig(this.ecConfig?.json);
+        this.ecConfig && ECManager.registerEntityConfig(this.ecConfig.json);
         this.initPlatform();
         this.initEvent();
         this.initTime();

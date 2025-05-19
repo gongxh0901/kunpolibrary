@@ -86,6 +86,9 @@ export class ECManager {
      * @param config 实体配置信息，格式为 {实体名: {组件名: 组件数据}}
      */
     public static registerEntityConfig(config: { [entityName: string]: IEntityConfig }): void {
+        if (!config) {
+            return;
+        }
         // 遍历并注册每个实体的配置
         for (const entityName in config) {
             this._entityList[entityName] = config[entityName];

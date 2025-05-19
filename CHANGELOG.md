@@ -18,3 +18,5 @@
 - UI模块添加fgui控制器和动画装饰器，详情见 [UI模块](./docs/UI.md)
 ## 1.0.34
 - 兼容性修改，兼容creator3.7及之后的版本
+## 1.0.35
+- 修复未配置GameEntiry中的ecConfig时报错的问题
