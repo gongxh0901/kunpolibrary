@@ -33,6 +33,7 @@ export { Box } from "./quadtree/Box";
 export { Circle } from "./quadtree/Circle";
 export { Polygon } from "./quadtree/Polygon";
 export { QTConfig, QuadTree } from "./quadtree/QuadTree";
+export { Shape } from "./quadtree/Shape";
 
 /** 行为树 */
 export { Agent as BTAgent } from "./behaviortree/Agent";
