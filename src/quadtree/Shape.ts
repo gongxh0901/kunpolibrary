@@ -4,7 +4,7 @@
  * @Description: 四叉树的 形状基类
  */
 
-import { Graphics, Rect, Vec2 } from "cc";
+import { Rect, Vec2 } from "cc";
 
 export abstract class Shape {
     /**
@@ -70,11 +70,6 @@ export abstract class Shape {
 
     public destroy(): void {
         this._valid = false;
-    }
-
-    /** @internal */
-    public drawShape(draw: Graphics): void {
-
     }
 }
 

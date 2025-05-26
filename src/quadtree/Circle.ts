@@ -4,7 +4,7 @@
  * @Description: 原型
  */
 
-import { Graphics, Rect } from "cc";
+import { Rect } from "cc";
 import { Shape } from "./Shape";
 
 export class Circle extends Shape {
@@ -20,10 +20,5 @@ export class Circle extends Shape {
 
     public getBoundingBox(): Rect {
         return this.boundingBox;
-    }
-
-    /** @internal */
-    public drawShape(draw: Graphics): void {
-        draw && draw.circle(this.position.x, this.position.y, this.radius * this.scale);
     }
 }

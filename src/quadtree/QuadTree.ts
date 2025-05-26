@@ -299,7 +299,6 @@ export class QuadTree {
                         this._trees[quadrant].insert(shapes.splice(i, 1)[0]);
                     }
                 }
-                shape.drawShape(this._graphics);
             }
         }
     }

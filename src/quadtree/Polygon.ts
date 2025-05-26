@@ -4,7 +4,7 @@
  * @Description: 多边形
  */
 
-import { Graphics, Rect, v2, Vec2 } from "cc";
+import { Rect, v2, Vec2 } from "cc";
 import { Shape } from "./Shape";
 
 
@@ -80,18 +80,6 @@ export class Polygon extends Shape {
         this._realPoints = new Array(pts.length);
         for (let i = 0, len = pts.length; i < len; i++) {
             this._realPoints[i] = v2(pts[i].x, pts[i].y);
-        }
-    }
-
-    /** @internal */
-    public drawShape(draw: Graphics): void {
-        if (draw) {
-            let points = this.points;
-            draw.moveTo(points[0].x, points[0].y);
-            for (let i = 1; i < points.length; i++) {
-                draw.lineTo(points[i].x, points[i].y);
-            }
-            draw.lineTo(points[0].x, points[0].y);
         }
     }
 }
