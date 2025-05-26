@@ -14,9 +14,6 @@ export abstract class Shape {
      */
     public tag: number = -1;
 
-    /** 被标记为无效 下次更新时删除 */
-    public invalid: boolean = false;
-
     /** 缩放 */
     public scale: number; // 缩放
 
@@ -31,6 +28,9 @@ export abstract class Shape {
 
     /** 旋转角度 @internal */
     protected _rotation: number;
+
+    /** 是否有效 下次更新时删除 @internal */
+    private _valid: boolean = true;
 
     constructor(tag: number) {
         this.tag = tag;
@@ -61,8 +61,16 @@ export abstract class Shape {
         return this._rotation;
     }
 
+    public get valid(): boolean {
+        return this._valid;
+    }
+
     /** 包围盒 子类重写 */
     public abstract getBoundingBox(): Rect;
+
+    public destroy(): void {
+        this._valid = false;
+    }
 
     /** @internal */
     public drawShape(draw: Graphics): void {

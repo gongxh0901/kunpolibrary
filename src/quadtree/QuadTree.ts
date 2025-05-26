@@ -4,7 +4,7 @@
  * @Description: 树节点
  */
 
-import { Color, Graphics, Intersection2D, rect, Rect } from "cc";
+import { Graphics, Intersection2D, rect, Rect } from "cc";
 import { Box } from "./Box";
 import { Circle } from "./Circle";
 import { Polygon } from "./Polygon";
@@ -51,7 +51,7 @@ export const QTConfig = {
 
 export class QuadTree {
     /** @internal */
-    private _draw: Graphics;
+    private _graphics: Graphics;
     /** @internal */
     private _shapes_map: Map<number, Shape[]>; // 根据类型存储形状对象
     /** @internal */
@@ -66,14 +66,14 @@ export class QuadTree {
      * 创建一个四叉树
      * @param rect 该节点对应的象限在屏幕上的范围
      * @param level 该节点的深度，根节点的默认深度为0
-     * @param draw cc中用于绘制树的绘制组件
+     * @param graphics cc中用于绘制树的绘制组件
      */
-    constructor(rect: Rect, level: number = 0, draw: Graphics = undefined) {
+    constructor(rect: Rect, level: number = 0, graphics: Graphics = undefined) {
         this._shapes_map = new Map();
         this._trees = [];
         this._level = level || 0;
         this._bounds = rect;
-        this._draw = draw;
+        this._graphics = graphics;
     }
 
     /**
@@ -145,7 +145,7 @@ export class QuadTree {
             }
             let shapes = this._shapes_map.get(key);
             for (const other_shape of shapes) {
-                if (!other_shape.invalid && shape !== other_shape && isCollide(shape, other_shape)) {
+                if (other_shape.valid && shape !== other_shape && isCollide(shape, other_shape)) {
                     result.push(other_shape);
                 }
             }
@@ -159,7 +159,7 @@ export class QuadTree {
     public update(root?: QuadTree): void {
         root = root || this;
         let isRoot = (root === this);
-        isRoot && this._strokeClear()
+        isRoot && this.graphicsClear();
         this._updateIgnoreShapes(root);
         this._updateShapes(root);
         // 递归刷新子象限
@@ -167,10 +167,10 @@ export class QuadTree {
             tree.update(root);
         }
         this._removeChildTree();
-        this._drawTreeBound(root);
+        this.graphicsTreeBound(root);
 
-        if (isRoot && this._draw) {
-            this._draw.stroke();
+        if (isRoot && this._graphics) {
+            this._graphics.stroke();
         }
     }
 
@@ -244,10 +244,10 @@ export class QuadTree {
         let halfheight = bounds.height * 0.5;
         let nextLevel = this._level + 1;
         this._trees.push(
-            new QuadTree(rect(bounds.center.x, bounds.center.y, halfwidth, halfheight), nextLevel, this._draw),
-            new QuadTree(rect(x, bounds.center.y, halfwidth, halfheight), nextLevel, this._draw),
-            new QuadTree(rect(x, y, halfwidth, halfheight), nextLevel, this._draw),
-            new QuadTree(rect(bounds.center.x, y, halfwidth, halfheight), nextLevel, this._draw)
+            new QuadTree(rect(bounds.center.x, bounds.center.y, halfwidth, halfheight), nextLevel, this._graphics),
+            new QuadTree(rect(x, bounds.center.y, halfwidth, halfheight), nextLevel, this._graphics),
+            new QuadTree(rect(x, y, halfwidth, halfheight), nextLevel, this._graphics),
+            new QuadTree(rect(bounds.center.x, y, halfwidth, halfheight), nextLevel, this._graphics)
         );
     }
 
@@ -268,7 +268,7 @@ export class QuadTree {
         }
         for (let i = len - 1; i >= 0; i--) {
             let shape = this._ignore_shapes[i];
-            if (shape.invalid) {
+            if (!shape.valid) {
                 this._ignore_shapes.splice(i, 1);
                 continue;
             }
@@ -285,7 +285,7 @@ export class QuadTree {
             let len = shapes.length;
             for (let i = len - 1; i >= 0; i--) {
                 let shape = shapes[i];
-                if (shape.invalid) {
+                if (!shape.valid) {
                     shapes.splice(i, 1);
                     continue;
                 }
@@ -299,7 +299,7 @@ export class QuadTree {
                         this._trees[quadrant].insert(shapes.splice(i, 1)[0]);
                     }
                 }
-                shape.drawShape(this._draw);
+                shape.drawShape(this._graphics);
             }
         }
     }
@@ -323,30 +323,28 @@ export class QuadTree {
     }
 
     /** 画出当前树的边界 @internal */
-    private _drawTreeBound(root: QuadTree): void {
-        if (!this._draw) {
+    private graphicsTreeBound(root: QuadTree): void {
+        if (!this._graphics) {
             return;
         }
-        this._draw.lineWidth = 4;
-        this._draw.strokeColor = Color.BLUE;
         if (this._trees.length > 0) {
-            this._draw.moveTo(this._bounds.x, this._bounds.center.y);
-            this._draw.lineTo(this._bounds.x + this._bounds.width, this._bounds.center.y);
+            this._graphics.moveTo(this._bounds.x, this._bounds.center.y);
+            this._graphics.lineTo(this._bounds.x + this._bounds.width, this._bounds.center.y);
 
-            this._draw.moveTo(this._bounds.center.x, this._bounds.y);
-            this._draw.lineTo(this._bounds.center.x, this._bounds.y + this._bounds.height);
+            this._graphics.moveTo(this._bounds.center.x, this._bounds.y);
+            this._graphics.lineTo(this._bounds.center.x, this._bounds.y + this._bounds.height);
         }
         if (this == root) {
-            this._draw.moveTo(this._bounds.xMin, this._bounds.yMin);
-            this._draw.lineTo(this._bounds.xMax, this._bounds.yMin);
-            this._draw.lineTo(this._bounds.xMax, this._bounds.yMax);
-            this._draw.lineTo(this._bounds.xMin, this._bounds.yMax);
-            this._draw.lineTo(this._bounds.xMin, this._bounds.yMin);
+            this._graphics.moveTo(this._bounds.xMin, this._bounds.yMin);
+            this._graphics.lineTo(this._bounds.xMax, this._bounds.yMin);
+            this._graphics.lineTo(this._bounds.xMax, this._bounds.yMax);
+            this._graphics.lineTo(this._bounds.xMin, this._bounds.yMax);
+            this._graphics.lineTo(this._bounds.xMin, this._bounds.yMin);
         }
     }
 
     /** 清除绘制 @internal */
-    private _strokeClear(): void {
-        this._draw && this._draw.clear();
+    private graphicsClear(): void {
+        this._graphics && this._graphics.clear();
     }
 }
