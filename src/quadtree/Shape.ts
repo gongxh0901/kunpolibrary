@@ -41,9 +41,9 @@ export abstract class Shape {
         this._position = new Vec2();
     }
 
-    set position(pos: Vec2) {
-        this._position.x = pos.x;
-        this._position.y = pos.y;
+    public setPosition(x: number, y: number) {
+        this._position.x = x;
+        this._position.y = y;
     }
 
     get position(): Vec2 {
