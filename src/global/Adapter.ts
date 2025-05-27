@@ -4,14 +4,17 @@
  * @Description: 适配用的类
  */
 
-import { debug, ResolutionPolicy, view } from "cc";
+import { ResolutionPolicy, view } from "cc";
+import { debug } from "../tool/log";
 import { WindowManager } from "../ui/WindowManager";
+import { GlobalEvent } from "./GlobalEvent";
 import { Screen } from "./Screen";
 import { size } from "./header";
 
 export abstract class Adapter {
     /** @internal */
     public init() {
+        debug("初始化适配器");
         // 设计尺寸 不会变化
         let designSize = this.getDesignSize();
         Screen.DesignHeight = designSize.height;
@@ -54,6 +57,8 @@ export abstract class Adapter {
         }
         WindowManager._screenResize();
         this.printScreen();
+        // 发送屏幕尺寸发生变化的消息
+        GlobalEvent.send("kunpo::adapter::resize");
     }
 
     /** @internal */
