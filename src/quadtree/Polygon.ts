@@ -5,6 +5,7 @@
  */
 
 import { Rect, v2, Vec2 } from "cc";
+import { ShapeType } from "./IShape";
 import { Shape } from "./Shape";
 
 
@@ -30,6 +31,11 @@ function rotate(radians: number, x: number, y: number): Vec2 {
 export class Polygon extends Shape {
     protected _points: Vec2[] = []; // 多边形
     protected _realPoints: Vec2[];
+
+    public get shapeType(): ShapeType {
+        return ShapeType.POLYGON;
+    }
+
     constructor(points: Vec2[], tag: number = -1) {
         super(tag);
         this._points = points;
@@ -41,7 +47,7 @@ export class Polygon extends Shape {
     }
 
     public getBoundingBox(): Rect {
-        if (this.isDirty) {
+        if (this._isDirty) {
             let minX = Number.MAX_VALUE;
             let maxX = Number.MIN_VALUE;
             let minY = Number.MAX_VALUE;
@@ -53,13 +59,13 @@ export class Polygon extends Shape {
                 maxX = Math.max(maxX, a.x);
                 maxY = Math.max(maxY, a.y);
             }
-            this.boundingBox.x = minX;
-            this.boundingBox.y = minY;
-            this.boundingBox.width = maxX - minX;
-            this.boundingBox.height = maxY - minY;
-            this.isDirty = false;
+            this._boundingBox.x = minX;
+            this._boundingBox.y = minY;
+            this._boundingBox.width = maxX - minX;
+            this._boundingBox.height = maxY - minY;
+            this._isDirty = false;
         }
-        return this.boundingBox;
+        return this._boundingBox;
     }
 
     public get points(): Vec2[] {

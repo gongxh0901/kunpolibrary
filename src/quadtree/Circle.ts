@@ -5,20 +5,26 @@
  */
 
 import { Rect } from "cc";
+import { ShapeType } from "./IShape";
 import { Shape } from "./Shape";
 
 export class Circle extends Shape {
     public radius: number; // 半径
+
+    public get shapeType(): ShapeType {
+        return ShapeType.CIRCLE;
+    }
+
     constructor(radius: number, tag: number = -1) {
         super(tag);
         this.radius = radius;
-        this.boundingBox.x = -this.radius;
-        this.boundingBox.y = -this.radius;
-        this.boundingBox.width = this.radius * 2;
-        this.boundingBox.height = this.radius * 2;
+        this._boundingBox.x = -this.radius;
+        this._boundingBox.y = -this.radius;
+        this._boundingBox.width = this.radius * 2;
+        this._boundingBox.height = this.radius * 2;
     }
 
     public getBoundingBox(): Rect {
-        return this.boundingBox;
+        return this._boundingBox;
     }
 }

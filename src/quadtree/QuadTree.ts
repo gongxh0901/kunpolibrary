@@ -5,10 +5,9 @@
  */
 
 import { Graphics, Intersection2D, rect, Rect } from "cc";
-import { Box } from "./Box";
 import { Circle } from "./Circle";
+import { IShape, ShapeType } from "./IShape";
 import { Polygon } from "./Polygon";
-import { Shape } from "./Shape";
 
 // 1|0
 // ---
@@ -25,18 +24,18 @@ const circleCircle = Intersection2D.circleCircle;
 const polygonCircle = Intersection2D.polygonCircle;
 const polygonPolygon = Intersection2D.polygonPolygon;
 /** 两个形状是否碰撞 */
-function isCollide(shape1: Shape, shape2: Shape): boolean {
-    if (shape1 instanceof Circle) {
-        if (shape2 instanceof Circle) {
-            return circleCircle(shape1.position, shape1.radius * shape1.scale, shape2.position, shape2.radius * shape2.scale);
-        } else if (shape2 instanceof Box || shape2 instanceof Polygon) {
-            return polygonCircle(shape2.points, shape1.position, shape1.radius * shape1.scale);
+function isCollide(shape1: IShape, shape2: IShape): boolean {
+    if (shape1.shapeType === ShapeType.CIRCLE) {
+        if (shape2.shapeType === ShapeType.CIRCLE) {
+            return circleCircle(shape1.position, (shape1 as Circle).radius * shape1.scale, shape2.position, (shape2 as Circle).radius * shape2.scale);
+        } else if (shape2.shapeType === ShapeType.BOX || shape2.shapeType === ShapeType.POLYGON) {
+            return polygonCircle((shape2 as Polygon).points, shape1.position, (shape1 as Circle).radius * shape1.scale);
         }
-    } else if (shape1 instanceof Box || shape1 instanceof Polygon) {
-        if (shape2 instanceof Circle) {
-            return polygonCircle(shape1.points, shape2.position, shape2.radius * shape2.scale);
-        } else if (shape2 instanceof Box || shape2 instanceof Polygon) {
-            return polygonPolygon(shape2.points, shape1.points);
+    } else if (shape1.shapeType === ShapeType.BOX || shape1.shapeType === ShapeType.POLYGON) {
+        if (shape2.shapeType === ShapeType.CIRCLE) {
+            return polygonCircle((shape1 as Polygon).points, shape2.position, (shape2 as Circle).radius * shape2.scale);
+        } else if (shape2.shapeType === ShapeType.BOX || shape2.shapeType === ShapeType.POLYGON) {
+            return polygonPolygon((shape2 as Polygon).points, (shape1 as Polygon).points);
         }
     }
     return false;
@@ -53,7 +52,7 @@ export class QuadTree {
     /** @internal */
     private _graphics: Graphics;
     /** @internal */
-    private _shapes_map: Map<number, Shape[]>; // 根据类型存储形状对象
+    private _shapes_map: Map<number, IShape[]>; // 根据类型存储形状对象
     /** @internal */
     private _trees: QuadTree[] = []; // 存储四个子节点
     /** @internal */
@@ -61,7 +60,7 @@ export class QuadTree {
     /** @internal */
     private _bounds: Rect; // 树的外框
     /** @internal */
-    private _ignore_shapes: Shape[] = []; // 不在树中的形状
+    private _ignore_shapes: IShape[] = []; // 不在树中的形状
     /**
      * 创建一个四叉树
      * @param rect 该节点对应的象限在屏幕上的范围
@@ -82,7 +81,7 @@ export class QuadTree {
      * 如果当前节点存在子节点，则检查物体到底属于哪个子节点，如果能匹配到子节点，则将该物体插入到该子节点中
      * 如果当前节点不存在子节点，将该物体存储在当前节点。随后，检查当前节点的存储数量，如果超过了最大存储数量，则对当前节点进行划分，划分完成后，将当前节点存储的物体重新分配到四个子节点中。
      */
-    public insert(shape: Shape): void {
+    public insert(shape: IShape): void {
         // 如果该节点下存在子节点
         if (this._trees.length > 0) {
             let quadrant = this._getQuadrant(shape);
@@ -114,28 +113,28 @@ export class QuadTree {
     }
 
     /** @internal */
-    private _insert(shape: Shape): void {
-        if (!this._shapes_map.has(shape.tag)) {
-            this._shapes_map.set(shape.tag, []);
+    private _insert(shape: IShape): void {
+        if (!this._shapes_map.has(shape.mask)) {
+            this._shapes_map.set(shape.mask, []);
         }
-        this._shapes_map.get(shape.tag).push(shape);
+        this._shapes_map.get(shape.mask).push(shape);
     }
 
     /**
      * 检索功能：
      * 给出一个物体对象，该函数负责将该物体可能发生碰撞的所有物体选取出来。该函数先查找物体所属的象限，该象限下的物体都是有可能发生碰撞的，然后再递归地查找子象限...
      */
-    public collide(shape: Shape, tag: number = -1): Shape[] {
-        let result: any[] = [];
+    public collide(shape: IShape, tag: number = -1): IShape[] {
+        let result: IShape[] = [];
         if (this._trees.length > 0) {
             let quadrant = this._getQuadrant(shape);
             if (quadrant === Quadrant.MORE) {
                 let len = this._trees.length - 1;
                 for (let i = len; i >= 0; i--) {
-                    result = result.concat(this._trees[i].collide(shape, tag));
+                    result.push(...this._trees[i].collide(shape, tag));
                 }
             } else {
-                result = result.concat(this._trees[quadrant].collide(shape, tag));
+                result.push(...this._trees[quadrant].collide(shape, tag));
             }
         }
 
@@ -145,7 +144,7 @@ export class QuadTree {
             }
             let shapes = this._shapes_map.get(key);
             for (const other_shape of shapes) {
-                if (other_shape.valid && shape !== other_shape && isCollide(shape, other_shape)) {
+                if (other_shape.isValid && shape !== other_shape && isCollide(shape, other_shape)) {
                     result.push(other_shape);
                 }
             }
@@ -185,7 +184,7 @@ export class QuadTree {
     }
 
     /** 当前形状是否包含在象限内 @internal */
-    private _isInner(shape: Shape, bounds: Rect): boolean {
+    private _isInner(shape: IShape, bounds: Rect): boolean {
         let rect = shape.getBoundingBox();
         return (
             rect.xMin * shape.scale + shape.position.x > bounds.xMin &&
@@ -204,7 +203,7 @@ export class QuadTree {
      * 右下：象限四
      * @internal
      */
-    private _getQuadrant(shape: Shape): Quadrant {
+    private _getQuadrant(shape: IShape): Quadrant {
         let bounds = this._bounds;
         let rect = shape.getBoundingBox();
         let center = bounds.center;
@@ -262,42 +261,66 @@ export class QuadTree {
 
     /** 更新忽略掉的形状 @internal */
     private _updateIgnoreShapes(root: QuadTree): void {
-        let len = this._ignore_shapes.length;
-        if (len <= 0) {
-            return;
-        }
-        for (let i = len - 1; i >= 0; i--) {
-            let shape = this._ignore_shapes[i];
-            if (!shape.valid) {
-                this._ignore_shapes.splice(i, 1);
+        let shapes = this._ignore_shapes;
+        let lastIndex = shapes.length - 1;
+        let index = 0;
+        while (index < lastIndex) {
+            let shape = shapes[index];
+            if (!shape.isValid) {
+                if (index !== lastIndex) {
+                    shapes[index] = shapes[lastIndex];
+                }
+                shapes.pop();
+                lastIndex--;
                 continue;
             }
-            if (!this._isInner(shape, this._bounds)) {
-                continue;
+            if (this._isInner(shape, this._bounds)) {
+                if (index !== lastIndex) {
+                    [shapes[index], shapes[lastIndex]] = [shapes[lastIndex], shapes[index]];
+                }
+                root.insert(shapes.pop());
+            } else {
+                index++;
             }
-            root.insert(this._ignore_shapes.splice(i, 1)[0]);
         }
     }
 
     /** 更新有效的形状 @internal */
     private _updateShapes(root: QuadTree): void {
         for (const shapes of this._shapes_map.values()) {
-            let len = shapes.length;
-            for (let i = len - 1; i >= 0; i--) {
-                let shape = shapes[i];
-                if (!shape.valid) {
-                    shapes.splice(i, 1);
+            let lastIndex = shapes.length - 1;
+            let index = 0;
+            while (index <= lastIndex) {
+                let shape = shapes[index];
+                if (!shape.isValid) {
+                    if (index !== lastIndex) {
+                        shapes[index] = shapes[lastIndex];
+                    }
+                    shapes.pop();
+                    lastIndex--;
                     continue;
                 }
                 if (!this._isInner(shape, this._bounds)) {
                     // 如果矩形不属于该象限，则将该矩形重新插入根节点
-                    root.insert(shapes.splice(i, 1)[0]);
+                    if (index !== lastIndex) {
+                        [shapes[index], shapes[lastIndex]] = [shapes[lastIndex], shapes[index]];
+                    }
+                    root.insert(shapes.pop());
+                    lastIndex--;
                 } else if (this._trees.length > 0) {
                     // 如果矩形属于该象限且该象限具有子象限，则将该矩形安插到子象限中
                     let quadrant = this._getQuadrant(shape);
                     if (quadrant !== Quadrant.MORE) {
-                        this._trees[quadrant].insert(shapes.splice(i, 1)[0]);
+                        if (index !== lastIndex) {
+                            [shapes[index], shapes[lastIndex]] = [shapes[lastIndex], shapes[index]];
+                        }
+                        this._trees[quadrant].insert(shapes.pop());
+                        lastIndex--;
+                    } else {
+                        index++;
                     }
+                } else {
+                    index++;
                 }
             }
         }
