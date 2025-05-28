@@ -87,5 +87,6 @@ export class Polygon extends Shape {
         for (let i = 0, len = pts.length; i < len; i++) {
             this._realPoints[i] = v2(pts[i].x, pts[i].y);
         }
+        this._isDirty = true;
     }
 }

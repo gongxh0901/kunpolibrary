@@ -31,9 +31,9 @@ export { ReadNetFile } from "./net/nettools/ReadNetFile";
 /** 四叉树 */
 export { Box } from "./quadtree/Box";
 export { Circle } from "./quadtree/Circle";
+export { IShape } from "./quadtree/IShape";
 export { Polygon } from "./quadtree/Polygon";
 export { QTConfig, QuadTree } from "./quadtree/QuadTree";
-export { Shape } from "./quadtree/Shape";
 
 /** 行为树 */
 export { Agent as BTAgent } from "./behaviortree/Agent";

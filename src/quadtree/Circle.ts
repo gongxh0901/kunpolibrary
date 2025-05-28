@@ -9,7 +9,7 @@ import { ShapeType } from "./IShape";
 import { Shape } from "./Shape";
 
 export class Circle extends Shape {
-    public radius: number; // 半径
+    private _radius: number; // 半径
 
     public get shapeType(): ShapeType {
         return ShapeType.CIRCLE;
@@ -17,14 +17,26 @@ export class Circle extends Shape {
 
     constructor(radius: number, tag: number = -1) {
         super(tag);
-        this.radius = radius;
-        this._boundingBox.x = -this.radius;
-        this._boundingBox.y = -this.radius;
-        this._boundingBox.width = this.radius * 2;
-        this._boundingBox.height = this.radius * 2;
+        this._radius = radius;
+        this._boundingBox.x = -this._radius;
+        this._boundingBox.y = -this._radius;
+        this._boundingBox.width = this._radius * 2;
+        this._boundingBox.height = this._radius * 2;
     }
 
     public getBoundingBox(): Rect {
         return this._boundingBox;
+    }
+
+    public get radius(): number {
+        return this._radius;
+    }
+
+    public set radius(value: number) {
+        this._radius = value;
+        this._boundingBox.x = -this._radius;
+        this._boundingBox.y = -this._radius;
+        this._boundingBox.width = this._radius * 2;
+        this._boundingBox.height = this._radius * 2;
     }
 }
