@@ -19,7 +19,7 @@ export abstract class Adapter {
         let designSize = this.getDesignSize();
         Screen.DesignHeight = designSize.height;
         Screen.DesignWidth = designSize.width;
-        view.setDesignResolutionSize(Screen.DesignWidth, Screen.DesignWidth, ResolutionPolicy.SHOW_ALL);
+        view.setDesignResolutionSize(Screen.DesignWidth, Screen.DesignHeight, ResolutionPolicy.SHOW_ALL);
 
         this.resize();
         this.registerResizeCallback((...args: any) => {
