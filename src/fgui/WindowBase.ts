@@ -23,6 +23,8 @@ export abstract class WindowBase extends GComponent implements IWindow {
     private _header: IWindowHeader = null;
     /** 窗口是否被遮挡了 @internal */
     private _isCover: boolean = false;
+    /** 吞噬触摸的节点 @internal */
+    private _swallowComponent: GComponent = null;
     /**
      * 初始化方法 (框架内部使用)
      * @param swallowTouch 是否吞噬触摸事件
@@ -33,14 +35,16 @@ export abstract class WindowBase extends GComponent implements IWindow {
         if (swallowTouch) {
             // 吞噬触摸事件，需要一个全屏的节点, 窗口本身可能留有安全区的边
             let bgNode = new GComponent();
+            bgNode.name = "swallow";
             bgNode.setSize(Screen.ScreenWidth, Screen.ScreenHeight, true);
             bgNode.setPivot(0.5, 0.5, true);
-            bgNode.setPosition(Screen.ScreenWidth * 0.5, Screen.ScreenHeight * 0.5);
+            bgNode.setPosition(this.width * 0.5, this.height * 0.5);
             this.addChild(bgNode);
             // 调整显示层级
             bgNode.parent.setChildIndex(bgNode, 0);
             bgNode.onClick(this.onEmptyAreaClick, this);
             bgNode.opaque = swallowTouch;
+            this._swallowComponent = bgNode;
         }
         // 窗口自身也要设置是否吞噬触摸
         this.opaque = swallowTouch;
@@ -65,6 +69,8 @@ export abstract class WindowBase extends GComponent implements IWindow {
             default:
                 break;
         }
+        this._swallowComponent?.setSize(Screen.ScreenWidth, Screen.ScreenHeight, true);
+        this._swallowComponent?.setPosition(this.width * 0.5, + this.height * 0.5);
         this.onAdapted();
     }
 

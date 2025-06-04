@@ -4,7 +4,6 @@
  * @Description: 网络请求管理器
  */
 
-import { GlobalEvent } from "../../global/GlobalEvent";
 import { HttpRequest } from "./HttpRequest";
 import { IHttpEvent } from "./IHttpEvent";
 import { IHttpResponse } from "./IHttpResponse";
@@ -82,23 +81,15 @@ export class HttpManager {
      * @param {number} timeout (单位s) 请求超时时间 默认0 (0表示不超时)
      * @internal
      */
-    private static _send(method: HttpRequestMethod, url: string, data: any, responseType: HttpResponseType, netEvent?: IHttpEvent, headers?: any[], timeout?: number): HttpRequest {
+    private static _send(method: HttpRequestMethod, url: string, data: any, responseType: HttpResponseType, netEvent: IHttpEvent, headers?: any[], timeout?: number): HttpRequest {
         let http = new HttpRequest()
         http.setNetCallback((result: "succeed" | "fail", response: IHttpResponse) => {
             switch (result) {
                 case "succeed":
-                    if (netEvent) {
-                        netEvent.onComplete(response);
-                    } else {
-                        GlobalEvent.send(HttpManager.HttpEvent, result, response);
-                    }
+                    netEvent?.onComplete(response);
                     break;
                 case "fail":
-                    if (netEvent) {
-                        netEvent.onError(response);
-                    } else {
-                        GlobalEvent.send(HttpManager.HttpEvent, result, response);
-                    }
+                    netEvent?.onError(response);
                     break;
             }
         });

@@ -22,3 +22,19 @@
 - 修复未配置GameEntiry中的ecConfig时报错的问题
 ## 1.0.38
 - 修复适配器设计尺寸设置错误的问题
+
+## 1.1.0 模块拆分
+- 拆分资源管理模块，使用 `npm install kunpocc-assets` 安装
+    * 仓库地址: https://github.com/Gongxh0901/kunpocc-assets
+
+- 拆分ec模块，使用 `npm install kunpocc-ec` 安装
+    * 仓库地址: https://github.com/Gongxh0901/kunpo-ec
+
+- 拆分ecs模块，使用 `npm install kunpocc-ecs` 安装
+    * 仓库地址: https://github.com/Gongxh0901/kunpo-esc
+
+- 拆分四叉树模块，使用 `npm install kunpocc-quadtree` 安装
+    * 仓库地址: https://github.com/Gongxh0901/kunpo-quadtree
+
+- 拆分行为树模块，使用 `npm install kunpocc-behaviortree` 安装
+    * 仓库地址: https://github.com/Gongxh0901/kunpocc-behaviortree

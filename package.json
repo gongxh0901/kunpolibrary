@@ -1,6 +1,6 @@
 {
     "name": "kunpocc",
-    "version": "1.0.38",
+    "version": "1.1.3",
     "description": "基于creator3.0+的kunpocc库",
     "main": "./dist/kunpocc.cjs",
     "module": "./dist/kunpocc.mjs",
@@ -28,7 +28,10 @@
         "dist/kunpocc.mjs",
         "dist/kunpocc.min.cjs",
         "dist/kunpocc.min.mjs",
-        "dist/kunpocc.d.ts"
+        "dist/kunpocc.d.ts",
+        "libs/lib.ali.api.d.ts",
+        "libs/lib.bytedance.api.d.ts",
+        "libs/lib.wx.api.d.ts"
     ],
     "author": "gongxh",
     "license": "ISC",

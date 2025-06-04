@@ -28,25 +28,6 @@ export { Socket } from "./net/socket/Socket";
 /** 读取网络文件 */
 export { ReadNetFile } from "./net/nettools/ReadNetFile";
 
-/** 四叉树 */
-export { Box } from "./quadtree/Box";
-export { Circle } from "./quadtree/Circle";
-export { IShape } from "./quadtree/IShape";
-export { Polygon } from "./quadtree/Polygon";
-export { QTConfig, QuadTree } from "./quadtree/QuadTree";
-
-/** 行为树 */
-export { Agent as BTAgent } from "./behaviortree/Agent";
-export { BehaviorTree } from "./behaviortree/BehaviorTree";
-export { Blackboard as BTBlackboard } from "./behaviortree/Blackboard";
-export * as BTAction from "./behaviortree/BTNode/Action";
-export * as BTNode from "./behaviortree/BTNode/BaseNode";
-export * as BTComposite from "./behaviortree/BTNode/Composite";
-export * as BTCondition from "./behaviortree/BTNode/Condition";
-export * as BTDecorator from "./behaviortree/BTNode/Decorator";
-export { Status as BTStatus } from "./behaviortree/header";
-export { Ticker as BTTicker } from "./behaviortree/Ticker";
-
 /** UI */
 export { Window } from "./fgui/Window";
 export { WindowHeader } from "./fgui/WindowHeader";
@@ -57,22 +38,9 @@ export { WindowGroup } from "./ui/WindowGroup";
 export { WindowHeaderInfo } from "./ui/WindowHeaderInfo";
 export { WindowManager } from "./ui/WindowManager";
 
-/** EC */
-export { Component } from './ecmodule/Component';
-export { ComponentManager } from './ecmodule/ComponentManager';
-export { ComponentPool } from './ecmodule/ComponentPool';
-export { _ecdecorator } from './ecmodule/ECDecorator';
-export { ECManager } from './ecmodule/ECManager';
-export { Entity } from './ecmodule/Entity';
-export { EntityManager } from './ecmodule/EntityManager';
-
 /** 引擎相关 */
 export { CocosEntry } from "./cocos/CocosEntry";
 export { CocosUIModule } from "./cocos/CocosUIModule";
-
-/** 资源相关 */
-export { AssetLoader, IAssetConfig } from "./asset/AssetLoader";
-export { AssetPool } from "./asset/AssetPool";
 
 /** 条件显示节点 */
 export { _conditionDecorator } from "./condition/ConditionDecorator";

@@ -5,13 +5,11 @@
  */
 
 import { _decorator, Component, director, game, JsonAsset, macro, sys } from "cc";
-import { ECDataHelper } from "../ecmodule/ECDataHelper";
 import { GlobalEvent } from "../global/GlobalEvent";
 import { GlobalTimer } from "../global/GlobalTimer";
 import { enableDebugMode, FrameConfig } from "../global/header";
 import { InnerTimer } from "../global/InnerTimer";
 import { Platform, PlatformType } from "../global/Platform";
-import { ECManager } from "../kunpocc";
 import { ModuleBase } from "../module/ModuleBase";
 import { debug, log } from "../tool/log";
 import { Time } from "../tool/Time";
@@ -21,7 +19,6 @@ const _global = (globalThis || window || global) as any;
 const { property } = _decorator;
 export abstract class CocosEntry extends Component {
     @property({ displayName: "uiConfig", type: JsonAsset, tooltip: "编辑器导出的UI配置, 可不设置, 之后通过 PropsHelper.setConfig 手动设置" }) uiConfig: JsonAsset = null;
-    @property({ displayName: "ecConfig", type: JsonAsset, tooltip: "编辑器导出的实体配置, 可不设置, 之后通过 ECManager.registerEntityConfig 手动设置" }) ecConfig: JsonAsset = null;
     @property({ displayName: "游戏帧率" }) fps: number = 60;
 
     /**
@@ -49,17 +46,11 @@ export abstract class CocosEntry extends Component {
         director.addPersistRootNode(this.node);
         this.node.setSiblingIndex(this.node.children.length - 1);
         PropsHelper.setConfig(this.uiConfig?.json);
-        let ecsMaps = _global["getKunpoRegisterECSMaps"]?.();
-        if (this.ecConfig && (!ecsMaps || ecsMaps.size <= 0)) {
-            ECManager.registerEntityConfig(this.ecConfig.json);
-        }
         this.initPlatform();
         this.initEvent();
         this.initTime();
         this.initAdapter();
         this.initModule();
-        // 注册所有组件
-        ECDataHelper.registerComponents();
         log("kunpo框架初始化完成");
         this.onInit();
     }
