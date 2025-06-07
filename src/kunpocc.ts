@@ -1,5 +1,4 @@
 /** 一些全局工具 */
-export { GlobalEvent } from "./global/GlobalEvent";
 export { GlobalTimer } from "./global/GlobalTimer";
 export { enableDebugMode, FrameConfig, KUNPO_DEBUG } from "./global/header";
 export { Platform, PlatformType } from "./global/Platform";
@@ -12,8 +11,6 @@ export * from "./tool/log";
 export { MathTool } from "./tool/Math";
 export { md5 } from "./tool/MD5";
 export { Time } from "./tool/Time";
-/** 消息监听 */
-export { EventManager } from "./event/EventManager";
 
 /** Http */
 export * from "./net/http/HttpManager";

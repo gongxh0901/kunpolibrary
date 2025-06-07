@@ -5,7 +5,6 @@
  */
 
 import { _decorator, Component, director, game, JsonAsset, macro, sys } from "cc";
-import { GlobalEvent } from "../global/GlobalEvent";
 import { GlobalTimer } from "../global/GlobalTimer";
 import { enableDebugMode, FrameConfig } from "../global/header";
 import { InnerTimer } from "../global/InnerTimer";
@@ -47,7 +46,6 @@ export abstract class CocosEntry extends Component {
         this.node.setSiblingIndex(this.node.children.length - 1);
         PropsHelper.setConfig(this.uiConfig?.json);
         this.initPlatform();
-        this.initEvent();
         this.initTime();
         this.initAdapter();
         this.initModule();
@@ -106,14 +104,6 @@ export abstract class CocosEntry extends Component {
                 break;
         }
         debug(`platform: ${PlatformType[Platform.platform]}`);
-    }
-
-    /**
-     * 初始化事件
-     * @internal
-     */
-    private initEvent(): void {
-        GlobalEvent._initGlobalEvent();
     }
 
     /**

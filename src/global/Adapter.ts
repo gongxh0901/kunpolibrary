@@ -5,9 +5,9 @@
  */
 
 import { ResolutionPolicy, view } from "cc";
+import { GlobalEvent } from "kunpocc-event";
 import { debug } from "../tool/log";
 import { WindowManager } from "../ui/WindowManager";
-import { GlobalEvent } from "./GlobalEvent";
 import { Screen } from "./Screen";
 import { size } from "./header";
 
