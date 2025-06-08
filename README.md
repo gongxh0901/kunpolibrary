@@ -35,25 +35,27 @@ npm set registry https://repo.huaweicloud.com/repository/npm/
 npm set registry https://npm.aliyun.com
 ```
 
-# 目录
+# 集成目录
 1. [使用教程 (新手必看)](./docs/Noviciate.md)
 2. [项目配置](./docs/Basic.md)
 3. [UI模块](./docs/UI.md)
-5.  [全局计时器](./docs/Timer.md)
-6.  [平台工具](./docs/Platform.md)
-7.  [屏幕尺寸](./docs/Screen.md)
-8.  [小工具](./docs/Tools.md)
-9.  [时间](./docs/Time.md)
-10. [小游戏接口封装](./docs/MiniGame.md)
-11. [热更新](./docs/HotUpdate.md)
-12. [条件显示节点 (一般用于UI上的红点)](./docs/Condition.md)
-13. [ec模块](https://github.com/Gongxh0901/kunpo-ec)
-14. [ecs模块](https://github.com/Gongxh0901/kunpo-esc)
-15. [网络模块 http和socket](https://github.com/Gongxh0901/kunpocc-net)
-16. [四叉树](https://github.com/Gongxh0901/kunpo-quadtree)
-17. [行为树](https://github.com/Gongxh0901/kunpocc-behaviortree)
-18. [资源管理](https://github.com/Gongxh0901/kunpocc-assets)
-19. [全局事件](https://github.com/Gongxh0901/kunpocc-event)
+4. [全局计时器](./docs/Timer.md)
+5. [平台工具](./docs/Platform.md)
+6. [屏幕尺寸](./docs/Screen.md)
+7. [小工具](./docs/Tools.md)
+8. [时间](./docs/Time.md)
+9. [小游戏接口封装](./docs/MiniGame.md)
+10. [热更新](./docs/HotUpdate.md)
+11. [条件显示节点 (一般用于UI上的红点)](./docs/Condition.md)
+
+# 独立模块目录
+1. [ec模块](https://github.com/Gongxh0901/kunpo-ec)
+2. [ecs模块](https://github.com/Gongxh0901/kunpo-esc)
+3. [网络模块 http和socket](https://github.com/Gongxh0901/kunpocc-net)
+4. [四叉树](https://github.com/Gongxh0901/kunpo-quadtree)
+5. [行为树](https://github.com/Gongxh0901/kunpocc-behaviortree)
+6. [资源管理](https://github.com/Gongxh0901/kunpocc-assets)
+7. [全局事件](https://github.com/Gongxh0901/kunpocc-event)
 ## 类型支持
 
 该库完全使用 TypeScript 编写，提供完整的类型定义文件。
