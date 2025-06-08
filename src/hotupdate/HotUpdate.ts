@@ -5,8 +5,8 @@
  */
 
 import { game, native, sys } from "cc";
+import { ReadNetFile } from "kunpocc-net";
 import { ICheckUpdatePromiseResult, IPromiseResult } from "../interface/PromiseResult";
-import { ReadNetFile } from "../net/nettools/ReadNetFile";
 import { debug, warn } from "../tool/log";
 import { Time } from "../tool/Time";
 import { Utils } from "../tool/Utils";

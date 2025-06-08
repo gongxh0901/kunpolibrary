@@ -42,3 +42,7 @@
 ## 1.1.4 事件模块拆分
 - 拆分事件模块，使用 `npm install kunpocc-event` 安装
     * 仓库地址: https://github.com/Gongxh0901/kunpocc-event
+
+## 1.1.5 网络模块拆分
+- 拆分网络模块，使用 `npm install kunpocc-net` 安装
+    * 仓库地址: https://github.com/Gongxh0901/kunpocc-net

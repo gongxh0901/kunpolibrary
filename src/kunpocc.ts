@@ -12,19 +12,6 @@ export { MathTool } from "./tool/Math";
 export { md5 } from "./tool/MD5";
 export { Time } from "./tool/Time";
 
-/** Http */
-export * from "./net/http/HttpManager";
-export { HttpTask } from "./net/http/HttpTask";
-export { IHttpEvent } from "./net/http/IHttpEvent";
-export { IHttpRequest } from "./net/http/IHttpRequest";
-export { IHttpResponse } from "./net/http/IHttpResponse";
-
-/** Socket */
-export { Socket } from "./net/socket/Socket";
-
-/** 读取网络文件 */
-export { ReadNetFile } from "./net/nettools/ReadNetFile";
-
 /** UI */
 export { Window } from "./fgui/Window";
 export { WindowHeader } from "./fgui/WindowHeader";
