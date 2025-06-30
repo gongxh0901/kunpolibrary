@@ -28,7 +28,7 @@ export class PropsHelper {
     }
 
     /** 序列化属性 @internal */
-    public static serializeProps(component: GComponent, packageName: string): void {
+    public static serializeProps(component: GComponent, packageName: string, componentName?: string): void {
         if (!this._config) {
             return;
         }
@@ -36,7 +36,7 @@ export class PropsHelper {
         if (!config) {
             return;
         }
-        const componentName = component.name;
+        componentName = componentName || component.name;
         const propsInfo = config[componentName];
         if (!propsInfo) {
             return;

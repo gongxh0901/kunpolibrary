@@ -24,7 +24,7 @@ export class ComponentExtendHelper {
     private static registerComponent(ctor: any, pkg: string, name: string): void {
         // 自定义组件扩展
         const onConstruct = function (this: any): void {
-            PropsHelper.serializeProps(this, pkg);
+            PropsHelper.serializeProps(this, pkg, name);
             this.onInit && this.onInit();
         };
         ctor.prototype.onConstruct = onConstruct;
