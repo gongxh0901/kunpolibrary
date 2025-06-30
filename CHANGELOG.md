@@ -46,3 +46,7 @@
 ## 1.1.5 网络模块拆分
 - 拆分网络模块，使用 `npm install kunpocc-net` 安装
     * 仓库地址: https://github.com/Gongxh0901/kunpocc-net
+  
+
+## 1.1.6 
+- 修复UI模块自定义组件属性序列化错误
