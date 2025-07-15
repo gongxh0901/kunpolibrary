@@ -7,6 +7,10 @@
 interface IPackageConfig {
     /** UI所在resources中的路径 */
     uiPath: string;
+
+    /** 如果UI不在 resources 中，则需要配置 所在bundle下的路径名*/
+    bundlePaths?: { [bundleName: string]: string };
+
     /** 
      * 手动管理资源的包
      * 1. 用于基础UI包, 提供一些最基础的组件，所有其他包都可能引用其中的内容

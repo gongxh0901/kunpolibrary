@@ -40,6 +40,8 @@ export namespace _uidecorator {
             pkg: string;
             /** 窗口名 */
             name: string;
+            /** 窗口bundle名 */
+            bundle: string;
         };
     }
     /** 用来存储窗口注册信息 @internal */
@@ -56,7 +58,7 @@ export namespace _uidecorator {
      * @param {string} pkgName fgui包名
      * @param {string} name 窗口名 (与fgui中的组件名一一对应)
      */
-    export function uiclass(groupName: string, pkgName: string, name: string): Function {
+    export function uiclass(groupName: string, pkgName: string, name: string, bundle?: string): Function {
         /** target 类的构造函数 */
         return function (ctor: any): void {
             // debug(`uiclass >${JSON.stringify(res)}<`);
@@ -71,6 +73,7 @@ export namespace _uidecorator {
                     group: groupName,
                     pkg: pkgName,
                     name: name,
+                    bundle: bundle || "",
                 },
             });
         };
@@ -127,6 +130,8 @@ export namespace _uidecorator {
             pkg: string;
             /** 组件名 */
             name: string;
+            /** headerbundle名 */
+            bundle: string;
         };
     }
     /** 用来存储组件注册信息 @internal */
@@ -142,7 +147,7 @@ export namespace _uidecorator {
      * @param {string} pkg 包名
      * @param {string} name 组件名
      */
-    export function uiheader(pkg: string, name: string): Function {
+    export function uiheader(pkg: string, name: string, bundle?: string): Function {
         return function (ctor: any): void {
             // log(`pkg:【${pkg}】 uiheader prop >${JSON.stringify(ctor[UIPropMeta] || {})}<`);
             uiheaderMap.set(ctor, {
@@ -154,6 +159,7 @@ export namespace _uidecorator {
                 res: {
                     pkg: pkg,
                     name: name,
+                    bundle: bundle || "",
                 }
             });
         };

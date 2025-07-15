@@ -213,13 +213,13 @@ export class WindowManager {
         // 窗口注册
         for (const { ctor, res } of _uidecorator.getWindowMaps().values()) {
             debug(`窗口注册  窗口名:${res.name} 包名:${res.pkg} 组名:${res.group}`);
-            this._resPool.add(ctor, res.group, res.pkg, res.name);
+            this._resPool.add(ctor, res.group, res.pkg, res.name, res.bundle);
 
         }
         // 窗口header注册
         for (const { ctor, res } of _uidecorator.getHeaderMaps().values()) {
             debug(`header注册  header名:${res.name} 包名:${res.pkg}`);
-            this._resPool.addHeader(ctor, res.pkg, res.name);
+            this._resPool.addHeader(ctor, res.pkg, res.name, res.bundle);
         }
         // 组件注册
         ComponentExtendHelper.register();

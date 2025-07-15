@@ -4,6 +4,7 @@
  * @Description: 
  */
 
+import { assetManager, resources } from "cc";
 import { UIObjectFactory, UIPackage } from "fairygui-cc";
 import { warn } from "../kunpocc";
 import { IPackageConfigRes } from "./IPackageConfig";
@@ -17,11 +18,17 @@ export interface WindowInfo {
     pkg: string;
     /** 窗口名 */
     name: string;
+    /** bundle名 */
+    bundle: string;
 }
 
 export interface HeaderInfo {
+    /** 类的构造函数 */
     ctor: any;
+    /** fgui包名 */
     pkg: string;
+    /** bundle名 */
+    bundle: string;
 }
 
 /** @internal */
@@ -30,6 +37,8 @@ export class WindowResPool {
     protected _windowInfos: Map<string, WindowInfo> = new Map<string, any>();
     /** 窗口header信息池 @internal */
     protected _headerInfos: Map<string, HeaderInfo> = new Map<string, any>();
+    /** UI包所在的bundle名 */
+    private _pkgBundles: Map<string, string> = new Map<string, string>();
 
     /** 是否设置过配置内容 @internal */
     private _isInit: boolean = false;
@@ -37,8 +46,12 @@ export class WindowResPool {
     private _windowPkgs: Map<string, string[]> = new Map();
     /** 包的引用计数 @internal */
     private _pkgRefs: { [pkg: string]: number } = {};
+
     /** UI包路径 @internal */
-    private _uipath: string = "";
+    // private _uipath: string = "";
+    /** UI包在bundle中的路径 @internal */
+    private _uiPaths: { [bundle: string]: string } = {};
+
     /** 手动管理的包 @internal */
     private _manualPackages: Set<string> = new Set();
     /** 立即释放的包 @internal */
@@ -58,7 +71,7 @@ export class WindowResPool {
      * 注册窗口信息
      * @param info 
      */
-    public add(ctor: any, group: string, pkg: string, name: string): void {
+    public add(ctor: any, group: string, pkg: string, name: string, bundle: string): void {
         if (this.has(name)) {
             return;
         }
@@ -66,8 +79,10 @@ export class WindowResPool {
             ctor: ctor,
             group: group,
             pkg: pkg,
-            name: name
+            name: name,
+            bundle: bundle
         });
+        this._pkgBundles.set(pkg, bundle || "resources");
         this.addWindowPkg(name, pkg);
         // 窗口组件扩展
         UIObjectFactory.setExtension(`ui://${pkg}/${name}`, ctor);
@@ -88,14 +103,16 @@ export class WindowResPool {
      * 注册窗口header信息
      * @param info 
      */
-    public addHeader(ctor: any, pkg: string, name: string): void {
+    public addHeader(ctor: any, pkg: string, name: string, bundle: string): void {
         if (this.hasHeader(name)) {
             return;
         }
         this._headerInfos.set(name, {
             ctor: ctor,
-            pkg: pkg
+            pkg: pkg,
+            bundle: bundle
         });
+        this._pkgBundles.set(pkg, bundle || "resources");
         // 窗口header扩展
         UIObjectFactory.setExtension(`ui://${pkg}/${name}`, ctor);
     }
@@ -124,10 +141,13 @@ export class WindowResPool {
         this._hideWaitWindow = res?.hideWaitWindow;
         this._fail = res?.fail;
 
-        this._uipath = res.config?.uiPath || "";
-        // 如果uipath不以/结尾 则添加/
-        if (this._uipath != "" && !this._uipath.endsWith("/")) {
-            this._uipath += "/";
+        this._uiPaths = res.config?.bundlePaths || {};
+        this._uiPaths["resources"] = res.config?.uiPath || "";
+
+        for (const bundle in this._uiPaths) {
+            if (this._uiPaths[bundle] != "" && !this._uiPaths[bundle].endsWith("/")) {
+                this._uiPaths[bundle] += "/";
+            }
         }
 
         this._manualPackages = new Set(res.config.manualPackages || []);
@@ -249,7 +269,12 @@ export class WindowResPool {
             return;
         }
         for (const pkg of needLoadPkgs) {
-            UIPackage.loadPackage(this._uipath + pkg, (err: any) => {
+            let bundleName = this.getPkgBundle(pkg);
+            let bundle = bundleName === "resources" ? resources : assetManager.getBundle(bundleName);
+            if (!bundle) {
+                throw new Error(`UI包【${pkg}】所在的bundle【${bundleName}】未加载`);
+            }
+            UIPackage.loadPackage(bundle, this.getPkgPath(pkg), (err: any) => {
                 total--;
                 err ? failPkgs.push(pkg) : successPkgs.push(pkg);
                 if (total > 0) {
@@ -262,6 +287,17 @@ export class WindowResPool {
                 }
             });
         }
+    }
+
+    /** 获取UI包所在的bundle名 */
+    private getPkgBundle(pkg: string): string {
+        return this._pkgBundles.get(pkg) || "resources";
+    }
+
+    /** 获取UI包在bundle中的路径 */
+    private getPkgPath(pkg: string): string {
+        let bundle = this._pkgBundles.get(pkg);
+        return this._uiPaths[bundle] + pkg;
     }
 
     /** 获取窗口对应的包名列表 */
