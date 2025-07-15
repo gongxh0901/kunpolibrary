@@ -1,6 +1,6 @@
 {
     "name": "kunpocc",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "description": "基于creator3.0+的kunpocc库",
     "main": "./dist/kunpocc.cjs",
     "module": "./dist/kunpocc.mjs",

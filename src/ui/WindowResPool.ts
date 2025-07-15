@@ -60,7 +60,7 @@ export class WindowResPool {
      */
     public add(ctor: any, group: string, pkg: string, name: string): void {
         if (this.has(name)) {
-            throw new Error(`窗口【${name}】信息已注册 请勿重复注册`);
+            return;
         }
         this._windowInfos.set(name, {
             ctor: ctor,
@@ -89,6 +89,9 @@ export class WindowResPool {
      * @param info 
      */
     public addHeader(ctor: any, pkg: string, name: string): void {
+        if (this.hasHeader(name)) {
+            return;
+        }
         this._headerInfos.set(name, {
             ctor: ctor,
             pkg: pkg
