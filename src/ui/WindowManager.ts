@@ -208,6 +208,7 @@ export class WindowManager {
      * 注册所有UI窗口类到资源池中。 （框架内部使用）
      * 该方法遍历所有通过_uidecorator.getWindowMaps()获取的窗口映射，
      * 并将每个窗口的资源名称、构造函数、分组和包信息添加到资源池中。
+     * @internal
      */
     public static registerUI(): void {
         // 窗口注册
@@ -223,6 +224,18 @@ export class WindowManager {
         }
         // 组件注册
         ComponentExtendHelper.register();
+    }
+
+    /** 动态注册窗口到资源池中 */
+    public static dynamicRegisterWindow(ctor: any, group: string, pkg: string, name: string, bundle: string): void {
+        debug(`窗口注册  窗口名:${name} 包名:${pkg} 组名:${group}`);
+        this._resPool.add(ctor, group, pkg, name, bundle);
+    }
+
+    /** 动态注册窗口header到资源池中 */
+    public static dynamicRegisterHeader(ctor: any, pkg: string, name: string, bundle: string): void {
+        debug(`header注册  header名:${name} 包名:${pkg}`);
+        this._resPool.addHeader(ctor, pkg, name, bundle);
     }
 
     /**

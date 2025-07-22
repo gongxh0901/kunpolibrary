@@ -5,6 +5,8 @@
  */
 
 import { ObjectHelper } from "../tool/helper/ObjectHelper";
+import { ComponentExtendHelper } from "./ComponentExtendHelper";
+import { WindowManager } from "./WindowManager";
 export namespace _uidecorator {
     /** @internal */
     const UIPropMeta = "__uipropmeta__"
@@ -76,6 +78,8 @@ export namespace _uidecorator {
                     bundle: bundle || "",
                 },
             });
+            // 首次引擎注册完成后 动态注册窗口
+            _registerFinish && WindowManager.dynamicRegisterWindow(ctor, groupName, pkgName, name, bundle || "");
         };
     }
 
@@ -119,6 +123,8 @@ export namespace _uidecorator {
                     name: name,
                 }
             });
+            // 首次引擎注册完成后 动态注册自定义组件
+            _registerFinish && ComponentExtendHelper.dynamicRegister(ctor, pkg, name);
         };
     }
 
@@ -162,6 +168,8 @@ export namespace _uidecorator {
                     bundle: bundle || "",
                 }
             });
+            // 首次引擎注册完成后 动态注册窗口header
+            _registerFinish && WindowManager.dynamicRegisterHeader(ctor, pkg, name, bundle || "");
         };
     }
 
@@ -209,6 +217,13 @@ export namespace _uidecorator {
     export function uiclick(target: Object, name: string, descriptor: PropertyDescriptor): void {
         // debug("方法装饰器:", target.constructor, name, descriptor);
         ObjectHelper.getObjectProp(target.constructor, UICBMeta)[name] = descriptor.value;
+    }
+
+    let _registerFinish: boolean = false;
+
+    /** 首次UI注册完成 */
+    export function setRegisterFinish(): void {
+        _registerFinish = true;
     }
 }
 

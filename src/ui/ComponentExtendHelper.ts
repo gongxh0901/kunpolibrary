@@ -26,6 +26,23 @@ export class ComponentExtendHelper {
     }
 
     /**
+     * 动态注册自定义组件
+     * @param ctor 组件构造函数
+     * @param pkg 包名
+     * @param name 组件名
+     */
+    public static dynamicRegister(ctor: any, pkg: string, name: string): void {
+        const componentKey = `${pkg}/${name}`;
+        if (this._registeredComponents.has(componentKey)) {
+            debug(`自定义组件已注册，跳过  组件名:${name} 包名:${pkg}`);
+            return;
+        }
+        debug(`自定义组件注册  组件名:${name} 包名:${pkg}`);
+        this.registerComponent(ctor, pkg, name);
+        this._registeredComponents.add(componentKey);
+    }
+
+    /**
      * 注册自定义组件信息
      * @param info 
      * @internal

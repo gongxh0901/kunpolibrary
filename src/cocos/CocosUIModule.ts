@@ -8,6 +8,7 @@ import { _decorator } from "cc";
 import { GRoot } from "fairygui-cc";
 import { ModuleBase } from "../module/ModuleBase";
 import { debug } from "../tool/log";
+import { _uidecorator } from "../ui/UIDecorator";
 import { WindowManager } from "../ui/WindowManager";
 import { WindowResPool } from "../ui/WindowResPool";
 import { CocosWindowContainer } from "./CocosWindowContainer";
@@ -35,6 +36,7 @@ export class CocosUIModule extends ModuleBase {
         this.node.destroyAllChildren();
         /** 注册窗口信息 */
         WindowManager.registerUI();
+        _uidecorator.setRegisterFinish();
         this.onInit();
     }
 
