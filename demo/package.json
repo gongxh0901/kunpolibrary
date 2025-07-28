@@ -1,0 +1,15 @@
+{
+  "name": "kunpocreator",
+  "uuid": "f5d24040-9cd4-4a5a-8559-38bf55e621f7",
+  "creator": {
+    "version": "3.8.6"
+  },
+  "dependencies": {
+    "fairygui-cc": "^1.2.2",
+    "kunpocc": "^1.1.5",
+    "kunpocc-assets": "^0.0.1",
+    "kunpocc-event": "^0.0.2",
+    "kunpocc-net": "^0.0.2",
+    "ts-node": "^10.9.2"
+  }
+}
