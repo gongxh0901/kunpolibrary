@@ -20,7 +20,7 @@
     "scripts": {
         "clean": "rm -rf dist",
         "build": "npm run clean && rollup -c rollup.config.mjs",
-        "copy": "cp -r dist/* ../KunpoDemo/node_modules/kunpocc/dist/",
+        "copy": "cp -r dist/* demo/node_modules/kunpocc/dist/",
         "build:all": "npm run build && npm run copy"
     },
     "files": [
