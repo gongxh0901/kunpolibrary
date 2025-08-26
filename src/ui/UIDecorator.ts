@@ -170,6 +170,7 @@ export namespace _uidecorator {
             });
             // 首次引擎注册完成后 动态注册窗口header
             _registerFinish && WindowManager.dynamicRegisterHeader(ctor, pkg, name, bundle || "");
+            return ctor;
         };
     }
 

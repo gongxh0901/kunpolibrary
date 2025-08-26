@@ -20,6 +20,7 @@ export namespace _conditionDecorator {
         /** target 类的构造函数 */
         return function (ctor: any): void {
             cdClassMap.set(conditionType, ctor);
+            return ctor;
         };
     }
 }
