@@ -5,6 +5,7 @@
  */
 
 import { GComponent } from "fairygui-cc";
+import { data } from "../data/DataDecorator";
 import { Screen } from "../global/Screen";
 import { AdapterType, WindowType } from "../ui/header";
 import { IWindow } from "../ui/IWindow";
@@ -49,6 +50,8 @@ export abstract class WindowBase extends GComponent implements IWindow {
         // 窗口自身也要设置是否吞噬触摸
         this.opaque = swallowTouch;
         this.bgAlpha = bgAlpha;
+        // 初始化数据绑定（如果有 @dataclass 装饰器）
+        data.initializeBindings(this);
         this.onInit();
     }
 
@@ -79,6 +82,8 @@ export abstract class WindowBase extends GComponent implements IWindow {
      * @internal
      */
     public _close(): void {
+        // 窗口关闭时 清理绑定信息
+        data.cleanupBindings(this);
         this.onClose();
         this.dispose();
     }

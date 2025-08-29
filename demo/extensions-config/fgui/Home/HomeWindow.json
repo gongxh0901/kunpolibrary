@@ -251,6 +251,11 @@
             "name": "btn_ui",
             "idPath": "n22_sf8l",
             "namePath": "btn_ui"
+        },
+        "onClickData": {
+            "name": "btn_data",
+            "idPath": "n23_rrvv",
+            "namePath": "btn_data"
         }
     },
     "controls": {

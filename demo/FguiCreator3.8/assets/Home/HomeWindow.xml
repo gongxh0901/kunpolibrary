@@ -30,6 +30,10 @@
       <relation target="" sidePair="center-center,top-top"/>
       <Button title="界面功能" titleFontSize="26"/>
     </component>
+    <component id="n23_rrvv" name="btn_data" src="kofe0" fileName="btns/button1.xml" pkg="mkwn34a7" xy="215,738" size="320,73">
+      <relation target="" sidePair="center-center,top-top"/>
+      <Button title="数据更新" titleFontSize="26"/>
+    </component>
   </displayList>
   <transition name="t0"/>
   <transition name="t1"/>

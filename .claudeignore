@@ -1,0 +1,55 @@
+# Claude Code ignore rules for kunpolibrary
+# 昆坡库项目过滤规则，减少上下文消耗
+
+# Demo and example files - 示例和演示文件
+demo/
+**/demo/
+
+# Dependencies - 依赖包
+node_modules/
+**/node_modules/
+
+# Generated/build output - 构建产物
+dist/
+**/dist/
+
+# Type definitions - 类型定义文件  
+libs/
+**/libs/
+
+# Images and assets - 图片和静态资源
+image/
+**/image/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.ico
+
+# Other common build artifacts - 其他常见构建产物
+build/
+**/build/
+temp/
+**/temp/
+.temp/
+**/.temp/
+
+# Cache directories - 缓存目录
+.cache/
+**/.cache/
+
+# Log files - 日志文件
+*.log
+logs/
+**/logs/
+
+# IDE and editor files - IDE和编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files - 操作系统生成的文件
+.DS_Store
+Thumbs.db

@@ -5,8 +5,8 @@
  */
 
 import { ConditionType } from "../../condition/ConditionType";
-import { DataHelper } from "../../Data/DataHelper";
 import { fgui, kunpo } from "../../header";
+import { DataHelper } from "../../Helper/DataHelper";
 const { uiclass, uiprop, uiclick } = kunpo._uidecorator;
 
 @uiclass("Window", "Condition", "ConditionWindow")

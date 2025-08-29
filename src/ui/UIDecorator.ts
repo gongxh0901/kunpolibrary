@@ -62,11 +62,11 @@ export namespace _uidecorator {
      */
     export function uiclass(groupName: string, pkgName: string, name: string, bundle?: string): Function {
         /** target 类的构造函数 */
-        return function (ctor: any): void {
-            // debug(`uiclass >${JSON.stringify(res)}<`);
-            // debug(`uiclass prop >${JSON.stringify(ctor[UIPropMeta] || {})}<`);
-            uiclassMap.set(ctor, {
-                ctor: ctor,
+        return function (ctor: any): any {
+            // 检查是否有原始构造函数引用（由其他装饰器如 @dataclass 提供）
+            const originalCtor = ctor;
+            uiclassMap.set(originalCtor, {
+                ctor: ctor, // 存储实际的构造函数（可能被包装过）
                 props: ctor[UIPropMeta] || null,
                 callbacks: ctor[UICBMeta] || null,
                 controls: ctor[UIControlMeta] || null,
@@ -78,8 +78,9 @@ export namespace _uidecorator {
                     bundle: bundle || "",
                 },
             });
-            // 首次引擎注册完成后 动态注册窗口
+            // 首次引擎注册完成后 动态注册窗口，使用实际的构造函数
             _registerFinish && WindowManager.dynamicRegisterWindow(ctor, groupName, pkgName, name, bundle || "");
+            return ctor;
         };
     }
 
@@ -110,10 +111,12 @@ export namespace _uidecorator {
      * @param {string} name 组件名
      */
     export function uicom(pkg: string, name: string): Function {
-        return function (ctor: any): void {
+        return function (ctor: any): any {
+            // 检查是否有原始构造函数引用（由其他装饰器如 @dataclass 提供）
+            const originalCtor = ctor;
             // log(`pkg:【${pkg}】 uicom prop >${JSON.stringify(ctor[UIPropMeta] || {})}<`);
-            uicomponentMap.set(ctor, {
-                ctor: ctor,
+            uicomponentMap.set(originalCtor, {
+                ctor: ctor, // 存储实际的构造函数（可能被包装过）
                 props: ctor[UIPropMeta] || null,
                 callbacks: ctor[UICBMeta] || null,
                 controls: ctor[UIControlMeta] || null,
@@ -123,8 +126,9 @@ export namespace _uidecorator {
                     name: name,
                 }
             });
-            // 首次引擎注册完成后 动态注册自定义组件
+            // 首次引擎注册完成后 动态注册自定义组件，使用实际的构造函数
             _registerFinish && ComponentExtendHelper.dynamicRegister(ctor, pkg, name);
+            return ctor;
         };
     }
 
@@ -155,9 +159,11 @@ export namespace _uidecorator {
      */
     export function uiheader(pkg: string, name: string, bundle?: string): Function {
         return function (ctor: any): void {
+            // 检查是否有原始构造函数引用（由其他装饰器如 @dataclass 提供）
+            const originalCtor = ctor;
             // log(`pkg:【${pkg}】 uiheader prop >${JSON.stringify(ctor[UIPropMeta] || {})}<`);
-            uiheaderMap.set(ctor, {
-                ctor: ctor,
+            uiheaderMap.set(originalCtor, {
+                ctor: ctor, // 存储实际的构造函数（可能被包装过）
                 props: ctor[UIPropMeta] || null,
                 callbacks: ctor[UICBMeta] || null,
                 controls: ctor[UIControlMeta] || null,
@@ -168,7 +174,7 @@ export namespace _uidecorator {
                     bundle: bundle || "",
                 }
             });
-            // 首次引擎注册完成后 动态注册窗口header
+            // 首次引擎注册完成后 动态注册窗口header，使用实际的构造函数
             _registerFinish && WindowManager.dynamicRegisterHeader(ctor, pkg, name, bundle || "");
             return ctor;
         };
