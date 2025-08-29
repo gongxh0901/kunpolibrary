@@ -5,8 +5,11 @@
  */
 
 import { GlobalEvent } from "kunpocc-event";
+import { Level } from "../Data/global/Level";
 
 export class DataHelper {
+    public static level: Level = new Level();
+
     private static _data: Map<string, any> = new Map();
 
     public static getValue<T>(key: string, defaultValue: T): T {

@@ -4,6 +4,7 @@
  * @Description: 自定义组件扩展帮助类
  */
 import { UIObjectFactory } from "fairygui-cc";
+import { data } from "../data/DataDecorator";
 import { debug } from "../tool/log";
 import { PropsHelper } from "./PropsHelper";
 import { _uidecorator } from "./UIDecorator";
@@ -51,9 +52,19 @@ export class ComponentExtendHelper {
         // 自定义组件扩展
         const onConstruct = function (this: any): void {
             PropsHelper.serializeProps(this, pkg, name);
+            // 初始化数据绑定（如果有 @dataclass 装饰器）
+            data.initializeBindings(this);
             this.onInit && this.onInit();
         };
         ctor.prototype.onConstruct = onConstruct;
+
+
+        const dispose = ctor.prototype.dispose
+        const newDispose = function (this: any): void {
+            data.cleanupBindings(this);
+            dispose.call(this);
+        };
+        ctor.prototype.dispose = newDispose;
         // 自定义组件扩展
         UIObjectFactory.setExtension(`ui://${pkg}/${name}`, ctor);
     }

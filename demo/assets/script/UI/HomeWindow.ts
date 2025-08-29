@@ -97,6 +97,11 @@ export class HomeWindow extends kunpo.Window {
         });
     }
 
+    @uiclick
+    private onClickData(): void {
+        kunpo.WindowManager.showWindow("DataWindow");
+    }
+
     public getHeaderInfo(): kunpo.WindowHeaderInfo {
         return kunpo.WindowHeaderInfo.create("WindowHeader", "aaa");
     }

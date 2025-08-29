@@ -14,4 +14,8 @@ export class CustomComponents extends fgui.GComponent {
     public onInit(): void {
         kunpo.log("CustomComponents onInit");
     }
+
+    public dispose(): void {
+        kunpo.log("CustomComponents dispose");
+    }
 }

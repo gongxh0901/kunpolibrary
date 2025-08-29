@@ -4,7 +4,7 @@
  * @Description: 条件2 关联数据condition2
  */
 import { GlobalEvent } from 'kunpocc-event';
-import { DataHelper } from '../Data/DataHelper';
+import { DataHelper } from '../Helper/DataHelper';
 import { kunpo } from '../header';
 import { ConditionType } from './ConditionType';
 const { conditionClass } = kunpo._conditionDecorator;

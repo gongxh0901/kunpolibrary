@@ -47,6 +47,7 @@ npm set registry https://npm.aliyun.com
 9. [小游戏接口封装](./docs/MiniGame.md)
 10. [热更新](./docs/HotUpdate.md)
 11. [条件显示节点 (一般用于UI上的红点)](./docs/Condition.md)
+12. [数据模块](./docs/Data.md)
 
 # 独立模块目录
 1. [ec模块](https://github.com/Gongxh0901/kunpo-ec)

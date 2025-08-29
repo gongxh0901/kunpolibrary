@@ -44,3 +44,7 @@ export { BytedanceCommon } from "./minigame/bytedance/BytedanceCommon";
 export { MiniHelper } from "./minigame/MiniHelper";
 export { WechatCommon } from "./minigame/wechat/WechatCommon";
 
+/** 数据绑定相关 - 强类型数据绑定系统 */
+export { DataBase } from './data/DataBase';
+export { data } from './data/DataDecorator';
+
