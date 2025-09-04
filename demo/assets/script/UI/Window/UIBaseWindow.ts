@@ -82,6 +82,11 @@ export class UIBaseWindow extends kunpo.Window {
         kunpo.WindowManager.showWindow("HideAllWindow");
     }
 
+    @uiclick
+    private onClickSameItem(): void {
+        kunpo.WindowManager.showWindow("SameItemWindow");
+    }
+
     public getHeaderInfo(): kunpo.WindowHeaderInfo {
         return kunpo.WindowHeaderInfo.create("WindowHeader", "aaa");
     }

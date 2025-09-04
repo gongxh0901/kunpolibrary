@@ -11,6 +11,8 @@
     <component id="sf8l7" name="PopWindowHeader2.xml" path="/" exported="true"/>
     <component id="sf8l8" name="UIBaseWindow.xml" path="/" exported="true"/>
     <component id="sf8lw" name="CustomComponents.xml" path="/"/>
+    <component id="fchfx" name="Item1.xml" path="/"/>
+    <component id="h2xjy" name="SameItemWindow.xml" path="/" exported="true"/>
   </resources>
   <publish name=""/>
 </packageDescription>

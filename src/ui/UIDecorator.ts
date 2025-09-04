@@ -98,7 +98,7 @@ export namespace _uidecorator {
         };
     }
     /** 用来存储组件注册信息 @internal */
-    let uicomponentMap: Map<string, IUIComInfo> = new Map();
+    let uicomponentMap: Map<any, IUIComInfo> = new Map();
 
     /** 获取组件注册信息 */
     export function getComponentMaps(): Map<any, IUIComInfo> {

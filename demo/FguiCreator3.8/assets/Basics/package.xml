@@ -24,6 +24,7 @@
     <image id="gukgl" name="image_toastbg.png" path="/window/toast/"/>
     <component id="gukgm" name="toast.xml" path="/window/toast/"/>
     <image id="gukgn" name="image_black.png" path="/image/" scale="9grid" scale9grid="4,4,2,2"/>
+    <component id="fchfo" name="Item1.xml" path="/" exported="true"/>
   </resources>
   <publish name="" path="../assets/resources/ui/manual" packageCount="2"/>
 </packageDescription>

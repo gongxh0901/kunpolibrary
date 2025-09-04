@@ -40,7 +40,14 @@
             "name": "btn_close",
             "idPath": "n22_sf8l",
             "namePath": "btn_close"
+        },
+        "onClickSameItem": {
+            "name": "btn_sameitem",
+            "idPath": "n23_h2xj",
+            "namePath": "btn_sameitem"
         }
     },
+    "controls": {},
+    "transitions": {},
     "__version__": "0.0.1"
 }

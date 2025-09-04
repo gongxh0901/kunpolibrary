@@ -10,5 +10,7 @@
     <component id="n4_fnoh" name="btn_close" src="ukhni" fileName="btns/btn_close.xml" pkg="mkwn34a7" xy="611,338">
       <relation target="n2_fnoh" sidePair="right-right,top-top"/>
     </component>
+    <component id="n5_eagu" name="n5" src="fchfx" fileName="Item1.xml" xy="75,111" size="209,164"/>
+    <component id="n6_eagu" name="n6" src="fchfo" fileName="Item1.xml" pkg="mkwn34a7" xy="402,68" size="215,212"/>
   </displayList>
 </component>
