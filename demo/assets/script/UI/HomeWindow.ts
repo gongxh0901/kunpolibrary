@@ -13,6 +13,11 @@ export class HomeWindow extends kunpo.Window {
     @uicontrol private status: fgui.Controller;
     @uicontrol private sta2: fgui.Controller;
 
+    @uicontrol private bookCtrl: fgui.Controller;
+    @uicontrol private doneCtrl: fgui.Controller;
+    @uicontrol private resultCtrl: fgui.Controller;
+
+
     @uitransition private t0: fgui.Transition;
     @uitransition private t1: fgui.Transition;
 
@@ -23,6 +28,12 @@ export class HomeWindow extends kunpo.Window {
 
     protected onShow(userdata?: any): void {
         kunpo.log("HomeWindow onShow:", userdata);
+
+        console.log("this.status", this.status);
+        console.log("this.sta2", this.sta2);
+        console.log("this.bookCtrl", this.bookCtrl);
+        console.log("this.doneCtrl", this.doneCtrl);
+        console.log("this.resultCtrl", this.resultCtrl);
     }
 
     @uiclick

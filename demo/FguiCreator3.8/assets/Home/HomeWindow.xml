@@ -2,6 +2,9 @@
 <component size="750,1334">
   <controller name="status" pages="0,1,1,2,2,3" selected="0"/>
   <controller name="sta2" pages="0,,1," selected="0"/>
+  <controller name="bookSta" pages="0,,1," selected="0"/>
+  <controller name="resultShow" pages="0,,1," selected="0"/>
+  <controller name="done" pages="0,,1," selected="0"/>
   <displayList>
     <graph id="n0_73ie" name="n0" xy="0,0" size="750,1334" type="rect" lineSize="5" lineColor="#ffff0000" fillColor="#ff003399" corner="20">
       <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>

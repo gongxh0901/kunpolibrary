@@ -260,7 +260,10 @@
     },
     "controls": {
         "status": "status",
-        "sta2": "sta2"
+        "sta2": "sta2",
+        "bookCtrl": "bookSta",
+        "doneCtrl": "done",
+        "resultCtrl": "resultShow"
     },
     "transitions": {
         "t0": "t0",
