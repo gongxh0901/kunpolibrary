@@ -75,12 +75,9 @@ export class HomeWindow extends kunpo.Window {
         let paths: KunpoAssets.IAssetConfig[] = [
             { path: "config/buffer", type: cc.BufferAsset },
         ];
-        let loader = new KunpoAssets.AssetLoader("load");
-        loader.start({
-            configs: paths,
+        let loader = new KunpoAssets.AssetLoader("buffer");
+        loader.setCallbacks({
             complete: () => {
-                kunpo.log("加载成功");
-
                 let basic = AssetPool.get<cc.BufferAsset>("config/buffer/basic");
                 kunpo.log("basic", JSON.stringify(kunpo.Binary.toJson(basic.buffer())));
 
@@ -99,13 +96,14 @@ export class HomeWindow extends kunpo.Window {
                 };
                 kunpo.log("aaa", JSON.stringify(kunpo.Binary.toJson(aaa)));
             },
-            fail: (msg: string, err: Error) => {
-                kunpo.log("加载失败", msg, err);
+            fail: (code: number, msg: string) => {
+                kunpo.log("load buffer 加载失败:", code, msg);
             },
             progress: (percent: number) => {
-
+                kunpo.log("load buffer 加载进度:", percent);
             }
         });
+        loader.start(paths);
     }
 
     @uiclick

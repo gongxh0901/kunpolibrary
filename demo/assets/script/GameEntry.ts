@@ -36,21 +36,22 @@ export class GameEntry extends kunpo.CocosEntry {
         let paths: KunpoAssets.IAssetConfig[] = [
             { path: "ui/manual", type: cc.Asset }, // 手动加载UI基础资源
         ];
-        let loader = new KunpoAssets.AssetLoader("load");
-        loader.start({
-            configs: paths,
+        let loader = new KunpoAssets.AssetLoader("basic");
+        loader.setCallbacks({
             complete: () => {
+                kunpo.log("load basic 加载成功");
                 fgui.UIPackage.addPackage("ui/manual/Basics");
                 fgui.UIPackage.addPackage("ui/manual/Home");
                 this.loadResources();
             },
-            fail: (msg: string, err: Error) => {
-
+            fail: (code: number, msg: string) => {
+                kunpo.log("load basic 加载失败:", code, msg);
             },
             progress: (percent: number) => {
-
+                kunpo.log("load basic 加载进度:", percent);
             }
         });
+        loader.start(paths);
     }
 
     /** 2. 加载剩余资源 */
@@ -62,19 +63,20 @@ export class GameEntry extends kunpo.CocosEntry {
             // { path: "texture/6101/spriteFrame", type: cc.SpriteFrame, isFile: true },
             // { path: "pet", type: cc.SpriteFrame, bundle: "bundle_res" },
         ];
-        let loader = new KunpoAssets.AssetLoader("load");
-        loader.start({
-            configs: paths,
+        let loader = new KunpoAssets.AssetLoader("resources");
+        loader.setCallbacks({
             complete: () => {
+                kunpo.log("load resources 加载成功");
                 this.loadComplete();
             },
-            fail: (msg: string, err: Error) => {
-
+            fail: (code: number, msg: string) => {
+                kunpo.log("load resources 加载失败:", code, msg);
             },
             progress: (percent: number) => {
-
+                kunpo.log("load resources 加载进度:", percent);
             }
         });
+        loader.start(paths);
     }
 
 

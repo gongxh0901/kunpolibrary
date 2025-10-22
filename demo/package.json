@@ -7,8 +7,8 @@
   "dependencies": {
     "fairygui-cc": "^1.2.2",
     "kunpocc": "^1.1.5",
-    "kunpocc-assets": "^0.0.1",
-    "kunpocc-event": "^0.0.2",
+    "kunpocc-assets": "^0.1.1",
+    "kunpocc-event": "^0.0.3",
     "kunpocc-net": "^0.0.2",
     "ts-node": "^10.9.2"
   }
