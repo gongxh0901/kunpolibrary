@@ -73,11 +73,6 @@ gongxh
 
 *  邮箱: gong.xinhai@163.com
 
-## 仓库
+## 源码仓库
 [kunpocc gitee地址](https://gitee.com/gongxinhai/kunpolibrary)
-
 [kunpocc github地址](https://github.com/Gongxh0901/kunpolibrary)
-
-[github demo地址](https://github.com/Gongxh0901/KunpoDemo)
-
-[gitee demo地址](https://gitee.com/gongxinhai/kunpo-demo)
