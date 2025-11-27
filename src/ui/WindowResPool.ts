@@ -6,7 +6,7 @@
 
 import { assetManager, resources } from "cc";
 import { UIObjectFactory, UIPackage } from "fairygui-cc";
-import { warn } from "../kunpocc";
+import { warn } from "../tool/log";
 import { IPackageConfigRes } from "./IPackageConfig";
 
 export interface WindowInfo {

@@ -83,6 +83,7 @@ export class Timer {
         const timerNode = this._pool.get(timerId);
 
         if (timerNode) {
+            timerNode.pause = true;
             timerNode.pauseRemainTime = timerNode.expireTime - this._elapsedTime;
             this._heap.remove(timerNode);
             this._pausedTimers.set(timerId, timerNode);

@@ -1,0 +1,171 @@
+---
+description: "Cocos Creator 3.x 开发规范和最佳实践"
+globs: ["src/cocos/**/*.ts", "src/global/**/*.ts"]
+alwaysApply: false
+type: "framework-specific"
+---
+
+# Cocos Creator 3.x 开发规范
+
+## 组件基类设计
+
+### 继承 Component 的标准模式
+```typescript
+import { _decorator, Component } from "cc";
+const { property } = _decorator;
+
+export abstract class CocosEntry extends Component {
+    @property({ displayName: "uiConfig", type: JsonAsset, tooltip: "编辑器导出的UI配置" }) 
+    uiConfig: JsonAsset = null;
+    
+    @property({ displayName: "游戏帧率" }) 
+    fps: number = 60;
+
+    /**
+     * 虚函数，子类需要实现
+     * kunpo库初始化完成后调用
+     */
+    public abstract onInit(): void;
+}
+```
+
+### 模块基类模式
+```typescript
+export abstract class ModuleBase extends Component implements IModule {
+    /** 模块名称 */
+    public moduleName: string;
+
+    /** 模块初始化 (内部使用) */
+    public init(): void { }
+
+    /** 模块初始化完成后调用的函数 */
+    protected abstract onInit(): void;
+}
+```
+
+## 生命周期管理
+
+### 组件生命周期规范
+- `start()`: 用于框架初始化，标记为 `@internal`
+- `onInit()`: 用户自定义初始化，需要子类实现
+- `onDestroy()`: 清理资源和取消事件监听
+
+### 时间和更新管理
+```typescript
+// 使用统一的时间系统
+import { GlobalTimer, InnerTimer } from "../global";
+
+private initTime(): void {
+    Time._configBoot();
+    InnerTimer.initTimer();  
+    GlobalTimer.initTimer();
+    this.schedule(this.tick.bind(this), 0, macro.REPEAT_FOREVER);
+}
+
+private tick(dt: number): void {
+    InnerTimer.update(dt);
+    GlobalTimer.update(dt);
+}
+```
+
+## 平台适配模式
+
+### 平台检测和初始化
+```typescript
+private initPlatform(): void {
+    Platform.isNative = sys.isNative;
+    Platform.isMobile = sys.isMobile;
+    Platform.isNativeMobile = sys.isNative && sys.isMobile;
+
+    switch (sys.platform) {
+        case sys.Platform.WECHAT_GAME:
+            Platform.isWX = true;
+            Platform.platform = PlatformType.WX;
+            break;
+        case sys.Platform.ALIPAY_MINI_GAME:
+            Platform.isAlipay = true; 
+            Platform.platform = PlatformType.Alipay;
+            break;
+        // ... 其他平台
+    }
+}
+```
+
+### 平台特定功能
+- 使用 `Platform` 类进行统一的平台判断
+- 小游戏平台适配通过专门的适配类实现
+- 避免在业务代码中直接使用 `sys` 对象
+
+## 节点管理
+
+### 持久化节点模式
+```typescript
+protected start(): void {
+    // 设置为持久化节点
+    director.addPersistRootNode(this.node);
+    this.node.setSiblingIndex(this.node.children.length - 1);
+}
+```
+
+### 组件查找模式
+```typescript
+private initModule(): void {
+    // 递归查找所有子节点中的模块组件
+    for (const module of this.getComponentsInChildren(ModuleBase)) {
+        debug(`module:${module.moduleName}`);
+        module.init();
+    }
+}
+```
+
+## 适配器模式
+
+### 引擎适配器设计
+- 通过 `CocosAdapter` 统一处理引擎特定功能
+- UI系统通过 `CocosUIModule` 进行适配
+- 窗口容器使用 `CocosWindowContainer`
+
+```typescript
+class CocosAdapter {
+    init(): void {
+        // 初始化引擎特定功能
+        this.initUI();
+        this.initScreen();
+    }
+}
+```
+
+## 资源管理
+
+### 配置文件处理
+```typescript
+// 使用 JsonAsset 处理配置
+@property({ type: JsonAsset }) 
+uiConfig: JsonAsset = null;
+
+protected start(): void {
+    PropsHelper.setConfig(this.uiConfig?.json);
+}
+```
+
+### Bundle 资源管理
+- UI 资源通过 bundle 参数指定包名
+- 支持动态资源加载和释放
+- 使用资源池管理资源生命周期
+
+## 调试和开发工具
+
+### 全局调试接口
+```typescript
+// 暴露调试接口到全局对象
+let _global = globalThis || window || global;
+(_global as any)["getKunpoRegisterWindowMaps"] = function () {
+    return _uidecorator.getWindowMaps() as any;
+};
+```
+
+### 帧率控制
+```typescript
+// 统一的帧率设置
+game.frameRate = this.fps;
+```

@@ -1,0 +1,276 @@
+---
+description: "装饰器模式和元数据管理规范"
+globs: ["**/*Decorator*.ts", "**/*decorator*.ts"]
+alwaysApply: false
+type: "design-pattern"
+---
+
+# 装饰器模式开发规范
+
+## 装饰器设计原则
+
+### namespace 封装模式
+```typescript
+export namespace _uidecorator {
+    /** 元数据存储键 */
+    const UIPropMeta = "__uipropmeta__";
+    const UICBMeta = "__uicbmeta__";
+    
+    /** 注册映射 */
+    const uiclassMap: Map<any, UIWindowInfo> = new Map();
+    
+    /** 对外接口 */
+    export function getWindowMaps(): Map<any, UIWindowInfo> {
+        return uiclassMap;
+    }
+}
+```
+
+### 装饰器工厂模式
+```typescript
+/**
+ * 类装饰器工厂
+ * @param groupName 窗口组名称  
+ * @param pkgName fgui包名
+ * @param name 窗口名
+ * @param bundle 可选bundle名
+ */
+export function uiclass(groupName: string, pkgName: string, name: string, bundle?: string): Function {
+    return function (ctor: any): any {
+        // 元数据收集
+        uiclassMap.set(ctor, {
+            ctor: ctor,
+            props: ctor[UIPropMeta] || null,
+            callbacks: ctor[UICBMeta] || null,
+            res: {
+                group: groupName,
+                pkg: pkgName,  
+                name: name,
+                bundle: bundle || ""
+            }
+        });
+        
+        // 动态注册支持
+        _registerFinish && WindowManager.dynamicRegisterWindow(ctor, groupName, pkgName, name, bundle || "");
+        return ctor;
+    };
+}
+```
+
+## 属性装饰器模式
+
+### 属性标记装饰器
+```typescript
+/**
+ * UI属性装饰器
+ * @param target 实例成员的类的原型
+ * @param name 属性名
+ */
+export function uiprop(target: Object, name: string): any {
+    ObjectHelper.getObjectProp(target.constructor, UIPropMeta)[name] = 1;
+}
+
+/**
+ * UI控制器装饰器  
+ */
+export function uicontrol(target: Object, name: string): any {
+    ObjectHelper.getObjectProp(target.constructor, UIControlMeta)[name] = 1;
+}
+
+/**
+ * UI动画装饰器
+ */
+export function uitransition(target: Object, name: string): any {
+    ObjectHelper.getObjectProp(target.constructor, UITransitionMeta)[name] = 1;
+}
+```
+
+### 使用示例
+```typescript
+@uiclass("popup", "common", "SettingsWindow")
+export class SettingsWindow extends Window {
+    @uiprop
+    btnClose: GButton;
+    
+    @uiprop  
+    list: GList;
+    
+    @uicontrol
+    tabController: GController;
+    
+    @uitransition
+    showAnim: GTransition;
+}
+```
+
+## 方法装饰器模式
+
+### 方法绑定装饰器
+```typescript
+/**
+ * 点击事件装饰器
+ * @param target 实例成员的类的原型
+ * @param name 方法名  
+ * @param descriptor 属性描述符
+ */
+export function uiclick(target: Object, name: string, descriptor: PropertyDescriptor): void {
+    ObjectHelper.getObjectProp(target.constructor, UICBMeta)[name] = descriptor.value;
+}
+```
+
+### 使用示例
+```typescript
+export class SettingsWindow extends Window {
+    @uiclick
+    private onBtnCloseClick(): void {
+        WindowManager.closeWindow("SettingsWindow");
+    }
+    
+    @uiclick
+    private onBtnSaveClick(): void {
+        this.saveSettings();
+    }
+}
+```
+
+## 数据绑定装饰器
+
+### 强类型绑定装饰器
+```typescript
+export namespace data {
+    const BIND_METADATA_KEY = Symbol('__bind_metadata__');
+    
+    /**
+     * 属性绑定装饰器
+     * @param dataClass 数据类构造函数
+     * @param selector 路径选择器函数
+     * @param callback 回调函数
+     * @param immediate 是否立即触发
+     */
+    export function bindProp<T extends DataBase>(
+        dataClass: new () => T, 
+        selector: (data: T) => any, 
+        callback: (item: any, value?: any, data?: T) => void, 
+        immediate: boolean = false
+    ) {
+        return function (target: any, prop: string | symbol) {
+            const path = `${dataClass.name}:${extractPathFromSelector(selector)}`;
+            
+            let ctor = target.constructor;
+            ctor[BIND_METADATA_KEY] = ctor[BIND_METADATA_KEY] || [];
+            ctor[BIND_METADATA_KEY].push({
+                prop, callback, path, immediate, isMethod: false
+            });
+        };
+    }
+    
+    /**
+     * 方法绑定装饰器  
+     */
+    export function bindMethod<T extends DataBase>(
+        dataClass: new () => T, 
+        selector: (data: T) => any, 
+        immediate: boolean = false
+    ) {
+        return function (target: any, method: string | symbol, descriptor?: PropertyDescriptor) {
+            const path = `${dataClass.name}:${extractPathFromSelector(selector)}`;
+            
+            let ctor = target.constructor;
+            ctor[BIND_METADATA_KEY] = ctor[BIND_METADATA_KEY] || [];
+            ctor[BIND_METADATA_KEY].push({
+                prop: method, 
+                callback: descriptor!.value, 
+                path, immediate, 
+                isMethod: true
+            });
+            return descriptor;
+        };
+    }
+}
+```
+
+### 数据绑定使用示例
+```typescript
+class GameData extends DataBase {
+    level: number = 1;
+    coins: number = 0;
+}
+
+export class GameUI extends Window {
+    @uiprop
+    levelLabel: GLabel;
+    
+    @uiprop
+    coinsLabel: GLabel;
+    
+    // 绑定属性到UI
+    @data.bindProp(GameData, data => data.level, function(item, value) {
+        this.levelLabel.text = `Level: ${value}`;
+    })
+    private _levelBinding: any;
+    
+    // 绑定方法到数据变化
+    @data.bindMethod(GameData, data => data.coins)
+    private onCoinsChanged(value: number): void {
+        this.coinsLabel.text = `Coins: ${value}`;
+    }
+}
+```
+
+## 条件装饰器
+
+### 条件注册装饰器
+```typescript
+export namespace _conditionDecorator {
+    const cdClassMap: Map<number, any> = new Map();
+    
+    export function getConditionMaps(): Map<number, any> {
+        return cdClassMap;
+    }
+    
+    /**
+     * 条件装饰器
+     * @param conditionType 条件类型ID
+     */
+    export function conditionClass(conditionType: number): Function {
+        return function (ctor: any): void {
+            cdClassMap.set(conditionType, ctor);
+            return ctor;
+        };
+    }
+}
+```
+
+### 条件使用示例
+```typescript
+@conditionClass(1001)
+export class LevelCondition extends ConditionBase {
+    protected check(): boolean {
+        return GameData.getInstance().level >= this.targetLevel;
+    }
+}
+```
+
+## 装饰器最佳实践
+
+### 元数据收集模式
+1. 使用 Symbol 作为元数据键避免冲突
+2. 在类原型上存储元数据信息
+3. 提供统一的元数据访问接口
+
+### 动态注册支持
+```typescript
+let _registerFinish: boolean = false;
+
+export function setRegisterFinish(): void {
+    _registerFinish = true;
+}
+
+// 在装饰器中支持动态注册
+_registerFinish && WindowManager.dynamicRegisterWindow(ctor, groupName, pkgName, name, bundle);
+```
+
+### 类型安全
+- 使用泛型约束确保装饰器类型安全
+- 提供明确的参数类型定义
+- 避免使用 any 类型，优先使用具体类型

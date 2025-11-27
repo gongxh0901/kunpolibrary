@@ -4,7 +4,7 @@
  * @Description: 微信广告
  */
 
-import { warn } from "../../kunpocc";
+import { warn } from "../../tool/log";
 import { MiniErrorCode } from "../header";
 import { IMiniRewardAds } from "../interface/IMiniAds";
 

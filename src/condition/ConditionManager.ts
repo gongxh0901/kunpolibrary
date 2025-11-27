@@ -118,6 +118,9 @@ export class ConditionManager {
      */
     public static _removeConditionNode(conditionNode: ConditionNode): void {
         let types = this._nodeToConditionTypes.get(conditionNode);
+        if (!types) {
+            return;
+        }
         for (const conditionType of types.values()) {
             let nodes = this._typeToNotifyNodes.get(conditionType);
             nodes.delete(conditionNode);

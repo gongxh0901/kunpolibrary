@@ -5,11 +5,11 @@
  */
 
 import { Platform } from "../global/Platform";
-import { BytedanceCommon } from "../kunpocc";
 import { AlipayAds } from "./alipay/AlipayAds";
 import { AlipayCommon } from "./alipay/AlipayCommon";
 import { AlipayPay } from "./alipay/AlipayPay";
 import { BytedanceAds } from "./bytedance/BytedanceAds";
+import { BytedanceCommon } from "./bytedance/BytedanceCommon";
 import { BytedancePay } from "./bytedance/BytedancePay";
 import { IMiniRewardAds } from "./interface/IMiniAds";
 import { IMiniCommon } from "./interface/IMiniCommon";

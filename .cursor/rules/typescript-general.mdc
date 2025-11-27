@@ -1,0 +1,111 @@
+---
+description: "KunpoCC TypeScript 通用开发规范"
+globs: ["src/**/*.ts"]
+alwaysApply: true
+type: "code-style"
+---
+
+# KunpoCC TypeScript 通用开发规范
+
+## 代码风格和命名规范
+
+### 命名约定
+- **类名**: 使用 PascalCase (如 `WindowManager`, `DataBase`)
+- **接口**: 以 `I` 开头，使用 PascalCase (如 `IWindow`, `IModule`) 
+- **方法和属性**: 使用 camelCase (如 `showWindow`, `onInit`)
+- **常量**: 全大写，下划线分隔 (如 `KUNPO_DEBUG`, `TAG`)
+- **私有方法**: 以下划线开头 (如 `_init`, `_removeWindow`)
+- **内部方法**: 添加 `@internal` JSDoc 注释
+
+### 类型定义
+```typescript
+// 优先使用接口定义对象结构
+interface size {
+    width: number;
+    height: number;
+}
+
+// 使用泛型约束确保类型安全
+public static getWindow<T extends IWindow>(name: string): T | null {
+    return this._windows.get(name) as T;
+}
+```
+
+## 注释规范
+
+### JSDoc 注释要求
+- 所有公共方法必须有完整的 JSDoc 注释
+- 包含参数说明、返回值说明和描述
+- 内部方法使用 `@internal` 标记
+
+```typescript
+/**
+ * @Author: Gongxh
+ * @Date: 2024-12-07  
+ * @Description: 窗口管理类
+ */
+
+/**
+ * 显示指定名称的窗口，并传递可选的用户数据
+ * @param windowName - 窗口的名称
+ * @param userdata - 可选参数，用于传递给窗口的用户数据
+ * @internal
+ */
+public static showWindowIm(windowName: string, userdata?: any): void {
+```
+
+## 错误处理和日志
+
+### 使用统一的日志系统
+```typescript
+import { debug, warn, error, log } from "../tool/log";
+
+// 调试信息（仅在 debug 模式下显示）
+debug("窗口注册完成", windowName);
+
+// 警告信息
+warn(`窗口不存在 ${windowName} 不需要关闭`);
+
+// 错误信息
+error("初始化失败", errorMessage);
+```
+
+### 错误处理模式
+```typescript
+// 使用 Promise 进行异步错误处理
+public static showWindow(windowName: string, userdata?: any): Promise<void> {
+    return new Promise((resolve, reject) => {
+        this._resPool.loadWindowRes(windowName, {
+            complete: () => {
+                this.showWindowIm(windowName, userdata);
+                resolve();
+            },
+            fail: (pkgs: string[]) => {
+                reject(pkgs);
+            }
+        });
+    });
+}
+```
+
+## TypeScript 最佳实践
+
+### 严格类型检查
+- 启用 `strict: true`
+- 禁用 `strictNullChecks: false` (项目特殊要求)
+- 使用明确的类型注解，避免 `any`
+
+### 装饰器使用
+- 启用 `experimentalDecorators: true`
+- 遵循项目的装饰器模式 (详见装饰器规范)
+
+### 模块导入
+```typescript
+// 使用相对路径导入
+import { WindowBase } from "./WindowBase";
+import { debug, warn } from "../tool/log";
+
+// 导出时保持清晰的结构
+export { WindowManager } from "./ui/WindowManager";
+export { _uidecorator } from "./ui/UIDecorator";
+```

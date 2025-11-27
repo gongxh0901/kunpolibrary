@@ -5,8 +5,8 @@
  */
 
 import { native } from "cc";
+import { Platform } from "../global/Platform";
 import { ICheckUpdatePromiseResult } from "../interface/PromiseResult";
-import { Platform } from "../kunpocc";
 import { log } from "../tool/log";
 import { HotUpdate, HotUpdateCode } from "./HotUpdate";
 

@@ -7,9 +7,9 @@
 
 import { GComponent } from "fairygui-cc";
 import { Screen } from "../global/Screen";
-import { AdapterType } from "../kunpocc";
 import { IWindow } from "../ui/IWindow";
 import { IWindowHeader } from "../ui/IWindowHeader";
+import { AdapterType } from "../ui/header";
 
 
 export abstract class WindowHeader extends GComponent implements IWindowHeader {

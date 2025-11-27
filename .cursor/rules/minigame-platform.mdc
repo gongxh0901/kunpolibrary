@@ -1,0 +1,449 @@
+---
+description: "小游戏平台开发规范"
+globs: ["src/minigame/**/*.ts", "src/global/Platform.ts"]
+alwaysApply: false
+type: "platform-specific"
+---
+
+# 小游戏平台开发规范
+
+## 平台检测和分类
+
+### 平台类型定义
+```typescript
+export enum PlatformType {
+    Unknown = 0,
+    Browser = 1,
+    WX = 2,          // 微信小游戏
+    Alipay = 3,      // 支付宝小游戏  
+    Bytedance = 4,   // 字节跳动小游戏
+    HuaweiQuick = 5  // 华为快游戏
+}
+
+export class Platform {
+    /** 平台类型 */
+    public static platform: PlatformType = PlatformType.Unknown;
+    
+    /** 平台标识 */
+    public static isWX: boolean = false;
+    public static isAlipay: boolean = false;
+    public static isBytedance: boolean = false;
+    public static isHuaweiQuick: boolean = false;
+    public static isBrowser: boolean = false;
+    
+    /** 设备类型 */
+    public static isNative: boolean = false;
+    public static isMobile: boolean = false;
+    public static isNativeMobile: boolean = false;
+    
+    /** 系统类型 */
+    public static isAndroid: boolean = false;
+    public static isIOS: boolean = false;
+    public static isHarmonyOS: boolean = false;
+}
+```
+
+### 平台初始化模式
+```typescript
+export class CocosEntry extends Component {
+    private initPlatform(): void {
+        // 设备类型检测
+        Platform.isNative = sys.isNative;
+        Platform.isMobile = sys.isMobile;
+        Platform.isNativeMobile = sys.isNative && sys.isMobile;
+
+        // 系统类型检测
+        switch (sys.os) {
+            case sys.OS.ANDROID:
+                Platform.isAndroid = true;
+                debug("系统类型 Android");
+                break;
+            case sys.OS.IOS:
+                Platform.isIOS = true;
+                debug("系统类型 IOS");
+                break;
+            case sys.OS.OPENHARMONY:
+                Platform.isHarmonyOS = true;
+                debug("系统类型 HarmonyOS");
+                break;
+        }
+
+        // 平台类型检测
+        switch (sys.platform) {
+            case sys.Platform.WECHAT_GAME:
+                Platform.isWX = true;
+                Platform.platform = PlatformType.WX;
+                break;
+            case sys.Platform.ALIPAY_MINI_GAME:
+                Platform.isAlipay = true;
+                Platform.platform = PlatformType.Alipay;
+                break;
+            case sys.Platform.BYTEDANCE_MINI_GAME:
+                Platform.isBytedance = true;
+                Platform.platform = PlatformType.Bytedance;
+                break;
+            case sys.Platform.HUAWEI_QUICK_GAME:
+                Platform.isHuaweiQuick = true;
+                Platform.platform = PlatformType.HuaweiQuick;
+                break;
+            default:
+                Platform.isBrowser = true;
+                Platform.platform = PlatformType.Browser;
+                break;
+        }
+        
+        debug(`platform: ${PlatformType[Platform.platform]}`);
+    }
+}
+```
+
+## 平台适配器设计
+
+### 通用适配器接口
+```typescript
+export interface IMiniGameAdapter {
+    /** 显示分享菜单 */
+    showShareMenu(): void;
+    
+    /** 分享应用 */
+    shareAppMessage(options: ShareOptions): void;
+    
+    /** 显示 loading */
+    showLoading(options: LoadingOptions): void;
+    
+    /** 隐藏 loading */
+    hideLoading(): void;
+    
+    /** 显示 toast */
+    showToast(options: ToastOptions): void;
+    
+    /** 获取系统信息 */
+    getSystemInfo(): Promise<SystemInfo>;
+    
+    /** 震动反馈 */
+    vibrateShort(): void;
+    vibrateLong(): void;
+}
+```
+
+### 微信小游戏适配
+```typescript
+export class WechatCommon implements IMiniGameAdapter {
+    public showShareMenu(): void {
+        if (Platform.isWX && wx.showShareMenu) {
+            wx.showShareMenu({
+                withShareTicket: true,
+                menus: ['shareAppMessage', 'shareTimeline']
+            });
+        }
+    }
+    
+    public shareAppMessage(options: ShareOptions): void {
+        if (Platform.isWX && wx.shareAppMessage) {
+            wx.shareAppMessage({
+                title: options.title,
+                imageUrl: options.imageUrl,
+                query: options.query,
+                success: options.success,
+                fail: options.fail
+            });
+        }
+    }
+    
+    public showLoading(options: LoadingOptions): void {
+        if (Platform.isWX && wx.showLoading) {
+            wx.showLoading({
+                title: options.title || '加载中...',
+                mask: options.mask !== false
+            });
+        }
+    }
+    
+    public getSystemInfo(): Promise<SystemInfo> {
+        return new Promise((resolve, reject) => {
+            if (Platform.isWX && wx.getSystemInfo) {
+                wx.getSystemInfo({
+                    success: resolve,
+                    fail: reject
+                });
+            } else {
+                reject(new Error('不支持的平台'));
+            }
+        });
+    }
+}
+```
+
+### 支付宝小游戏适配
+```typescript
+export class AlipayCommon implements IMiniGameAdapter {
+    public showShareMenu(): void {
+        // 支付宝特定实现
+    }
+    
+    public shareAppMessage(options: ShareOptions): void {
+        if (Platform.isAlipay && my.shareAppMessage) {
+            my.shareAppMessage({
+                title: options.title,
+                desc: options.desc,
+                path: options.path,
+                success: options.success,
+                fail: options.fail
+            });
+        }
+    }
+    
+    public showLoading(options: LoadingOptions): void {
+        if (Platform.isAlipay && my.showLoading) {
+            my.showLoading({
+                content: options.title || '加载中...'
+            });
+        }
+    }
+}
+```
+
+### 字节跳动小游戏适配
+```typescript
+export class BytedanceCommon implements IMiniGameAdapter {
+    public shareAppMessage(options: ShareOptions): void {
+        if (Platform.isBytedance && tt.shareAppMessage) {
+            tt.shareAppMessage({
+                title: options.title,
+                imageUrl: options.imageUrl,
+                query: options.query,
+                success: options.success,
+                fail: options.fail
+            });
+        }
+    }
+    
+    public vibrateShort(): void {
+        if (Platform.isBytedance && tt.vibrateShort) {
+            tt.vibrateShort({
+                success: () => debug('震动成功'),
+                fail: (err) => warn('震动失败', err)
+            });
+        }
+    }
+}
+```
+
+## 统一接口封装
+
+### MiniHelper 统一接口
+```typescript
+export class MiniHelper {
+    private static _adapter: IMiniGameAdapter | null = null;
+    
+    /** 初始化适配器 */
+    public static init(): void {
+        switch (Platform.platform) {
+            case PlatformType.WX:
+                this._adapter = new WechatCommon();
+                break;
+            case PlatformType.Alipay:
+                this._adapter = new AlipayCommon();
+                break;
+            case PlatformType.Bytedance:
+                this._adapter = new BytedanceCommon();
+                break;
+            default:
+                warn('当前平台不支持小游戏功能');
+                break;
+        }
+    }
+    
+    /** 统一的分享接口 */
+    public static share(options: ShareOptions): void {
+        if (this._adapter) {
+            this._adapter.shareAppMessage(options);
+        } else {
+            warn('未初始化小游戏适配器');
+        }
+    }
+    
+    /** 统一的震动接口 */
+    public static vibrate(type: 'short' | 'long' = 'short'): void {
+        if (this._adapter) {
+            if (type === 'short') {
+                this._adapter.vibrateShort();
+            } else {
+                this._adapter.vibrateLong();
+            }
+        }
+    }
+    
+    /** 统一的系统信息获取 */
+    public static async getSystemInfo(): Promise<SystemInfo | null> {
+        if (this._adapter) {
+            try {
+                return await this._adapter.getSystemInfo();
+            } catch (error) {
+                error('获取系统信息失败', error);
+                return null;
+            }
+        }
+        return null;
+    }
+}
+```
+
+## 平台特定功能
+
+### 广告系统封装
+```typescript
+interface AdOptions {
+    adUnitId: string;
+    success?: () => void;
+    fail?: (error: any) => void;
+}
+
+export class AdManager {
+    /** 显示激励视频广告 */
+    public static showRewardedVideoAd(options: AdOptions): void {
+        switch (Platform.platform) {
+            case PlatformType.WX:
+                this.showWXRewardedAd(options);
+                break;
+            case PlatformType.Alipay:
+                this.showAlipayRewardedAd(options);
+                break;
+            default:
+                options.fail?.('当前平台不支持广告');
+                break;
+        }
+    }
+    
+    private static showWXRewardedAd(options: AdOptions): void {
+        if (wx.createRewardedVideoAd) {
+            const rewardedVideoAd = wx.createRewardedVideoAd({
+                adUnitId: options.adUnitId
+            });
+            
+            rewardedVideoAd.onLoad(() => {
+                rewardedVideoAd.show();
+            });
+            
+            rewardedVideoAd.onClose((res) => {
+                if (res && res.isEnded) {
+                    options.success?.();
+                } else {
+                    options.fail?.('用户取消观看');
+                }
+            });
+        }
+    }
+}
+```
+
+### 支付系统封装  
+```typescript
+interface PaymentOptions {
+    amount: number;
+    orderInfo: string;
+    success?: (result: any) => void;
+    fail?: (error: any) => void;
+}
+
+export class PaymentManager {
+    public static pay(options: PaymentOptions): void {
+        switch (Platform.platform) {
+            case PlatformType.WX:
+                this.wxPay(options);
+                break;
+            case PlatformType.Alipay:
+                this.alipayPay(options);
+                break;
+            default:
+                options.fail?.('当前平台不支持支付');
+                break;
+        }
+    }
+    
+    private static wxPay(options: PaymentOptions): void {
+        // 微信支付实现
+    }
+    
+    private static alipayPay(options: PaymentOptions): void {
+        // 支付宝支付实现
+    }
+}
+```
+
+## 数据存储适配
+
+### 本地存储封装
+```typescript
+export class StorageManager {
+    /** 设置数据 */
+    public static setItem(key: string, value: any): void {
+        try {
+            const jsonValue = JSON.stringify(value);
+            
+            switch (Platform.platform) {
+                case PlatformType.WX:
+                    wx.setStorageSync(key, jsonValue);
+                    break;
+                case PlatformType.Alipay:
+                    my.setStorageSync({ key, data: jsonValue });
+                    break;
+                default:
+                    localStorage.setItem(key, jsonValue);
+                    break;
+            }
+        } catch (error) {
+            error('存储数据失败', key, error);
+        }
+    }
+    
+    /** 获取数据 */
+    public static getItem<T>(key: string, defaultValue?: T): T | null {
+        try {
+            let jsonValue: string | null = null;
+            
+            switch (Platform.platform) {
+                case PlatformType.WX:
+                    jsonValue = wx.getStorageSync(key);
+                    break;
+                case PlatformType.Alipay:
+                    jsonValue = my.getStorageSync({ key }).data;
+                    break;
+                default:
+                    jsonValue = localStorage.getItem(key);
+                    break;
+            }
+            
+            if (jsonValue) {
+                return JSON.parse(jsonValue) as T;
+            }
+            return defaultValue || null;
+        } catch (error) {
+            error('读取数据失败', key, error);
+            return defaultValue || null;
+        }
+    }
+}
+```
+
+## 平台开发最佳实践
+
+### 1. 统一接口设计
+- 为所有平台提供一致的API接口
+- 使用适配器模式处理平台差异
+- 提供降级方案处理不支持的功能
+
+### 2. 平台检测
+- 在应用启动时进行平台检测
+- 使用枚举定义平台类型
+- 提供便捷的平台判断属性
+
+### 3. 错误处理
+- 对不支持的平台提供友好的错误信息
+- 使用 try-catch 处理平台API调用
+- 提供回调函数处理异步操作结果
+
+### 4. 性能优化
+- 延迟加载平台特定功能
+- 避免在不支持的平台上创建无用对象
+- 使用条件编译减少包体积

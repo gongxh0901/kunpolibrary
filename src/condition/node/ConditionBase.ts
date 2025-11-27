@@ -36,7 +36,7 @@ export abstract class ConditionBase {
     public _updateCondition(): boolean {
         let canNotify = this.evaluate();
         if (canNotify == this._canNotify) {
-            return;
+            return false;
         }
         this._canNotify = canNotify;
         return true;

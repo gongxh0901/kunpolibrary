@@ -106,11 +106,17 @@ export class BinaryHeap<T extends HeapNode> {
 
         const size = --this._size;
         const nodes = this._nodes;
-        const newNode = (nodes[node.index] = nodes[size]);
 
-        newNode.index = node.index;
-        nodes[size] = null;
-        this.update(newNode);
+
+        // 如果删除的不是最后一个元素，需要调整堆
+        if (node.index < size) {
+            const newNode = (nodes[node.index] = nodes[size]);
+            newNode.index = node.index;
+            nodes[size] = null;
+            this.update(newNode);
+        } else {
+            nodes[size] = null;
+        }
         node.index = -1;
     }
 

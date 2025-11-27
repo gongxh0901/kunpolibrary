@@ -177,7 +177,7 @@ export class WindowGroup {
         let isMoved = false;
         if (this.size == 0) {
             warn(`WindowGroup.moveWindowToTop: window group 【${this._name}】 is empty`);
-            return;
+            return false;
         }
         if (this._windowNames[this.size - 1] == name) {
             // 已经在最顶层了
@@ -185,7 +185,7 @@ export class WindowGroup {
             const index = this._windowNames.indexOf(name);
             if (index == -1) {
                 warn(`WindowGroup.moveWindowToTop: window 【${name}】 not found in window group 【${this._name}】`);
-                return;
+                return false;
             }
             if (index < this._windowNames.length - 1) {
                 this._windowNames.splice(index, 1);
@@ -202,6 +202,7 @@ export class WindowGroup {
         window._setDepth(this._root.numChildren - 1);
         // 处理窗口显示和隐藏状态
         this._processWindowHideStatus(this.size - 1, isMoved);
+        return true;
     }
 
     /**

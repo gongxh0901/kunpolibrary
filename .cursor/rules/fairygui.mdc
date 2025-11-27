@@ -1,0 +1,256 @@
+---
+description: "FairyGUI UI 系统开发规范"
+globs: ["src/fgui/**/*.ts", "src/ui/**/*.ts"]
+alwaysApply: false
+type: "ui-framework"
+---
+
+# FairyGUI UI 系统开发规范
+
+## 窗口基类设计模式
+
+### 窗口继承层次
+```typescript
+// 基础窗口类 - 提供核心功能
+export abstract class WindowBase extends Component {
+    // 核心窗口管理逻辑
+}
+
+// 抽象窗口类 - 定义生命周期
+export abstract class Window extends WindowBase {
+    protected abstract onInit(): void;
+    protected onClose(): void { }
+    protected onShow(userdata?: any): void { }
+    protected onHide(): void { }
+    protected onShowFromHide(): void { }
+    protected onCover(): void { }
+    protected onRecover(): void { }
+}
+```
+
+### 窗口生命周期管理
+- `onInit()`: 窗口初始化，必须实现
+- `onShow()`: 窗口显示时调用
+- `onHide()`: 窗口隐藏时调用
+- `onClose()`: 窗口关闭时调用
+- `onCover()`: 被其他窗口覆盖时调用
+- `onRecover()`: 从覆盖状态恢复时调用
+- `onShowFromHide()`: 从隐藏状态重新显示时调用
+
+## 窗口管理器模式
+
+### 静态管理器设计
+```typescript
+export class WindowManager {
+    /** 窗口组映射 */
+    private static _groups: Map<string, WindowGroup> = new Map();
+    /** 所有窗口映射 */
+    private static _windows: Map<string, IWindow> = new Map();
+    /** 资源池 */
+    private static _resPool: WindowResPool;
+
+    /**
+     * 异步显示窗口（自动加载资源）
+     */
+    public static showWindow(windowName: string, userdata?: any): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this._resPool.loadWindowRes(windowName, {
+                complete: () => {
+                    this.showWindowIm(windowName, userdata);
+                    resolve();
+                },
+                fail: (pkgs: string[]) => reject(pkgs)
+            });
+        });
+    }
+
+    /**
+     * 立即显示窗口（资源已加载）
+     */
+    public static showWindowIm(windowName: string, userdata?: any): void {
+        const info = this._resPool.get(windowName);
+        const windowGroup = this.getWindowGroup(info.group);
+        this._resPool.addResRef(windowName);
+        windowGroup.showWindow(info, userdata);
+    }
+}
+```
+
+### 窗口组管理
+- 使用 `WindowGroup` 管理同类型窗口
+- 支持窗口层级和遮挡关系
+- 自动处理窗口恢复和覆盖
+
+## 装饰器系统
+
+### UI 装饰器使用规范
+```typescript
+// 窗口类装饰器
+@uiclass("popup", "common", "SettingsWindow", "ui")
+export class SettingsWindow extends Window {
+    
+    // UI 属性装饰器
+    @uiprop
+    btnClose: GButton;
+    
+    @uiprop
+    list: GList;
+    
+    // UI 控制器装饰器
+    @uicontrol
+    controller: GController;
+    
+    // UI 动画装饰器
+    @uitransition
+    showTransition: GTransition;
+    
+    // 点击事件装饰器
+    @uiclick
+    private onBtnCloseClick(): void {
+        WindowManager.closeWindow("SettingsWindow");
+    }
+}
+
+// 组件装饰器
+@uicom("common", "CustomButton")
+export class CustomButton extends GButton {
+    // 自定义组件逻辑
+}
+
+// Header 装饰器
+@uiheader("common", "CommonHeader", "ui")
+export class CommonHeader extends WindowHeader {
+    // 通用头部逻辑
+}
+```
+
+### 装饰器参数规范
+- `@uiclass(group, pkg, name, bundle?)`: 窗口类注册
+  - `group`: 窗口组名
+  - `pkg`: FairyGUI 包名
+  - `name`: 组件名（与 FairyGUI 中一致）
+  - `bundle`: 可选的 bundle 名称
+- `@uicom(pkg, name)`: 自定义组件注册
+- `@uiheader(pkg, name, bundle?)`: 窗口头部注册
+
+## 资源管理模式
+
+### 资源池设计
+```typescript
+export class WindowResPool {
+    private _windowInfos: Map<string, WindowHeaderInfo> = new Map();
+    private _headerInfos: Map<string, WindowHeaderInfo> = new Map();
+    
+    /**
+     * 加载窗口资源
+     */
+    loadWindowRes(windowName: string, callbacks: {
+        complete: () => void;
+        fail: (pkgs: string[]) => void;
+    }): void {
+        // 检查包资源是否已加载
+        // 自动加载依赖的UI包
+        // 调用相应的回调
+    }
+    
+    /**
+     * 释放窗口资源
+     */
+    releaseWindowRes(windowName: string): void {
+        // 减少引用计数
+        // 必要时卸载资源
+    }
+}
+```
+
+### 包配置管理
+```typescript
+interface IPackageConfigRes {
+    [windowName: string]: {
+        group: string;
+        pkg: string;
+        bundle?: string;
+    };
+}
+
+// 初始化包配置
+WindowManager.initPackageConfig(packageConfig);
+```
+
+## UI 组件扩展
+
+### 组件扩展模式
+```typescript
+export class ComponentExtendHelper {
+    private static _componentMaps: Map<string, any> = new Map();
+    
+    /**
+     * 注册自定义组件
+     */
+    public static register(): void {
+        for (const { ctor, res } of _uidecorator.getComponentMaps().values()) {
+            UIObjectFactory.setPackageItemExtension(
+                `ui://${res.pkg}/${res.name}`, 
+                ctor
+            );
+        }
+    }
+    
+    /**
+     * 动态注册组件
+     */
+    public static dynamicRegister(ctor: any, pkg: string, name: string): void {
+        UIObjectFactory.setPackageItemExtension(
+            `ui://${pkg}/${name}`, 
+            ctor
+        );
+    }
+}
+```
+
+## 窗口头部系统
+
+### WindowHeader 模式
+```typescript
+export class WindowHeader {
+    /** 头部组件实例 */
+    protected _header: GComponent;
+    
+    /**
+     * 创建头部
+     */
+    public createHeader(pkg: string, name: string): GComponent {
+        this._header = UIPackage.createObject(pkg, name).asCom;
+        return this._header;
+    }
+    
+    /**
+     * 头部适配
+     */
+    public adapter(window: GComponent): void {
+        // 头部适配逻辑
+        // 处理安全区域
+        // 设置头部位置和尺寸
+    }
+}
+```
+
+## 屏幕适配
+
+### 屏幕尺寸变化处理
+```typescript
+// 在 WindowManager 中处理屏幕变化
+public static _screenResize(): void {
+    this._windows.forEach((window: IWindow) => {
+        window.screenResize();
+    });
+    this._groups.forEach((group: WindowGroup) => {
+        group._screenResize();
+    });
+}
+
+// 在窗口中实现屏幕适配
+protected screenResize(): void {
+    // 处理窗口在屏幕尺寸变化时的适配逻辑
+}
+```
